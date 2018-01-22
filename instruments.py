@@ -63,10 +63,9 @@ class VisaInstrument(object):
         self.__inst = rm.open_resource(resource_name, read_termination=read_termination, open_timeout=open_timeout)
         self.__resource_name = resource_name
         self.__idn = self.query('*IDN?')
-        self._ins_type = []
         self.__brand = None
         self.__model = None
-        self._mismatch = False
+        super(VisaInstrument, self).__init__()
 
     def __str__(self):
         return 'InsType: ' + str(self.ins_type) + '\n'\
@@ -98,14 +97,6 @@ class VisaInstrument(object):
         raise AttributeError('attr "IDN" is read-only.')
 
     @property
-    def ins_type(self):
-        return self.__ins_type
-
-    @ins_type.setter
-    def ins_type(self, value):
-        raise AttributeError('attr "ins_type" is read-only.')
-
-    @property
     def brand(self):
         return self.__brand
 
@@ -121,25 +112,19 @@ class VisaInstrument(object):
     def model(self, value):
         raise AttributeError('attr "model" is read-only.')
 
-    @property
-    def mismatch(self):
-        return self._mismatch
-
-    @mismatch.setter
-    def mismatch(self, value):
-        raise AttributeError('attr "mismatch" is read-only.')
-
     # methods
     def check_mismatch(self):
         """
         Check if idn matches model name.
+        :return: (bool) if idn mismatches model name
         """
         idn = self.idn
         model = self.model
         if model not in idn:
-            self._mismatch = True
+            mismatch = True
         else:
-            self._mismatch = False
+            mismatch = False
+        return mismatch
 
     def command(self, cmd):
         """
@@ -175,13 +160,15 @@ class VisaInstrument(object):
 
 
 class ModelN7744A(VisaInstrument, TypeOPM):
-    def __init__(self, resource_name, channel):
-        VisaInstrument.__init__(self, resource_name)
-        TypeOPM.__init__(self)
+    def __init__(self, resource_name, channel, max_channel=4):
+        if not isinstance(channel, int):
+            raise TypeError('channel should be int')
+        if not 1 <= channel <= max_channel:
+            raise ValueError('input channel not exist')
+        super(ModelN7744A, self).__init__(resource_name)
         self.__brand = "Keysight"
         self.__model = "N7744A"
         self.__channel = channel
-        self.check_mismatch()
 
     # param encapsulation
     @property
@@ -272,3 +259,124 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         if not isinstance(value, (int, float)):
             raise TypeError('Calibration value should be a number (int or float)')
         return self.command("sens" + str(self.channel) + ":pow:wav " + str(value) + "NM")
+
+
+class ModelN7752A(ModelN7744A, TypeVOA):
+    def __init__(self, resource_name, channel, max_channel=6):
+        super(ModelN7752A, self).__init__(resource_name, channel, max_channel)
+        self.__model = "N7752A"
+
+    # param encapsulation
+    @property
+    def model(self):
+        return self.__model
+
+    @model.setter
+    def model(self, value):
+        raise AttributeError('attr "model" is read-only.')
+
+    # Methods
+    def __is_att(self):
+        if self.channel in (1, 2, 3, 4):
+            return True
+        else:
+            return False
+
+    def __check_is_att(self):
+        if not self.__is_att():
+            raise ValueError('channel '+str(self.channel)+' has no att function.')
+
+    def enable(self, status=True):
+        """
+        Set VOA output enabled/disabled.
+        :param status: (bool=True)
+        """
+        self.__check_is_att()
+        if not isinstance(status, bool):
+            raise TypeError('param "status" should be bool.')
+        status_str = str(int(status))
+        return self.command(":OUTP" + str(self.channel) + " " + status_str)
+
+    def is_enabled(self):
+        """
+        Get enable status of VOA.
+        :return: (bool) if VOA output is enabled.
+        """
+        self.__check_is_att()
+        status = self.query(":OUTP" + str(self.channel) + "?")
+        if status:
+            status = bool(int(status))
+        return status
+
+    def get_att(self):
+        """
+        Get att value in dB.
+        :return: (float) att value in dB
+        """
+        self.__check_is_att()
+        att_str = self.query(":INP" + str(self.channel) + ":ATT?")
+        att = float(att_str)
+        return att
+
+    def get_offset(self):
+        """
+        Get att offset value in dB.
+        :return: (float) att offset value in dB
+        """
+        self.__check_is_att()
+        offset_str = self.query("INP" + str(self.channel) + ":OFFS?")
+        offset = float(offset_str)
+        return offset
+
+    def get_wavelength(self):
+        """
+        :return: (float) optical wavelength in nm
+        """
+        if self.channel >= 5:
+            return ModelN7744A.get_wavelength(self)
+        wl_str = self.query(":INP"+str(self.channel)+":WAV?")
+        wl = float(wl_str)
+        return wl
+
+    def get_cal(self):
+        """
+        :return: (float) power monitor calibration offset in dB
+        """
+        if self.channel >= 5:
+            return ModelN7744A.get_cal(self)
+        cal_str = self.query("OUTP" + str(self.channel) + ":POW:OFFS?")
+        cal = float(cal_str)
+        return cal
+
+    def set_att(self, value):
+        """
+        Set att value in dB.
+        :param value: (float|int) att value in dB
+        """
+        self.__check_is_att()
+        return self.command("INP" + str(self.channel) + ":ATT " + str(value) + "dB")
+
+    def set_offset(self, value):
+        """
+        Set att offset value in dB.
+        :param value: (float|int) att offset value in dB
+        """
+        self.__check_is_att()
+        return self.command("INP"+str(self.channel)+":OFFS "+str(value)+"dB")
+
+    def set_wavelength(self, value):
+        """
+        Set wavelength value in nm.
+        :param value: (float|int) wavelength value in nm
+        """
+        if self.channel >= 5:
+            return ModelN7744A.set_wavelength(self, value)
+        return self.command(":INP"+str(self.channel)+":WAV " + str(value) + "NM")
+
+    def set_cal(self, value):
+        """
+        Set calibration offset in dB
+        """
+        if self.channel >= 5:
+            return ModelN7744A.set_cal(self, value)
+        return self.command("OUTP" + str(self.channel) + ":POW:OFFS " + str(value))

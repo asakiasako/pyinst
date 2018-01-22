@@ -27,3 +27,36 @@ def dbm_to_w(value):
     w_value = (10**(value/10))/1000
     w_value = float(w_value)
     return w_value
+
+
+def format_unit(value, precision):
+    """
+    Format base unit to readable styles, suchas: 0.034 -> (34, 'm'), 2.3e-10 -> (230, 'p')
+    m: 1E-3; u: 1E-6; n: 1E-9; p: 1E-12
+    :param value: (float|int) initial value in base unit
+    :param precision: (int) decimal digits
+    :return: (tuple) (float:value, str:prefix)
+    """
+    if not isinstance(value, (float, int)):
+        raise TypeError('value should be a number (int or float).')
+    if not isinstance(precision, int):
+        raise TypeError('precision should be a int')
+    abs_value = abs(value)
+    if abs_value < 1e-9:
+        value = value*10**12
+        value = round(value, precision)
+        return value, 'p'
+    elif 1e-9 <= abs_value < 1e-6:
+        value = value*10**9
+        value = round(value, precision)
+        return value, 'n'
+    elif 1e-6 <= abs_value < 1e-3:
+        value = value*10**6
+        value = round(value, precision)
+        return value, 'u'
+    elif 1e-3 <= abs_value < 1:
+        value = value*10**3
+        value = round(value, precision)
+        return value, 'm'
+    else:
+        return value, ''

@@ -21,23 +21,40 @@ class OpticalUnits(Enum):
     W = 1
 
 
-# Instrument Types
+# --- Instrument Types ---
 
 class TypeIns(object):
     # Base Class of Instrument Types
-    def __init__(self, ins_type):
-        if not hasattr(self, '_ins_type'):
-            self._ins_type = []
-        if ins_type not in self._ins_type:
-            self._ins_type.append(ins_type)
+    def __init__(self):
+        self._ins_type = []
+
+    # param encapsulation
+    @property
+    def ins_type(self):
+        return self._ins_type
+
+    @ins_type.setter
+    def ins_type(self, value):
+        raise AttributeError('attr "ins_type" is read-only.')
+
+    def append_ins_type(self, i_type):
+        """
+        Append new instrument type into ins_type attr.
+        :param i_type: (InstrumentTypes) instrument type
+        """
+        if not isinstance(i_type, InstrumentTypes):
+            raise TypeError('i_type should be <enum InstrumentTypes>')
+        if i_type not in self._ins_type:
+            self._ins_type.append(i_type)
 
     def raise_no_rewrite(self):
         raise AttributeError('This function should be rewritten by extension class.')
 
 
 class TypeOPM(TypeIns):
-    def __init__(self):
-        super(TypeOPM, self).__init__(InstrumentTypes.OPM)
+    def __init__(self, *args, **kwargs):
+        super(TypeOPM, self).__init__()
+        self.append_ins_type(InstrumentTypes.OPM)
 
     def get_value(self):
         """
@@ -55,7 +72,7 @@ class TypeOPM(TypeIns):
     def get_power(self):
         """
         Return a tuple of (value, unit)
-        :return: (tuple) (float value, OpticalUnit unit)
+        :return: (tuple) (float:value, OpticalUnit:unit)
         """
         return self.get_value(), self.get_unit()
 
@@ -91,19 +108,35 @@ class TypeOPM(TypeIns):
         """
         self.raise_no_rewrite()
 
-    def set_unit(self):
+    def get_wavelength(self):
+        """
+        :return: (float) optical wavelength in nm
+        """
+        self.raise_no_rewrite()
+
+    def get_formatted_w_power(self):
+        """
+        Return a formatted power in w based unit, such as: (34, 'mw'), (223, 'pw')
+        :return: (tuple) (float:value, str:unit)
+        """
+        w_value = self.get_w_value()
+        value, unit = format_unit(w_value, 3)
+        unit += 'w'
+        return value, unit
+
+    def set_unit(self, unit):
         """
         Set optical power unit
         """
         self.raise_no_rewrite()
 
-    def set_cal(self):
+    def set_cal(self, value):
         """
         Set calibration offset in dB
         """
         self.raise_no_rewrite()
 
-    def set_wavelength(self):
+    def set_wavelength(self, value):
         """
         Set optical wavelength in nm
         """
@@ -116,3 +149,71 @@ class TypeOPM(TypeIns):
         dbm_value = self.get_dbm_value()
         cal = self.get_cal()
         self.set_cal(dbm_value + cal)
+
+
+class TypeVOA(TypeIns):
+    def __init__(self, *args, **kwargs):
+        super(TypeVOA, self).__init__()
+        self.append_ins_type(InstrumentTypes.VOA)
+
+    def enable(self, status=True):
+        """
+        Set VOA output enabled/disabled.
+        :param status: (bool=True)
+        """
+        self.raise_no_rewrite()
+
+    def disable(self):
+        """
+        Set VOA output disabled.
+        """
+        return self.enable(False)
+
+    def is_enabled(self):
+        """
+        Get enable status of VOA.
+        :return: (bool) if VOA output is enabled.
+        """
+        self.raise_no_rewrite()
+
+    def get_att(self):
+        """
+        Get att value in dB.
+        :return: (float) att value in dB
+        """
+        self.raise_no_rewrite()
+
+    def get_offset(self):
+        """
+        Get offset value in dB.
+        :return: (float) offset value in dB
+        """
+        self.raise_no_rewrite()
+
+    def get_wavelength(self):
+        """
+        :return: (float) optical wavelength in nm
+        """
+        self.raise_no_rewrite()
+
+    def set_att(self, value):
+        """
+        Set att value in dB.
+        :param value: (float|int) att value in dB
+        """
+        self.raise_no_rewrite()
+
+    def set_offset(self, value):
+        """
+        Set offset value in dB.
+        :param value: (float|int) offset value in dB
+        """
+        self.raise_no_rewrite()
+
+    def set_wavelength(self, value):
+        """
+        Set wavelength value in nm.
+        :param value: (float|int) wavelength value in nm
+        """
+        self.raise_no_rewrite()
+
