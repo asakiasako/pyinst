@@ -12,6 +12,7 @@ InstrumentTypes = Enum('InstrumentTypes', (
     'OTF',  # Optical Tunable Filter
     'TEC',  # Temp Control
     'SW',   # Optical Switcher
+    'PS',   # Power Supply
 ))
 
 
@@ -21,12 +22,18 @@ class OpticalUnits(Enum):
     W = 1
 
 
+@unique
+class WavelengthUnits(Enum):
+    NM = 0
+    HZ = 1
+
 # --- Instrument Types ---
 
 class TypeIns(object):
     # Base Class of Instrument Types
     def __init__(self):
         self._ins_type = []
+        super(TypeIns, self).__init__()
 
     # param encapsulation
     @property
@@ -214,6 +221,87 @@ class TypeVOA(TypeIns):
         """
         Set wavelength value in nm.
         :param value: (float|int) wavelength value in nm
+        """
+        self.raise_no_rewrite()
+
+
+class TypeWM(TypeIns):
+    def __init__(self, *args, **kwargs):
+        super(TypeWM, self).__init__()
+        self.append_ins_type(InstrumentTypes.WM)
+
+    def start(self):
+        """
+        Start repeat measurement.
+        """
+        self.raise_no_rewrite()
+
+    def stop(self):
+        """
+        Stop repeat measurement.
+        """
+        self.raise_no_rewrite()
+
+    def is_started(self):
+        """
+        Get measurement state of WM.
+        :return: (bool) if repeat measurement is started.
+        """
+        self.raise_no_rewrite()
+
+    def get_frequency_array(self):
+        """
+        Get wavelength of all peaks in unit of frequency(Hz).
+        :return: (dict) {'num': (int), 'values': (tuple of floats)}
+        """
+        self.raise_no_rewrite()
+
+    def get_wavelength_array(self):
+        """
+        Get wavelength of all peaks in unit of wavelength(m).
+        :return: (dict) {'num': (int), 'values': (tuple of floats)}
+        """
+        self.raise_no_rewrite()
+
+    def get_power_array(self):
+        """
+        Get optical power of all peaks in selected unit.
+        :return: (dict) {'num': (int), 'values': (tuple of floats)}
+        """
+        self.raise_no_rewrite()
+
+    def get_power_unit(self):
+        """
+        Get optical power unit.
+        :return: (OpticalUnits) optical power unit.
+        """
+        self.raise_no_rewrite()
+
+    def set_power_unit(self, unit):
+        """
+        Set optical power unit.
+        :param unit: (OpticalUnits) optical power unit.
+        """
+        self.raise_no_rewrite()
+
+    def get_frequency(self):
+        """
+        Get frequency of single peak in Hz
+        :return: (float) frequency in Hz
+        """
+        self.raise_no_rewrite()
+
+    def get_wavelength(self):
+        """
+        Get wavelength of single peak in m
+        :return: (float) wavelength in m
+        """
+        self.raise_no_rewrite()
+
+    def get_power(self):
+        """
+        Get wavelength of single peak in selected unit
+        :return: (float) optical power in selected unit.
         """
         self.raise_no_rewrite()
 

@@ -120,11 +120,12 @@ class VisaInstrument(object):
         """
         idn = self.idn
         model = self.model
-        if model not in idn:
-            mismatch = True
-        else:
-            mismatch = False
-        return mismatch
+        if isinstance(model, str):
+            model = [model]
+        for i in model:
+            if i in idn:
+                return False
+        return True
 
     def command(self, cmd):
         """
@@ -380,3 +381,136 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         if self.channel >= 5:
             return ModelN7744A.set_cal(self, value)
         return self.command("OUTP" + str(self.channel) + ":POW:OFFS " + str(value))
+
+
+class ModelAQ6150(VisaInstrument, TypeWM):
+    def __init__(self, resource_name):
+        super(ModelAQ6150, self).__init__(resource_name)
+        self.__model = ["AQ6150", "AQ6151"]
+        self.__brand = "Yokogawa"
+
+    # param encapsulation
+    @property
+    def model(self):
+        return self.__model
+
+    @model.setter
+    def model(self, value):
+        raise AttributeError('attr "model" is read-only.')
+
+    @property
+    def brand(self):
+        return self.__brand
+
+    @brand.setter
+    def brand(self, value):
+        raise AttributeError('attr "brand" is read-only.')
+
+    # Methods
+    def format_array_data(self, msg):
+        """
+        Format array data from AQ6150 to readable format.
+        :param msg: array data str from AQ6150
+        :return: (dict) {'num': (int), 'values': (tuple of floats)}
+        """
+        msg_str = msg
+        msg_str_list = msg_str.split(",")
+        num = int(msg_str_list[0])
+        value_list = [float(i) for i in msg_str_list[1:]]
+        value_tuple = tuple(value_list)
+        rtn_dict = {"num": num, "values": value_tuple}
+        return rtn_dict
+
+    def start(self):
+        """
+        Start repeat measurement.
+        """
+        return self.command(":INIT:CONT ON")
+
+    def stop(self):
+        """
+        Stop repeat measurement.
+        """
+        return self.command(":ABOR")
+
+    def is_started(self):
+        """
+        Get measurement state of WM.
+        :return: (bool) if repeat measurement is started.
+        """
+        status_str = self.query(":INIT:CONT?")
+        status = bool(int(status_str))
+        return status
+
+    def get_frequency_array(self):
+        """
+        Get wavelength of all peaks in unit of frequency.
+        :return: (dict) {'num': (int), 'values': (tuple of floats)}
+        """
+        msg_str = self.query(":FETC:ARR:POW:FREQ?")
+        return self.format_array_data(msg_str)
+
+    def get_wavelength_array(self):
+        """
+        Get wavelength of all peaks in unit of wavelength.
+        :return: (dict) {'num': (int), 'values': (tuple of floats)}
+        """
+        msg_str = self.query(":FETC:ARR:POW:WAV?")
+        return self.format_array_data(msg_str)
+
+    def get_power_array(self):
+        """
+        Get optical power of all peaks in selected unit.
+        :return: (dict) {'num': (int), 'values': (tuple of floats)}
+        """
+        msg_str = self.query(":FETC:ARR:POW?")
+        return self.format_array_data(msg_str)
+
+    def get_power_unit(self):
+        """
+        Get optical power unit.
+        :return: (OpticalUnits) optical power unit.
+        """
+        unit_str = self.query(":UNIT?")
+        if unit_str.strip() == "DBM":
+            return OpticalUnits.DBM
+        if unit_str.strip() == "W":
+            return OpticalUnits.W
+
+    def set_power_unit(self, unit):
+        """
+        Set optical power unit.
+        :param unit: (OpticalUnits) optical power unit.
+        """
+        if not isinstance(unit, OpticalUnits):
+            raise TypeError('unit should be <enum OpticalUnits>')
+        unit_list = ["DBM", "W"]
+        unit_str = unit_list[unit.value]
+        return self.command(":UNIT "+unit_str)
+
+    def get_frequency(self):
+        """
+        Get frequency of single peak in Hz
+        :return: (float) frequency in Hz
+        """
+        freq_str = self.query(":FETC:POW:FREQ?")
+        freq = float(freq_str)
+        return freq
+
+    def get_wavelength(self):
+        """
+        Get wavelength of single peak in m
+        :return: (float) wavelength in m
+        """
+        wl_str = self.query(":FETC:POW:WAV?")
+        wl = float(wl_str)
+        return wl
+
+    def get_power(self):
+        """
+        Get wavelength of single peak in selected unit
+        :return: (float) optical power in selected unit.
+        """
+        pow_str = self.query(":FETC:POW?")
+        pow = float(pow_str)
+        return pow
