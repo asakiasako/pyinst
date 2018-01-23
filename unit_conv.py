@@ -60,3 +60,19 @@ def format_unit(value, precision):
         return value, 'm'
     else:
         return value, ''
+
+
+def check_range(value, r_min, r_max):
+    if not (r_min <= value <= r_max):
+        raise ValueError('Out of range')
+
+
+def check_type(value, v_type, name):
+    if not isinstance(value, v_type):
+        if not isinstance(v_type, (tuple, list)):
+            type_str = v_type.__name__
+        else:
+            type_str_list = [i.__name__ for i in v_type]
+            type_str = "(%s)" % "|".join(type_str_list)
+        raise TypeError('Param %s should be %s' % (name, type_str))
+
