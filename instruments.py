@@ -161,11 +161,11 @@ class VisaInstrument(object):
 
 
 class ModelN7744A(VisaInstrument, TypeOPM):
-    def __init__(self, resource_name, channel, max_channel=4):
+    def __init__(self, resource_name, channel, max_channel=4, read_termination=READ_TERMINATION):
         check_type(channel, int, 'channel')
         if not 1 <= channel <= max_channel:
             raise ValueError('input channel not exist')
-        super(ModelN7744A, self).__init__(resource_name)
+        super(ModelN7744A, self).__init__(resource_name, read_termination=read_termination)
         self.__brand = "Keysight"
         self.__model = "N7744A"
         self.__channel = channel
@@ -259,8 +259,8 @@ class ModelN7744A(VisaInstrument, TypeOPM):
 
 
 class ModelN7752A(ModelN7744A, TypeVOA):
-    def __init__(self, resource_name, channel, max_channel=6):
-        super(ModelN7752A, self).__init__(resource_name, channel, max_channel)
+    def __init__(self, resource_name, channel, max_channel=6, read_termination=READ_TERMINATION):
+        super(ModelN7752A, self).__init__(resource_name, channel, max_channel, read_termination=read_termination)
         self.__model = "N7752A"
 
     # param encapsulation
@@ -379,8 +379,8 @@ class ModelN7752A(ModelN7744A, TypeVOA):
 
 
 class ModelAQ6150(VisaInstrument, TypeWM):
-    def __init__(self, resource_name):
-        super(ModelAQ6150, self).__init__(resource_name)
+    def __init__(self, resource_name, read_termination=READ_TERMINATION):
+        super(ModelAQ6150, self).__init__(resource_name, read_termination=read_termination)
         self.__model = ["AQ6150", "AQ6151"]
         self.__brand = "Yokogawa"
 
@@ -511,8 +511,8 @@ class ModelAQ6150(VisaInstrument, TypeWM):
 
 
 class ModelOTF970(VisaInstrument, TypeOTF):
-    def __init__(self, resource_name):
-        super(ModelOTF970, self).__init__(resource_name)
+    def __init__(self, resource_name, read_termination='\r\n'):
+        super(ModelOTF970, self).__init__(resource_name, read_termination=read_termination)
         self.__model = "OTF-970"
         self.__brand = "Santec"
         self._set_ranges()
