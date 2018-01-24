@@ -18,6 +18,13 @@ __doc__ = "Library of instruments.\n"\
     "E-mail: %s\n"\
     % (VERSION, UPDATED, AUTHOR, AUTHOR_EMAIL)
 
+
+# enums
+class ControlMethod(Enum):
+    VISA = 1    # Control through VISA Interface, including VISA through serial&socket
+    SOCKET = 2  # Control directly with socket (without VISA)
+    SERIAL = 3  # Control directly with serial port (without VISA)
+
 # globals
 rm = visa.ResourceManager()  # VISA ResourceManager
 
@@ -59,18 +66,21 @@ class VisaInstrument(object):
     Base class of visa instruments.
     __init__(self, resource_name, read_termination=READ_TERMINATION, open_timeout=OPEN_TIMEOUT)
     """
-    def __init__(self, resource_name, read_termination=READ_TERMINATION, open_timeout=OPEN_TIMEOUT):
-        self.__inst = rm.open_resource(resource_name, read_termination=read_termination, open_timeout=open_timeout)
+    def __init__(self, resource_name, read_termination=READ_TERMINATION, control_method=ControlMethod.VISA,
+                 open_timeout=OPEN_TIMEOUT, *args, **kwargs):
+        if control_method == ControlMethod.VISA:
+            self.__inst = rm.open_resource(resource_name, read_termination=read_termination, open_timeout=open_timeout)
         self.__resource_name = resource_name
         self.__idn = self.query('*IDN?')
         self.__brand = None
         self.__model = None
+        self.__control_method = control_method
         super(VisaInstrument, self).__init__()
 
     def __str__(self):
         return 'InsType: ' + str(self.ins_type) + '\n'\
                 'IDN: ' + self.idn + '\n'\
-                'VISA_Address: ' + self.resource_name
+                'ResourceName: ' + self.resource_name
 
     # support for context
     def __enter__(self):
@@ -134,8 +144,9 @@ class VisaInstrument(object):
         :param cmd: (str) VISA command
         :return: (BaseInstrument) self
         """
-        self.__inst.write(cmd)
-        return self  # for chained calling
+        if self.__control_method == ControlMethod.VISA:
+            self.__inst.write(cmd)
+            return self  # for chained calling
 
     def read(self):
         """
@@ -143,7 +154,8 @@ class VisaInstrument(object):
         Since it's always used after a 'command' method, it's better to use 'query' method instead.
         :return: (str) message sent from instrument
         """
-        return self.__inst.read()
+        if self.__control_method == ControlMethod.VISA:
+            return self.__inst.read()
 
     def query(self, cmd):
         """
@@ -151,13 +163,15 @@ class VisaInstrument(object):
         :param cmd: (str) VISA command
         :return: (str) message sent from instrument
         """
-        return self.__inst.query(cmd)
+        if self.__control_method == ControlMethod.VISA:
+            return self.__inst.query(cmd)
 
     def close(self):
         """
         Close the session of visa resource
         """
-        self.__inst.close()
+        if self.__control_method == ControlMethod.VISA:
+            self.__inst.close()
 
 
 class ModelN7744A(VisaInstrument, TypeOPM):
@@ -213,9 +227,9 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         """
         unit_int = int(self.query(":SENS" + str(self.channel) + ":POW:UNIT?"))
         if unit_int == 0:
-            unit = OpticalUnits.DBM
+            unit = OpticalUnit.DBM
         elif unit_int == 1:
-            unit = OpticalUnits.W
+            unit = OpticalUnit.W
         else:
             unit = None
         return unit
@@ -240,7 +254,7 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         """
         Set optical power unit
         """
-        check_type(unit, OpticalUnits, 'unit')
+        check_type(unit, OpticalUnit, 'unit')
         return self.command(":SENS" + str(self.channel) + ":POW:UNIT " + str(unit.value))
 
     def set_cal(self, value):
@@ -464,20 +478,20 @@ class ModelAQ6150(VisaInstrument, TypeWM):
     def get_power_unit(self):
         """
         Get optical power unit.
-        :return: (OpticalUnits) optical power unit.
+        :return: (OpticalUnit) optical power unit.
         """
         unit_str = self.query(":UNIT?")
         if unit_str.strip() == "DBM":
-            return OpticalUnits.DBM
+            return OpticalUnit.DBM
         if unit_str.strip() == "W":
-            return OpticalUnits.W
+            return OpticalUnit.W
 
     def set_power_unit(self, unit):
         """
         Set optical power unit.
-        :param unit: (OpticalUnits) optical power unit.
+        :param unit: (OpticalUnit) optical power unit.
         """
-        check_type(unit, OpticalUnits, 'unit')
+        check_type(unit, OpticalUnit, 'unit')
         unit_list = ["DBM", "W"]
         unit_str = unit_list[unit.value]
         return self.command(":UNIT "+unit_str)
@@ -658,19 +672,19 @@ class ModelOTF970(VisaInstrument, TypeOTF):
     def get_power_unit(self):
         """
         Get optical power unit of power monitor.
-        :return: (OpticalUnits) optical power unit of power monitor
+        :return: (OpticalUnit) optical power unit of power monitor
         """
         unit_str = self.query(':POW:UNIT?')
-        unit_list = [OpticalUnits.DBM, OpticalUnits.W]
+        unit_list = [OpticalUnit.DBM, OpticalUnit.W]
         unit = unit_list[int(unit_str.strip())]
         return unit
 
     def set_power_unit(self, unit):
         """
         Set optical power unit of power monitor.
-        :param unit: (OpticalUnits) optical power unit of power monitor
+        :param unit: (OpticalUnit) optical power unit of power monitor
         """
-        check_type(unit, OpticalUnits, 'unit')
+        check_type(unit, OpticalUnit, 'unit')
         return self.command(":POW:UNIT "+str(unit.value))
 
     def get_power_value(self):
@@ -729,3 +743,299 @@ class ModelOTF970(VisaInstrument, TypeOTF):
             if self._is_peak_search_complete():
                 print('4')
                 return self
+
+
+class ModelE36xx(VisaInstrument, TypePS):
+    def __init__(self, resource_name, read_termination=READ_TERMINATION, control_method=ControlMethod.VISA):
+        super(ModelE36xx, self).__init__(resource_name, read_termination=read_termination, control_method=control_method)
+        
+    def enable(self, status=True):
+        """
+        Enable power supply output or not.
+        :param status: (bool) enable status of power supply output
+        """
+        check_type(status, bool, 'status')
+        status_list = ['OFF', 'ON']
+        status_str = status_list[int(status)]
+        return self.command(":OUTP "+status_str)
+
+    def is_enabled(self):
+        """
+        Get the power supply output enable status.
+        :return: (bool) if power supply output is enabled.
+        """
+        status_str = self.query(":OUTP?")
+        status = bool(int(status_str))
+        return status
+
+    def set_voltage(self, value):
+        """
+        Set voltage (limit).
+        :param value: (float|int) voltage value in V
+        """
+        check_type(value, (float, int), 'value')
+        check_range(value, 0, self._range["max_volt"])
+        return self.command(":VOLT "+str(value))
+
+    def get_voltage(self):
+        """
+        Get voltage (limit) setting.
+        :return: (float) voltage value in V
+        """
+        volt_str = self.query(':VOLT?')
+        volt = float(volt_str)
+        return volt
+
+    def measure_voltage(self):
+        """
+        Query voltage measured
+        :return: (float) voltage measured in V
+        """
+        volt_str = self.query(":MEAS?")
+        volt = float(volt_str)
+        return volt
+
+    def set_current(self, value):
+        """
+        Set current (limit).
+        :param value: (float|int) current value in A
+        """
+        check_type(value, (int, float), 'value')
+        check_range(value, 0, self._range["max_current"])
+        return self.command(":CURR "+str(value))
+
+    def get_current(self):
+        """
+        Get current (limit) setting.
+        :return: (float) current value in A
+        """
+        curr_str = self.query(":CURR?")
+        curr = float(curr_str)
+        return curr
+
+    def measure_current(self):
+        """
+        Query current measured.
+        :return: (float) current measured in A
+        """
+        curr_str = self.query(":MEAS:CURR?")
+        curr = float(curr_str)
+        return curr
+
+    def set_ocp(self, value):
+        """
+        :param value: (float|int) ocp value in A
+        """
+        check_type(value, (float, int), 'value')
+        check_range(value, 0, 22)
+        return self.command(":CURR:PROT "+str(value))
+
+    def get_ocp(self):
+        """
+        :return: (float) ocp value in A
+        """
+        ocp_str = self.query(":CURR:PROT?")
+        ocp = float(ocp_str)
+        return ocp
+
+    def set_ocp_status(self, status):
+        """
+        :param status: (bool) if ocp is enabled
+        """
+        check_type(status, bool, 'status')
+        return self.command(":CURR:PROT:STAT "+str(int(status)))
+
+    def get_ocp_status(self):
+        """
+        :return: (bool) if ocp is enabled
+        """
+        status_str = self.query(":CURR:PROT:STAT?")
+        status = bool(int(status_str))
+        return status
+
+    def ocp_is_tripped(self):
+        """
+        Check if the over-current protection circuit is tripped and not cleared
+        :return: (bool) if ocp is tripped
+        """
+        trip_str = self.query(":CURR:PROT:TRIP?")
+        trip = bool(int(trip_str))
+        return trip
+
+    def clear_ocp(self):
+        """
+        clear ocp status
+        """
+        return self.command(":CURR:PROT:CLE")
+
+    def set_ovp(self, value):
+        """
+        :param value: (float|int) ovp value in V
+        """
+        check_type(value, (float, int), 'value')
+        check_range(value, 0, 22)
+        return self.command(":VOLT:PROT "+str(value))
+
+    def get_ovp(self):
+        """
+        :return: (float) ovp value in V
+        """
+        ovp_str = self.query(":VOLT:PROT?")
+        ovp = float(ovp_str)
+        return ovp
+
+    def set_ovp_status(self, status):
+        """
+        :param status: (bool) if ovp is enabled
+        """
+        check_type(status, bool, 'status')
+        return self.command(":VOLT:PROT:STAT "+str(int(status)))
+
+    def get_ovp_status(self):
+        """
+        :return: (bool) if ovp is enabled
+        """
+        status_str = self.query(":VOLT:PROT:STAT?")
+        status = bool(int(status_str))
+        return status
+
+    def ovp_is_tripped(self):
+        """
+        Check if the over-voltage protection circuit is tripped and not cleared
+        :return: (bool) if ovp is tripped
+        """
+        trip_str = self.query(":VOLT:PROT:TRIP?")
+        trip = bool(int(trip_str))
+        return trip
+
+    def clear_ovp(self):
+        """
+        clear OVP status
+        """
+        return self.command(":VOLT:PROT:CLE")
+        
+    
+class ModelE3633A(ModelE36xx):
+    def __init__(self, resource_name, range_level, read_termination=READ_TERMINATION,
+                 control_method=ControlMethod.VISA):
+        super(ModelE3633A, self).__init__(resource_name, read_termination=read_termination,
+                                          control_method=control_method)
+        self.__model = "E3633A"
+        self.__brand = "Keysight"
+        self._ranges = {
+            "HIGH": {
+                'max_volt': 20.0,
+                'max_current': 10.0
+            },
+            "LOW": {
+                'max_volt': 8.0,
+                'max_current': 20.0
+            }
+        }
+        self._range_level = range_level
+        self._range = self._ranges[self._range_level]
+        self._set_range(self._range_level)
+
+    # param encapsulation
+    @property
+    def model(self):
+        return self.__model
+
+    @model.setter
+    def model(self, value):
+        raise AttributeError('param model is read-only')
+
+    @property
+    def brand(self):
+        return self.__brand
+
+    @brand.setter
+    def brand(self, value):
+        raise AttributeError('param brand is read-only')
+
+    # Methods
+    def _set_range(self, range_level):
+        return self.command(":VOLT:RANG "+range_level)
+
+    def get_range(self):
+        range_str = self.query(":VOLT:RANG?")
+        if "8" in range_str:
+            return self._ranges["LOW"]
+        if "20" in range_str:
+            return self._ranges["HIGH"]
+
+
+class ModelE3631A(ModelE36xx):
+    def __init__(self, resource_name, select, read_termination=READ_TERMINATION, control_method=ControlMethod.VISA):
+        super(ModelE3631A, self).__init__(resource_name, read_termination=read_termination,
+                                          control_method=control_method)
+        self.__model = "E3631A"
+        self.__brand = "Keysight"
+        self._ranges = {
+            1: {
+                'max_volt': 6.0,
+                'max_current': 5.0
+            },
+            2: {
+                'max_volt': 25.0,
+                'max_current': 1.0
+            },
+            3: {
+                'max_volt': -25.0,
+                'max_current': 1.0
+            }
+        }
+        self._select = select
+        self._range = self._ranges[select]
+        self._set_range(self._select)
+        self._del_attr()
+
+    # param encapsulation
+    @property
+    def brand(self):
+        return self.__brand
+
+    @brand.setter
+    def brand(self, value):
+        raise AttributeError('Param brand is read-only.')
+
+    @property
+    def model(self):
+        return self.__model
+
+    @model.setter
+    def model(self, value):
+        raise AttributeError('Param model is read-only.')
+
+    # Methods
+    def _set_range(self, select):
+        self.command(":INST:NSEL "+str(select))
+
+    def get_range(self):
+        sel_str = self.query(":INST:NSEL?")
+        sel = int(sel_str)
+        return self._ranges[sel]
+
+    @staticmethod
+    def _no_function(*args, **kwargs):
+        raise AttributeError('Model E3631A do not have this function.')
+
+    def _del_attr(self):
+        # Model E3631 has no OCP or OVP function.
+        attr_list = [
+            'set_ocp',
+            'get_ocp',
+            'set_ocp_status',
+            'get_ocp_status',
+            'ocp_is_tripped',
+            'clear_ocp',
+            'set_ovp',
+            'get_ovp',
+            'set_ovp_status',
+            'get_ovp_status',
+            'ovp_is_tripped',
+            'clear_ovp'
+        ]
+        for i in attr_list:
+            self.__dict__[i] = self._no_function
+
