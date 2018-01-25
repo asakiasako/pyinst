@@ -2,19 +2,20 @@ from enum import Enum, unique
 from .unit_conv import *
 from time import sleep
 
+
 # define enums
 # noinspection PyArgumentList
-InstrumentType = Enum('InstrumentType', (
-    'OPM',  # Optical Power Meter
-    'VOA',  # Variable Optical Attenuator
-    'OMA',  # Optical Modulation Analyser
-    'OSA',  # Optical Spectrum Analyser
-    'WM',   # Optical Wavelength Meter
-    'OTF',  # Optical Tunable Filter
-    'TEC',  # Temp Control
-    'SW',   # Optical Switcher
-    'PS',   # Power Supply
-))
+@unique
+class InstrumentType(Enum):
+    OPM = 1     # Optical Power Meter
+    VOA = 2     # Variable Optical Attenuator
+    OMA = 3     # Optical Modulation Analyser
+    OSA = 4     # Optical Spectrum Analyser
+    WM = 5      # Optical Wavelength Meter
+    OTF = 6     # Optical Tunable Filter
+    TEC = 7     # Temp Control
+    SW = 8      # Optical Switcher
+    PS = 9      # Power Supply
 
 
 @unique
@@ -646,3 +647,22 @@ class TypePS(TypeIns):
         clear OVP status
         """
         self._raise_no_rewrite()
+
+
+class TypeOMA(TypeIns):
+    def __init__(self, *args, **kwargs):
+        super(TypeOMA, self).__init__()
+        self._append_ins_type(InstrumentType.OMA)
+
+    def run(self):
+        self._raise_no_rewrite()
+
+    def stop(self):
+        self._raise_no_rewrite()
+
+
+class TypeOSA(TypeIns):
+    def __init__(self, *args, **kwargs):
+        super(TypeOSA, self).__init__()
+        self._append_ins_type(InstrumentType.OSA)
+

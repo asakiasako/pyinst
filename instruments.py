@@ -1,5 +1,6 @@
 import visa
 from .ins_types import *
+from time import sleep
 
 # define const
 VERSION = '0.0.0 origin'
@@ -7,6 +8,7 @@ UPDATED = '2018/1/17'
 AUTHOR = 'Chongjun Lei'
 AUTHOR_EMAIL = 'chongjun.lei@neophotonics.com'
 OPEN_TIMEOUT = 0  # default open timeout for all instruments if not specified during init.
+TIMEOUT = 25000  # default timeout of operation for all instruments if not specified during init.
 READ_TERMINATION = '\n'  # default read termination for all instruments if not specified during init.
 
 # description
@@ -20,10 +22,11 @@ __doc__ = "Library of instruments.\n"\
 
 
 # enums
+@unique
 class ControlMethod(Enum):
-    VISA = 1    # Control through VISA Interface, including VISA through serial&socket
-    SOCKET = 2  # Control directly with socket (without VISA)
-    SERIAL = 3  # Control directly with serial port (without VISA)
+    VISA = 1    # Control with VISA Interface, including VISA control over ethernet or serial.
+    ETHERNET = 2  # Control directly with ethernet
+    SERIAL = 3  # Control directly with serial port, usually RS-232
 
 # globals
 rm = visa.ResourceManager()  # VISA ResourceManager
@@ -66,10 +69,11 @@ class VisaInstrument(object):
     Base class of visa instruments.
     __init__(self, resource_name, read_termination=READ_TERMINATION, open_timeout=OPEN_TIMEOUT)
     """
-    def __init__(self, resource_name, read_termination=READ_TERMINATION, control_method=ControlMethod.VISA,
-                 open_timeout=OPEN_TIMEOUT, *args, **kwargs):
+    def __init__(self, resource_name, read_termination=READ_TERMINATION, timeout=TIMEOUT,
+                 control_method=ControlMethod.VISA, open_timeout=OPEN_TIMEOUT, *args, **kwargs):
         if control_method == ControlMethod.VISA:
-            self.__inst = rm.open_resource(resource_name, read_termination=read_termination, open_timeout=open_timeout)
+            self.__inst = rm.open_resource(resource_name, read_termination=read_termination, open_timeout=open_timeout,
+                                           timeout=timeout)
         self.__resource_name = resource_name
         self.__idn = self.query('*IDN?')
         self.__brand = None
@@ -80,7 +84,7 @@ class VisaInstrument(object):
     def __str__(self):
         return 'InsType: ' + str(self.ins_type) + '\n'\
                 'IDN: ' + self.idn + '\n'\
-                'ResourceName: ' + self.resource_name
+                'Address: ' + self.resource_name + '\n'
 
     # support for context
     def __enter__(self):
@@ -173,13 +177,23 @@ class VisaInstrument(object):
         if self.__control_method == ControlMethod.VISA:
             self.__inst.close()
 
+    def wait(self, duration):
+        """
+        Wait for duration in ms
+        :param duration: (int|float) time to wait in ms
+        """
+        check_type(duration, (float, int), 'duration')
+        check_range(duration, 0, 600000)
+        sleep(duration/1000)
+        return self
+
 
 class ModelN7744A(VisaInstrument, TypeOPM):
-    def __init__(self, resource_name, channel, max_channel=4, read_termination=READ_TERMINATION):
+    def __init__(self, resource_name, channel, max_channel=4, read_termination=READ_TERMINATION, timeout=TIMEOUT):
         check_type(channel, int, 'channel')
         if not 1 <= channel <= max_channel:
             raise ValueError('input channel not exist')
-        super(ModelN7744A, self).__init__(resource_name, read_termination=read_termination)
+        super(ModelN7744A, self).__init__(resource_name, read_termination=read_termination, timeout=timeout)
         self.__brand = "Keysight"
         self.__model = "N7744A"
         self.__channel = channel
@@ -273,8 +287,9 @@ class ModelN7744A(VisaInstrument, TypeOPM):
 
 
 class ModelN7752A(ModelN7744A, TypeVOA):
-    def __init__(self, resource_name, channel, max_channel=6, read_termination=READ_TERMINATION):
-        super(ModelN7752A, self).__init__(resource_name, channel, max_channel, read_termination=read_termination)
+    def __init__(self, resource_name, channel, max_channel=6, read_termination=READ_TERMINATION, timeout=TIMEOUT):
+        super(ModelN7752A, self).__init__(resource_name, channel, max_channel, read_termination=read_termination,
+                                          timeout=timeout)
         self.__model = "N7752A"
 
     # param encapsulation
@@ -393,8 +408,8 @@ class ModelN7752A(ModelN7744A, TypeVOA):
 
 
 class ModelAQ6150(VisaInstrument, TypeWM):
-    def __init__(self, resource_name, read_termination=READ_TERMINATION):
-        super(ModelAQ6150, self).__init__(resource_name, read_termination=read_termination)
+    def __init__(self, resource_name, read_termination=READ_TERMINATION, timeout=TIMEOUT):
+        super(ModelAQ6150, self).__init__(resource_name, read_termination=read_termination, timeout=timeout)
         self.__model = ["AQ6150", "AQ6151"]
         self.__brand = "Yokogawa"
 
@@ -525,8 +540,8 @@ class ModelAQ6150(VisaInstrument, TypeWM):
 
 
 class ModelOTF970(VisaInstrument, TypeOTF):
-    def __init__(self, resource_name, read_termination='\r\n'):
-        super(ModelOTF970, self).__init__(resource_name, read_termination=read_termination)
+    def __init__(self, resource_name, read_termination='\r\n', timeout=TIMEOUT):
+        super(ModelOTF970, self).__init__(resource_name, read_termination=read_termination, timeout=timeout)
         self.__model = "OTF-970"
         self.__brand = "Santec"
         self._set_ranges()
@@ -746,8 +761,8 @@ class ModelOTF970(VisaInstrument, TypeOTF):
 
 
 class ModelE36xx(VisaInstrument, TypePS):
-    def __init__(self, resource_name, read_termination=READ_TERMINATION, control_method=ControlMethod.VISA):
-        super(ModelE36xx, self).__init__(resource_name, read_termination=read_termination, control_method=control_method)
+    def __init__(self, resource_name, read_termination=READ_TERMINATION, timeout=TIMEOUT):
+        super(ModelE36xx, self).__init__(resource_name, read_termination=read_termination, timeout=timeout)
         
     def enable(self, status=True):
         """
@@ -916,10 +931,8 @@ class ModelE36xx(VisaInstrument, TypePS):
         
     
 class ModelE3633A(ModelE36xx):
-    def __init__(self, resource_name, range_level, read_termination=READ_TERMINATION,
-                 control_method=ControlMethod.VISA):
-        super(ModelE3633A, self).__init__(resource_name, read_termination=read_termination,
-                                          control_method=control_method)
+    def __init__(self, resource_name, range_level, read_termination=READ_TERMINATION, timeout=TIMEOUT):
+        super(ModelE3633A, self).__init__(resource_name, read_termination=read_termination, timeout=timeout)
         self.__model = "E3633A"
         self.__brand = "Keysight"
         self._ranges = {
@@ -966,9 +979,8 @@ class ModelE3633A(ModelE36xx):
 
 
 class ModelE3631A(ModelE36xx):
-    def __init__(self, resource_name, select, read_termination=READ_TERMINATION, control_method=ControlMethod.VISA):
-        super(ModelE3631A, self).__init__(resource_name, read_termination=read_termination,
-                                          control_method=control_method)
+    def __init__(self, resource_name, select, read_termination=READ_TERMINATION, timeout=TIMEOUT):
+        super(ModelE3631A, self).__init__(resource_name, read_termination=read_termination, timeout=timeout)
         self.__model = "E3631A"
         self.__brand = "Keysight"
         self._ranges = {
