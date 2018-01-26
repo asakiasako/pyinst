@@ -76,3 +76,9 @@ def check_type(value, v_type, name):
             type_str = "(%s)" % "|".join(type_str_list)
         raise TypeError('Param %s should be %s' % (name, type_str))
 
+
+def check_selection(value, seq):
+    if not isinstance(seq, (list, tuple)):
+        raise TypeError('seq must be list|tuple')
+    if value not in seq:
+        raise ValueError('Out of selection.')
