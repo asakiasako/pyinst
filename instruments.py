@@ -75,10 +75,10 @@ class VisaInstrument(object):
             self.__inst = rm.open_resource(resource_name, read_termination=read_termination, open_timeout=open_timeout,
                                            timeout=timeout)
         self.__resource_name = resource_name
+        self.__control_method = control_method
         self.__idn = self.query('*IDN?')
         self.__brand = None
         self.__model = None
-        self.__control_method = control_method
         super(VisaInstrument, self).__init__()
 
     def __str__(self):
@@ -1099,7 +1099,7 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         Set OSA sweep mode. mode = "AUTO"|"REPEAT"|"SINGLE"|"STOP"
         :param mode: (str) "AUTO"|"REPEAT"|"SINGLE"|"STOP"
         """
-        selection = ["AUTO, REPEAT, SINGLE, STOP"]
+        selection = ["AUTO", "REPEAT", "SINGLE", "STOP"]
         check_type(mode, str, 'mode')
         check_selection(mode, selection)
         if mode != "STOP":
@@ -1189,7 +1189,7 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         """
         Set peak wavelength to center.
         """
-        return self.command(':CALC:MARK:SCEN')
+        return self.command(':CALC:MARK:MAX:SCEN')
 
     def set_span(self, value, unit="NM"):
         """
@@ -1219,7 +1219,7 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         """
         check_type(start, (float, int), 'start')
         check_type(stop, (float, int), 'stop')
-        check_range(start, 0, stop)
+        check_range(stop, 0, start)
         return self.command(':SENS:WAV:STAR %fTHZ;:SENS:WAV:STOP %fTHZ' % (start, stop))
 
 
@@ -1232,7 +1232,7 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         check_type(value, (float, int), 'value')
         check_type(unit, str, 'unit')
         check_selection(unit, ['DBM', 'MW', 'UM', 'NW'])
-        return self.command(":DISP:Y1:RLEV %f%s" % (value, unit))
+        return self.command(":DISPLAY:TRACE:Y1:RLEVEL %f%s" % (value, unit))
 
 
     def set_peak_to_ref(self):
