@@ -8,8 +8,9 @@ UPDATED = '2018/1/17'
 AUTHOR = 'Chongjun Lei'
 AUTHOR_EMAIL = 'chongjun.lei@neophotonics.com'
 OPEN_TIMEOUT = 0  # default open timeout for all instruments if not specified during init.
-TIMEOUT = 25000  # default timeout of operation for all instruments if not specified during init.
+TIMEOUT = 30000  # default timeout of operation for all instruments if not specified during init.
 READ_TERMINATION = '\n'  # default read termination for all instruments if not specified during init.
+WRITE_TERMINATION = '\n'  # default write termination for all instruments if not specified during init.
 
 # description
 __doc__ = "Library of instruments.\n"\
@@ -19,14 +20,6 @@ __doc__ = "Library of instruments.\n"\
     "Author: %s\n"\
     "E-mail: %s\n"\
     % (VERSION, UPDATED, AUTHOR, AUTHOR_EMAIL)
-
-
-# enums
-@unique
-class ControlMethod(Enum):
-    VISA = 1    # Control with VISA Interface, including VISA control over ethernet or serial.
-    ETHERNET = 2  # Control directly with ethernet
-    SERIAL = 3  # Control directly with serial port, usually RS-232
 
 # globals
 rm = visa.ResourceManager()  # VISA ResourceManager
@@ -67,15 +60,27 @@ def resource_info(resource_name):
 class VisaInstrument(object):
     """
     Base class of visa instruments.
-    __init__(self, resource_name, read_termination=READ_TERMINATION, open_timeout=OPEN_TIMEOUT)
+    __init__(self, resource_name, read_termination=READ_TERMINATION, open_timeout=OPEN_TIMEOUT, **kwargs)
+
+    === Serial Connection ===
+    resource_name: port name, such as 'COM1'
+    When using serial connection, these kwargs are available:
+        <int: baud_rate>
+        <int: data_bits> (5<=data_bits<=8)
+        <int: flow_control> (in visa.constants: VI_ASRL_FLOW_NONE = 0, VI_ASRL_FLOW_XON_XOFF = 1,
+                            VI_ASRL_FLOW_RTS_CTS = 2, VI_ASRL_FLOW_DTR_DSR = 4)
+        <Parity: parity> (in visa.constants.Parity: none, odd, even, mark, space)
+        <StopBits: stop_bits> (in visa.constants.StopBits: one, one_and_a_half, two)
+
+    === TCP/IP Socket Connection ===
+    resource_name: TCPIP::host address::port::SOCKET
     """
-    def __init__(self, resource_name, read_termination=READ_TERMINATION, timeout=TIMEOUT,
-                 control_method=ControlMethod.VISA, open_timeout=OPEN_TIMEOUT, *args, **kwargs):
-        if control_method == ControlMethod.VISA:
-            self.__inst = rm.open_resource(resource_name, read_termination=read_termination, open_timeout=open_timeout,
-                                           timeout=timeout)
+    def __init__(self, resource_name, read_termination=READ_TERMINATION, write_termination=WRITE_TERMINATION,
+                 timeout=TIMEOUT, open_timeout=OPEN_TIMEOUT, *args, **kwargs):
+        self.__inst = rm.open_resource(resource_name, read_termination=read_termination,
+                                       write_termination=write_termination, open_timeout=open_timeout,
+                                       timeout=timeout, **kwargs)
         self.__resource_name = resource_name
-        self.__control_method = control_method
         self.__idn = self.query('*IDN?')
         self.__brand = None
         self.__model = None
@@ -148,9 +153,8 @@ class VisaInstrument(object):
         :param cmd: (str) VISA command
         :return: (BaseInstrument) self
         """
-        if self.__control_method == ControlMethod.VISA:
-            self.__inst.write(cmd)
-            return self  # for chained calling
+        self.__inst.write(cmd)
+        return self  # reserved for chained calling
 
     def read(self):
         """
@@ -158,8 +162,7 @@ class VisaInstrument(object):
         Since it's always used after a 'command' method, it's better to use 'query' method instead.
         :return: (str) message sent from instrument
         """
-        if self.__control_method == ControlMethod.VISA:
-            return self.__inst.read()
+        return self.__inst.read()
 
     def query(self, cmd):
         """
@@ -167,15 +170,13 @@ class VisaInstrument(object):
         :param cmd: (str) VISA command
         :return: (str) message sent from instrument
         """
-        if self.__control_method == ControlMethod.VISA:
-            return self.__inst.query(cmd)
+        return self.__inst.query(cmd)
 
     def close(self):
         """
         Close the session of visa resource
         """
-        if self.__control_method == ControlMethod.VISA:
-            self.__inst.close()
+        self.__inst.close()
 
     def wait(self, duration):
         """
@@ -189,11 +190,11 @@ class VisaInstrument(object):
 
 
 class ModelN7744A(VisaInstrument, TypeOPM):
-    def __init__(self, resource_name, channel, max_channel=4, read_termination=READ_TERMINATION, timeout=TIMEOUT):
+    def __init__(self, resource_name, channel, max_channel=4, **kwargs):
         check_type(channel, int, 'channel')
         if not 1 <= channel <= max_channel:
             raise ValueError('input channel not exist')
-        super(ModelN7744A, self).__init__(resource_name, read_termination=read_termination, timeout=timeout)
+        super(ModelN7744A, self).__init__(resource_name, **kwargs)
         self.__brand = "Keysight"
         self.__model = "N7744A"
         self.__channel = channel
@@ -287,9 +288,8 @@ class ModelN7744A(VisaInstrument, TypeOPM):
 
 
 class ModelN7752A(ModelN7744A, TypeVOA):
-    def __init__(self, resource_name, channel, max_channel=6, read_termination=READ_TERMINATION, timeout=TIMEOUT):
-        super(ModelN7752A, self).__init__(resource_name, channel, max_channel, read_termination=read_termination,
-                                          timeout=timeout)
+    def __init__(self, resource_name, channel, max_channel=6, **kwargs):
+        super(ModelN7752A, self).__init__(resource_name, channel, max_channel, **kwargs)
         self.__model = "N7752A"
 
     # param encapsulation
@@ -408,8 +408,8 @@ class ModelN7752A(ModelN7744A, TypeVOA):
 
 
 class ModelAQ6150(VisaInstrument, TypeWM):
-    def __init__(self, resource_name, read_termination=READ_TERMINATION, timeout=TIMEOUT):
-        super(ModelAQ6150, self).__init__(resource_name, read_termination=read_termination, timeout=timeout)
+    def __init__(self, resource_name, **kwargs):
+        super(ModelAQ6150, self).__init__(resource_name, **kwargs)
         self.__model = ["AQ6150", "AQ6151"]
         self.__brand = "Yokogawa"
 
@@ -540,8 +540,9 @@ class ModelAQ6150(VisaInstrument, TypeWM):
 
 
 class ModelOTF970(VisaInstrument, TypeOTF):
-    def __init__(self, resource_name, read_termination='\r\n', timeout=TIMEOUT):
-        super(ModelOTF970, self).__init__(resource_name, read_termination=read_termination, timeout=timeout)
+    def __init__(self, resource_name, read_termination='\r\n', write_termination='\r\n', **kwargs):
+        super(ModelOTF970, self).__init__(resource_name, read_termination=read_termination,
+                                          write_termination=write_termination, **kwargs)
         self.__model = "OTF-970"
         self.__brand = "Santec"
         self._set_ranges()
@@ -761,8 +762,8 @@ class ModelOTF970(VisaInstrument, TypeOTF):
 
 
 class ModelE36xx(VisaInstrument, TypePS):
-    def __init__(self, resource_name, read_termination=READ_TERMINATION, timeout=TIMEOUT):
-        super(ModelE36xx, self).__init__(resource_name, read_termination=read_termination, timeout=timeout)
+    def __init__(self, resource_name, **kwargs):
+        super(ModelE36xx, self).__init__(resource_name, **kwargs)
         
     def enable(self, status=True):
         """
@@ -931,8 +932,8 @@ class ModelE36xx(VisaInstrument, TypePS):
         
     
 class ModelE3633A(ModelE36xx):
-    def __init__(self, resource_name, range_level, read_termination=READ_TERMINATION, timeout=TIMEOUT):
-        super(ModelE3633A, self).__init__(resource_name, read_termination=read_termination, timeout=timeout)
+    def __init__(self, resource_name, range_level, **kwargs):
+        super(ModelE3633A, self).__init__(resource_name, **kwargs)
         self.__model = "E3633A"
         self.__brand = "Keysight"
         self._ranges = {
@@ -979,8 +980,8 @@ class ModelE3633A(ModelE36xx):
 
 
 class ModelE3631A(ModelE36xx):
-    def __init__(self, resource_name, select, read_termination=READ_TERMINATION, timeout=TIMEOUT):
-        super(ModelE3631A, self).__init__(resource_name, read_termination=read_termination, timeout=timeout)
+    def __init__(self, resource_name, select, **kwargs):
+        super(ModelE3631A, self).__init__(resource_name, **kwargs)
         self.__model = "E3631A"
         self.__brand = "Keysight"
         self._ranges = {
@@ -1053,8 +1054,8 @@ class ModelE3631A(ModelE36xx):
 
 
 class ModelAQ6370(VisaInstrument, TypeOSA):
-    def __init__(self, resource_name, read_termination=READ_TERMINATION, timeout=TIMEOUT):
-        super(ModelAQ6370, self).__init__(resource_name, read_termination=read_termination, timeout=timeout)
+    def __init__(self, resource_name, **kwargs):
+        super(ModelAQ6370, self).__init__(resource_name, **kwargs)
         self.__model = "AQ6370"
         self.__brand = "Yokogawa"
         self._analysis_cat = ["WDM", "DFBLD", "FPLD"]
@@ -1222,7 +1223,6 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         check_range(stop, 0, start)
         return self.command(':SENS:WAV:STAR %fTHZ;:SENS:WAV:STOP %fTHZ' % (start, stop))
 
-
     def set_ref_level(self, value, unit):
         """
         Set reference level.
@@ -1233,7 +1233,6 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         check_type(unit, str, 'unit')
         check_selection(unit, ['DBM', 'MW', 'UM', 'NW'])
         return self.command(":DISPLAY:TRACE:Y1:RLEVEL %f%s" % (value, unit))
-
 
     def set_peak_to_ref(self):
         """
@@ -1344,8 +1343,8 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
 
 
 class ModelN4392A(VisaInstrument, TypeOMA):
-    def __init__(self, resource_name, read_termination=READ_TERMINATION, timeout=TIMEOUT):
-        super(ModelN4392A, self).__init__(resource_name, read_termination=read_termination, timeout=timeout)
+    def __init__(self, resource_name, **kwargs):
+        super(ModelN4392A, self).__init__(resource_name, **kwargs)
         self.__model = "N4392A"
         self.__brand = "Keysight"
         self._trace = None
