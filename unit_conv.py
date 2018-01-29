@@ -82,3 +82,30 @@ def check_selection(value, seq):
         raise TypeError('seq must be list|tuple')
     if value not in seq:
         raise ValueError('Out of selection.')
+
+
+def complement_to_int(comp, bytes_num):
+    range_str = '0x%s' % ('FF'*bytes_num)
+    range_val = int(range_str, 16)
+    if comp < (range_val+1)/2:
+        return comp
+    else:
+        return comp - range_val - 1
+
+
+def int_to_complement(value, bytes_num):
+    """
+    :return: (str) a str of Hex caractors with fixed length such as: '0048', 'FF3A'
+    """
+    check_type(value, int, 'value')
+    range_str = '0x%s' % ('FF' * bytes_num)
+    range_val = int(range_str, 16)
+    check_range(value, -(range_val+1)/2, (range_val+1)/2 - 1)
+    if value >= 0:
+        return '%0*X' % (bytes_num*2, value)
+    else:
+        return '%0*X' % (bytes_num*2, value+range_val+1)
+
+
+def calc_check_sum(str0):
+    return sum([ord(i) for i in str0])
