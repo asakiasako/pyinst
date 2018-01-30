@@ -8,7 +8,8 @@ UPDATED = '2018/1/17'
 AUTHOR = 'Chongjun Lei'
 AUTHOR_EMAIL = 'chongjun.lei@neophotonics.com'
 OPEN_TIMEOUT = 0  # default open timeout for all instruments if not specified during init.
-TIMEOUT = 30000  # default timeout of operation for all instruments if not specified during init.
+TIMEOUT = 30000  # default timeout of operation in ms for all instruments if not specified during init.
+QUERY_DELAY = 0.001  # the default time in seconds to wait after each write operation for all if not specified.
 READ_TERMINATION = '\n'  # default read termination for all instruments if not specified during init.
 WRITE_TERMINATION = '\n'  # default write termination for all instruments if not specified during init.
 
@@ -62,6 +63,10 @@ class VisaInstrument(object):
     Base class of visa instruments.
     __init__(self, resource_name, read_termination=READ_TERMINATION, open_timeout=OPEN_TIMEOUT, **kwargs)
 
+    * if the instrument is not a standard visa instrument, you can also use this class, but you should pass a key param
+    'no_idn = True' during init. You may need to change several params such as read_termination and write_termination,
+    to fit the API defined for the instrument.
+
     === Serial Connection ===
     resource_name: port name, such as 'COM1'
     When using serial connection, these kwargs are available:
@@ -76,10 +81,10 @@ class VisaInstrument(object):
     resource_name: TCPIP::host address::port::SOCKET
     """
     def __init__(self, resource_name, read_termination=READ_TERMINATION, write_termination=WRITE_TERMINATION,
-                 timeout=TIMEOUT, open_timeout=OPEN_TIMEOUT, *args, **kwargs):
+                 timeout=TIMEOUT, open_timeout=OPEN_TIMEOUT, delay=QUERY_DELAY, *args, **kwargs):
         self.__inst = rm.open_resource(resource_name, read_termination=read_termination,
                                        write_termination=write_termination, open_timeout=open_timeout,
-                                       timeout=timeout, **kwargs)
+                                       timeout=timeout, delay=delay, **kwargs)
         self.__resource_name = resource_name
         if 'no_idn' in kwargs:
             self.__no_idn = True
@@ -137,6 +142,22 @@ class VisaInstrument(object):
         raise AttributeError('attr "model" is read-only.')
 
     # methods
+    def check_connection(self):
+        """
+        Check if instrument is connected and able to query.
+        :return: <bool> if instrument is connected.
+        """
+        if self.__no_idn:
+            return
+        try:
+            idn = self.idn
+            if idn:
+                return True
+            else:
+                return False
+        except visa.VisaIOError:
+            return False
+
     def check_mismatch(self):
         """
         Check if idn matches model name.
