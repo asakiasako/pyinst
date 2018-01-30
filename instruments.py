@@ -81,13 +81,12 @@ class VisaInstrument(object):
     resource_name: TCPIP::host address::port::SOCKET
     """
     def __init__(self, resource_name, read_termination=READ_TERMINATION, write_termination=WRITE_TERMINATION,
-                 timeout=TIMEOUT, open_timeout=OPEN_TIMEOUT, delay=QUERY_DELAY, *args, **kwargs):
+                 timeout=TIMEOUT, open_timeout=OPEN_TIMEOUT, query_delay=QUERY_DELAY, no_idn=False, *args, **kwargs):
         self.__inst = rm.open_resource(resource_name, read_termination=read_termination,
                                        write_termination=write_termination, open_timeout=open_timeout,
-                                       timeout=timeout, delay=delay, **kwargs)
+                                       timeout=timeout, query_delay=query_delay, **kwargs)
         self.__resource_name = resource_name
-        if 'no_idn' in kwargs:
-            self.__no_idn = True
+        self.__no_idn = no_idn
         if self.__no_idn:
             self.__idn = "No IDN. Not a standard VISA instrument."
         else:
@@ -226,6 +225,8 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         self.__brand = "Keysight"
         self.__model = "N7744A"
         self.__channel = channel
+        self._max_wl = 1640.0
+        self._min_wl = 1260.0
 
     # param encapsulation
     @property
@@ -312,13 +313,22 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         Set optical wavelength in nm
         """
         check_type(value, (int, float), 'value')
+        check_range(value, self._min_wl, self._max_wl)
         return self.command("sens" + str(self.channel) + ":pow:wav " + str(value) + "NM")
+
+    def get_wavelength_range(self):
+        """
+        Get wavelength range in nm.
+        :return: <tuple: (<float: min>, <float: max>)>
+        """
+        return self._min_wl, self._max_wl
 
 
 class ModelN7752A(ModelN7744A, TypeVOA):
     def __init__(self, resource_name, channel, max_channel=6, **kwargs):
         super(ModelN7752A, self).__init__(resource_name, channel, max_channel, **kwargs)
         self.__model = "N7752A"
+        self._max_att = 45.0
 
     # param encapsulation
     @property
@@ -388,7 +398,7 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         if self.channel >= 5:
             return ModelN7744A.get_wavelength(self)
         wl_str = self.query(":INP"+str(self.channel)+":WAV?")
-        wl = float(wl_str)
+        wl = float(wl_str)*10**9
         return wl
 
     def get_cal(self):
@@ -407,7 +417,16 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         :param value: (float|int) att value in dB
         """
         self.__check_is_att()
+        check_type(value, (int, float), 'value')
+        check_range(value, 0, self._max_att)
         return self.command("INP" + str(self.channel) + ":ATT " + str(value) + "dB")
+
+    def get_att_range(self):
+        """
+        Get att setting range in dB.
+        :return: (tuple of float) range in dB
+        """
+        return 0.0, self._max_att
 
     def set_offset(self, value):
         """
@@ -424,6 +443,8 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         """
         if self.channel >= 5:
             return ModelN7744A.set_wavelength(self, value)
+        check_type(value, (float, int), 'value')
+        check_range(value, self._min_wl, self._max_wl)
         return self.command(":INP"+str(self.channel)+":WAV " + str(value) + "NM")
 
     def set_cal(self, value):
@@ -1520,7 +1541,7 @@ class ModelTC3625(VisaInstrument, TypeTEC):
         result_content = result_str[0:-2]
         result_check_sum = result_str[-2:]
         calced_check_sum = ('%02X' % calc_check_sum(result_content))[-2:]
-        if not result_check_sum == calced_check_sum:
+        if result_check_sum.lower() != calced_check_sum.lower():
             raise ValueError("Response checksum not correct.")
         if result_content.lower() == ("X"*8).lower():
             raise ValueError("Command checksum not correct.")
