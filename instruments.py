@@ -63,7 +63,7 @@ class VisaInstrument(object):
     Base class of visa instruments.
     __init__(self, resource_name, read_termination=READ_TERMINATION, open_timeout=OPEN_TIMEOUT, **kwargs)
 
-    * if the instrument is not a standard visa instrument, you can also use this class, but you should pass a key param
+    * if the instrument is not a standard visa instrument, you can still use this class, but you should pass a key param
     'no_idn = True' during init. You may need to change several params such as read_termination and write_termination,
     to fit the API defined for the instrument.
 
@@ -82,6 +82,7 @@ class VisaInstrument(object):
     """
     brand = ""
     model = ""
+    detail = {}
 
     def __init__(self, resource_name, read_termination=READ_TERMINATION, write_termination=WRITE_TERMINATION,
                  timeout=TIMEOUT, open_timeout=OPEN_TIMEOUT, query_delay=QUERY_DELAY, no_idn=False, *args, **kwargs):
@@ -204,6 +205,9 @@ class VisaInstrument(object):
 class ModelN7744A(VisaInstrument, TypeOPM):
     brand = "Keysight"
     model = "N7744A"
+    detail = {
+        "Wavelength Range": "1260~1640 nm"
+    }
 
     def __init__(self, resource_name, channel, max_channel=4, **kwargs):
         check_type(channel, int, 'channel')
@@ -296,6 +300,10 @@ class ModelN7744A(VisaInstrument, TypeOPM):
 
 class ModelN7752A(ModelN7744A, TypeVOA):
     model = "N7752A"
+    detail = {
+        "Wavelength Range": "1260~1640 nm",
+        "Att Range": "0~45 dB"
+    }
 
     def __init__(self, resource_name, channel, max_channel=6, **kwargs):
         super(ModelN7752A, self).__init__(resource_name, channel, max_channel, **kwargs)
@@ -541,6 +549,11 @@ class ModelAQ6150(VisaInstrument, TypeWM):
 class ModelOTF970(VisaInstrument, TypeOTF):
     model = "OTF-970"
     brand = "Santec"
+    detail = {
+        "Wavelength Range": "xxx",
+        "Frequency Range": "xxx",
+        "Bandwidth Range": "xxx"
+    }
 
     def __init__(self, resource_name, read_termination='\r\n', write_termination='\r\n', **kwargs):
         super(ModelOTF970, self).__init__(resource_name, read_termination=read_termination,
@@ -919,6 +932,9 @@ class ModelE36xx(VisaInstrument, TypePS):
 class ModelE3633A(ModelE36xx):
     model = "E3633A"
     brand = "Keysight"
+    detail = {
+        "Range": "20V,10A | 8V,20A"
+    }
 
     def __init__(self, resource_name, range_level, **kwargs):
         super(ModelE3633A, self).__init__(resource_name, **kwargs)
@@ -953,6 +969,9 @@ class ModelE3633A(ModelE36xx):
 class ModelE3631A(ModelE36xx):
     model = "E3631A"
     brand = "Keysight"
+    detail = {
+        "Range": "CH1: 6V,5A | CH2: 25V,1A | CH3: -25V,1A"
+    }
 
     def __init__(self, resource_name, select, **kwargs):
         super(ModelE3631A, self).__init__(resource_name, **kwargs)
