@@ -67,6 +67,12 @@ class VisaInstrument(object):
     'no_idn = True' during init. You may need to change several params such as read_termination and write_termination,
     to fit the API defined for the instrument.
 
+    === General ===
+    Always remember to make sure that read_termination & write_termination matches your instrument setting.
+
+    === Connect as NI-VISA ===
+    resource_name: visa address
+
     === Serial Connection ===
     resource_name: port name, such as 'COM1'
     When using serial connection, these kwargs are available:
