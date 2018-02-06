@@ -105,3 +105,5 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+model_lib.json
