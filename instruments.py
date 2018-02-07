@@ -1,6 +1,9 @@
 import visa
 from .ins_types import *
 from time import sleep
+import subprocess
+import os.path
+import zerorpc
 
 # define const
 VERSION = '0.0.0 origin'
@@ -24,7 +27,8 @@ __doc__ = "Library of instruments.\n"\
 
 # globals
 rm = visa.ResourceManager()  # VISA ResourceManager
-
+ops_rpc = None
+rpc_client = None
 
 def close():
     """
@@ -80,6 +84,9 @@ class VisaInstrument(object):
     === TCP/IP Socket Connection ===
     resource_name: TCPIP::host address::port::SOCKET
     """
+    brand = ""
+    model = ""
+
     def __init__(self, resource_name, read_termination=READ_TERMINATION, write_termination=WRITE_TERMINATION,
                  timeout=TIMEOUT, open_timeout=OPEN_TIMEOUT, query_delay=QUERY_DELAY, no_idn=False, *args, **kwargs):
         self.__inst = rm.open_resource(resource_name, read_termination=read_termination,
@@ -91,8 +98,6 @@ class VisaInstrument(object):
             self.__idn = "No IDN. Not a standard VISA instrument."
         else:
             self.__idn = self.query('*IDN?')
-        self.__brand = None
-        self.__model = None
         super(VisaInstrument, self).__init__()
 
     def __str__(self):
@@ -123,22 +128,6 @@ class VisaInstrument(object):
     @idn.setter
     def idn(self, value):
         raise AttributeError('attr "IDN" is read-only.')
-
-    @property
-    def brand(self):
-        return self.__brand
-
-    @brand.setter
-    def brand(self, value):
-        raise AttributeError('attr "brand" is read-only.')
-
-    @property
-    def model(self):
-        return self.__model
-
-    @model.setter
-    def model(self, value):
-        raise AttributeError('attr "model" is read-only.')
 
     # methods
     def check_connection(self):
@@ -217,34 +206,19 @@ class VisaInstrument(object):
 
 
 class ModelN7744A(VisaInstrument, TypeOPM):
+    brand = "Keysight"
+    model = "N7744A"
+
     def __init__(self, resource_name, channel, max_channel=4, **kwargs):
         check_type(channel, int, 'channel')
         if not 1 <= channel <= max_channel:
             raise ValueError('input channel not exist')
         super(ModelN7744A, self).__init__(resource_name, **kwargs)
-        self.__brand = "Keysight"
-        self.__model = "N7744A"
         self.__channel = channel
         self._max_wl = 1640.0
         self._min_wl = 1260.0
 
     # param encapsulation
-    @property
-    def brand(self):
-        return self.__brand
-
-    @brand.setter
-    def brand(self, value):
-        raise AttributeError('attr "brand" is read-only.')
-
-    @property
-    def model(self):
-        return self.__model
-
-    @model.setter
-    def model(self, value):
-        raise AttributeError('attr "model" is read-only.')
-
     @property
     def channel(self):
         return self.__channel
@@ -325,19 +299,13 @@ class ModelN7744A(VisaInstrument, TypeOPM):
 
 
 class ModelN7752A(ModelN7744A, TypeVOA):
+    model = "N7752A"
+
     def __init__(self, resource_name, channel, max_channel=6, **kwargs):
         super(ModelN7752A, self).__init__(resource_name, channel, max_channel, **kwargs)
-        self.__model = "N7752A"
         self._max_att = 45.0
 
     # param encapsulation
-    @property
-    def model(self):
-        return self.__model
-
-    @model.setter
-    def model(self, value):
-        raise AttributeError('attr "model" is read-only.')
 
     # Methods
     def __is_att(self):
@@ -457,27 +425,13 @@ class ModelN7752A(ModelN7744A, TypeVOA):
 
 
 class ModelAQ6150(VisaInstrument, TypeWM):
+    model = ["AQ6150", "AQ6151"]
+    brand = "Yokogawa"
+
     def __init__(self, resource_name, **kwargs):
         super(ModelAQ6150, self).__init__(resource_name, **kwargs)
-        self.__model = ["AQ6150", "AQ6151"]
-        self.__brand = "Yokogawa"
 
     # param encapsulation
-    @property
-    def model(self):
-        return self.__model
-
-    @model.setter
-    def model(self, value):
-        raise AttributeError('attr "model" is read-only.')
-
-    @property
-    def brand(self):
-        return self.__brand
-
-    @brand.setter
-    def brand(self, value):
-        raise AttributeError('attr "brand" is read-only.')
 
     # Methods
     def format_array_data(self, msg):
@@ -589,29 +543,15 @@ class ModelAQ6150(VisaInstrument, TypeWM):
 
 
 class ModelOTF970(VisaInstrument, TypeOTF):
+    model = "OTF-970"
+    brand = "Santec"
+
     def __init__(self, resource_name, read_termination='\r\n', write_termination='\r\n', **kwargs):
         super(ModelOTF970, self).__init__(resource_name, read_termination=read_termination,
                                           write_termination=write_termination, **kwargs)
-        self.__model = "OTF-970"
-        self.__brand = "Santec"
         self._set_ranges()
 
     # param encapsulation
-    @property
-    def model(self):
-        return self.__model
-
-    @model.setter
-    def model(self, value):
-        raise AttributeError('attr "model" is read-only.')
-
-    @property
-    def brand(self):
-        return self.__brand
-
-    @brand.setter
-    def brand(self, value):
-        raise AttributeError('attr "brand" is read-only.')
 
     # Methods
     def _set_ranges(self):
@@ -981,10 +921,11 @@ class ModelE36xx(VisaInstrument, TypePS):
         
     
 class ModelE3633A(ModelE36xx):
+    model = "E3633A"
+    brand = "Keysight"
+
     def __init__(self, resource_name, range_level, **kwargs):
         super(ModelE3633A, self).__init__(resource_name, **kwargs)
-        self.__model = "E3633A"
-        self.__brand = "Keysight"
         self._ranges = {
             "HIGH": {
                 'max_volt': 20.0,
@@ -1000,21 +941,6 @@ class ModelE3633A(ModelE36xx):
         self._set_range(self._range_level)
 
     # param encapsulation
-    @property
-    def model(self):
-        return self.__model
-
-    @model.setter
-    def model(self, value):
-        raise AttributeError('param model is read-only')
-
-    @property
-    def brand(self):
-        return self.__brand
-
-    @brand.setter
-    def brand(self, value):
-        raise AttributeError('param brand is read-only')
 
     # Methods
     def _set_range(self, range_level):
@@ -1029,10 +955,11 @@ class ModelE3633A(ModelE36xx):
 
 
 class ModelE3631A(ModelE36xx):
+    model = "E3631A"
+    brand = "Keysight"
+
     def __init__(self, resource_name, select, **kwargs):
         super(ModelE3631A, self).__init__(resource_name, **kwargs)
-        self.__model = "E3631A"
-        self.__brand = "Keysight"
         self._ranges = {
             1: {
                 'max_volt': 6.0,
@@ -1053,21 +980,6 @@ class ModelE3631A(ModelE36xx):
         self._del_attr()
 
     # param encapsulation
-    @property
-    def brand(self):
-        return self.__brand
-
-    @brand.setter
-    def brand(self, value):
-        raise AttributeError('Param brand is read-only.')
-
-    @property
-    def model(self):
-        return self.__model
-
-    @model.setter
-    def model(self, value):
-        raise AttributeError('Param model is read-only.')
 
     # Methods
     def _set_range(self, select):
@@ -1103,10 +1015,11 @@ class ModelE3631A(ModelE36xx):
 
 
 class ModelAQ6370(VisaInstrument, TypeOSA):
+    model = "AQ6370"
+    brand = "Yokogawa"
+
     def __init__(self, resource_name, **kwargs):
         super(ModelAQ6370, self).__init__(resource_name, **kwargs)
-        self.__model = "AQ6370"
-        self.__brand = "Yokogawa"
         self._analysis_cat = ["WDM", "DFBLD", "FPLD"]
         self._analysis_setting_map = {
             "WDM": ["TH", "MDIFF", "WDMASK", "NALGO", "NAREA", "MAREA", "FALGO", "NBW"],
@@ -1127,21 +1040,6 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         self._setup_map = ["BWIDTH:RES"]
 
     # param encapsulation
-    @property
-    def model(self):
-        return self.__model
-
-    @model.setter
-    def model(self, value):
-        raise AttributeError("param model is read-only.")
-
-    @property
-    def brand(self):
-        return self.__brand
-
-    @brand.setter
-    def brand(self, value):
-        raise AttributeError("param brand is read-only.")
 
     # Method
     def sweep(self, mode="REPEAT"):
@@ -1392,30 +1290,16 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
 
 
 class ModelN4392A(VisaInstrument, TypeOMA):
+    model = "N4392A"
+    brand = "Keysight"
+
     def __init__(self, resource_name, **kwargs):
         super(ModelN4392A, self).__init__(resource_name, **kwargs)
-        self.__model = "N4392A"
-        self.__brand = "Keysight"
         self._trace = None
         self._items = []
         self._units = []
 
     # param encapsulation
-    @property
-    def model(self):
-        return self.__model
-
-    @model.setter
-    def model(self, value):
-        raise AttributeError('param model is read-only')
-
-    @property
-    def brand(self):
-        return self.__brand
-
-    @brand.setter
-    def brand(self, value):
-        raise AttributeError('param brand is read-only')
 
     # Methods
     def run(self):
@@ -1498,31 +1382,17 @@ class ModelN4392A(VisaInstrument, TypeOMA):
 
 
 class ModelTC3625(VisaInstrument, TypeTEC):
+    model = "TC-36-25"
+    brand = "TE Technology"
+
     def __init__(self, resource_name, write_termination='\r', read_termination='^', baud_rate=9600, data_bits=8,
                  flow_control=0, parity=visa.constants.Parity.none, stop_bits=visa.constants.StopBits.one, **kwargs):
         super(ModelTC3625, self).__init__(
             resource_name, write_termination=write_termination, read_termination=read_termination, baud_rate=baud_rate,
             data_bits=data_bits, flow_control=flow_control, parity=parity, stop_bits=stop_bits, no_idn=True, **kwargs
         )
-        self.__model = "TC-36-25"
-        self.__brand = "TE Technology"
 
     # param enconsulation
-    @property
-    def model(self):
-        return self.__model
-
-    @model.setter
-    def model(self, value):
-        raise AttributeError('attr model is read-only')
-
-    @property
-    def brand(self):
-        return self.__brand
-
-    @brand.setter
-    def brand(self, value):
-        raise AttributeError('attr brand is read-only')
 
     def formed_query(self, cmd, value=0):
         """
@@ -1600,3 +1470,54 @@ class ModelTC3625(VisaInstrument, TypeTEC):
             return TempUnit.C
         else:
             return TempUnit.F
+
+
+class ModelNSW(VisaInstrument, TypeSW):
+    model = "Neo_SW"
+    brand = "NeoPhotonics"
+
+    def __init__(self, resource_name, index):
+        super(ModelNSW, self).__init__(resource_name, no_idn=True)
+        self.connect_to_rpc()
+        self.__index = index
+        rpc_client.connect_device(resource_name)
+
+    @staticmethod
+    def get_usb_devices(num=9):
+        return rpc_client.get_usb_devices(num)
+
+    @staticmethod
+    def connect_to_rpc():
+        global ops_rpc, rpc_client
+        if not ops_rpc:
+            ops_rpc = subprocess.run(os.path.join(__file__, 'dependency/ops_rpc.exe'))
+        if not rpc_client:
+            rpc_client = zerorpc.Client()
+            rpc_client.connect('tcp://127.0.0.1:4242')
+
+    def command(self, cmd):
+        return
+
+    def query(self, cmd):
+        return
+
+    def close(self):
+        global ops_rpc, rpc_client
+        ops_rpc.kill()
+        ops_rpc = None
+        rpc_client = None
+
+    def set_channel(self, channel):
+        """
+        Set channel.
+        :param channel: (int) channel number (1 based)
+        """
+        rpc_client.select_channel(self.resource_name, self.__index, channel)
+        return self
+
+    def get_channel(self):
+        """
+        Get selected channel.
+        :return: (int) selected channel (1 based)
+        """
+        return rpc_client.get_selected_channel(self.resource_name, self.__index)
