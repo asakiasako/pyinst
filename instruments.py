@@ -1,6 +1,8 @@
 import visa
 from .ins_types import *
 from time import sleep
+import subprocess
+import os.path
 
 # define const
 VERSION = '0.0.0 origin'
@@ -1491,3 +1493,52 @@ class ModelTC3625(VisaInstrument, TypeTEC):
             return TempUnit.C
         else:
             return TempUnit.F
+
+
+class ModelNSW(TypeSW):
+    model = "Neo_SW"
+    brand = "NeoPhotonics"
+    detail = {}
+    _depend = os.path.join(os.path.dirname(__file__), 'dependency/neo_opswitch.exe')
+
+    def __init__(self, resource_name, index):
+        super(ModelNSW, self).__init__()
+        self.__resource_name = resource_name
+        self.__index = index
+
+    # param encapsulation
+    @property
+    def resource_name(self):
+        return self.__resource_name
+
+    @resource_name.setter
+    def resource_name(self, value):
+        raise AttributeError('param resource_name is read-only')
+
+    @classmethod
+    def get_usb_devices(cls, num=9):
+        str_list = subprocess.check_output('%s %s %s' % (cls._depend, 'get_usb_devices', num))
+        list0 = eval(str_list)
+        return list0
+
+    def set_channel(self, channel):
+        """
+        Set channel.
+        :param channel: (int) channel number (1 based)
+        """
+        back_str = subprocess.check_output('%s %s %s %s %s' % (self._depend,
+                                                           'select_channel', self.resource_name, self.__index, channel))
+        if "True" in back_str:
+            return self
+        else:
+            raise ChildProcessError('Switch select faild.')
+
+    def get_channel(self):
+        """
+        Get selected channel.
+        :return: (int) selected channel (1 based)
+        """
+        channel_str = subprocess.check_output('%s %s %s %s' % (self._depend,
+                                              'get_selected_channel', self.resource_name, self.__index))
+        channel = int(channel_str)
+        return channel
