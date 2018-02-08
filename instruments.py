@@ -3,7 +3,6 @@ from .ins_types import *
 from time import sleep
 import subprocess
 import os.path
-import zerorpc
 
 # define const
 VERSION = '0.0.0 origin'
@@ -67,9 +66,15 @@ class VisaInstrument(object):
     Base class of visa instruments.
     __init__(self, resource_name, read_termination=READ_TERMINATION, open_timeout=OPEN_TIMEOUT, **kwargs)
 
-    * if the instrument is not a standard visa instrument, you can also use this class, but you should pass a key param
+    * if the instrument is not a standard visa instrument, you can still use this class, but you should pass a key param
     'no_idn = True' during init. You may need to change several params such as read_termination and write_termination,
     to fit the API defined for the instrument.
+
+    === General ===
+    Always remember to make sure that read_termination & write_termination matches your instrument setting.
+
+    === Connect as NI-VISA ===
+    resource_name: visa address
 
     === Serial Connection ===
     resource_name: port name, such as 'COM1'
@@ -86,6 +91,8 @@ class VisaInstrument(object):
     """
     brand = ""
     model = ""
+    detail = {}
+    params = []
 
     def __init__(self, resource_name, read_termination=READ_TERMINATION, write_termination=WRITE_TERMINATION,
                  timeout=TIMEOUT, open_timeout=OPEN_TIMEOUT, query_delay=QUERY_DELAY, no_idn=False, *args, **kwargs):
@@ -208,6 +215,16 @@ class VisaInstrument(object):
 class ModelN7744A(VisaInstrument, TypeOPM):
     brand = "Keysight"
     model = "N7744A"
+    detail = {
+        "Wavelength Range": "1260~1640 nm"
+    }
+    params = [
+        {
+            "name": "channel",
+            "type": "int",
+            "range": [1, 2, 3, 4]
+        }
+    ]
 
     def __init__(self, resource_name, channel, max_channel=4, **kwargs):
         check_type(channel, int, 'channel')
@@ -300,6 +317,17 @@ class ModelN7744A(VisaInstrument, TypeOPM):
 
 class ModelN7752A(ModelN7744A, TypeVOA):
     model = "N7752A"
+    detail = {
+        "Wavelength Range": "1260~1640 nm",
+        "Att Range": "0~45 dB"
+    }
+    params = [
+        {
+            "name": "channel",
+            "type": "int",
+            "range": [1, 3, 5, 6]
+        }
+    ]
 
     def __init__(self, resource_name, channel, max_channel=6, **kwargs):
         super(ModelN7752A, self).__init__(resource_name, channel, max_channel, **kwargs)
@@ -545,6 +573,11 @@ class ModelAQ6150(VisaInstrument, TypeWM):
 class ModelOTF970(VisaInstrument, TypeOTF):
     model = "OTF-970"
     brand = "Santec"
+    detail = {
+        "Wavelength Range": "xxx",
+        "Frequency Range": "xxx",
+        "Bandwidth Range": "xxx"
+    }
 
     def __init__(self, resource_name, read_termination='\r\n', write_termination='\r\n', **kwargs):
         super(ModelOTF970, self).__init__(resource_name, read_termination=read_termination,
@@ -923,6 +956,16 @@ class ModelE36xx(VisaInstrument, TypePS):
 class ModelE3633A(ModelE36xx):
     model = "E3633A"
     brand = "Keysight"
+    detail = {
+        "Range": "20V,10A | 8V,20A"
+    }
+    params = [
+        {
+            "name": "range_level",
+            "type": "str",
+            "range": ["HIGH", "LOW"]
+        }
+    ]
 
     def __init__(self, resource_name, range_level, **kwargs):
         super(ModelE3633A, self).__init__(resource_name, **kwargs)
@@ -957,6 +1000,16 @@ class ModelE3633A(ModelE36xx):
 class ModelE3631A(ModelE36xx):
     model = "E3631A"
     brand = "Keysight"
+    detail = {
+        "Range": "CH1: 6V,5A | CH2: 25V,1A | CH3: -25V,1A"
+    }
+    params = [
+        {
+            "name": "select",
+            "type": "int",
+            "range": [1, 2, 3]
+        }
+    ]
 
     def __init__(self, resource_name, select, **kwargs):
         super(ModelE3631A, self).__init__(resource_name, **kwargs)
@@ -1472,52 +1525,57 @@ class ModelTC3625(VisaInstrument, TypeTEC):
             return TempUnit.F
 
 
-class ModelNSW(VisaInstrument, TypeSW):
+class ModelNSW(TypeSW):
     model = "Neo_SW"
     brand = "NeoPhotonics"
+    detail = {}
+    params = [
+        {
+            "name": "channel",
+            "type": "int",
+            "range": [1, 2, 3]
+        }
+    ]
+    _depend = os.path.join(os.path.dirname(__file__), 'dependency/neo_opswitch.exe')
 
-    def __init__(self, resource_name, index):
-        super(ModelNSW, self).__init__(resource_name, no_idn=True)
-        self.connect_to_rpc()
-        self.__index = index
-        rpc_client.connect_device(resource_name)
+    def __init__(self, resource_name, channel):
+        super(ModelNSW, self).__init__()
+        self.__resource_name = resource_name
+        self.__index = channel - 1
 
-    @staticmethod
-    def get_usb_devices(num=9):
-        return rpc_client.get_usb_devices(num)
+    # param encapsulation
+    @property
+    def resource_name(self):
+        return self.__resource_name
 
-    @staticmethod
-    def connect_to_rpc():
-        global ops_rpc, rpc_client
-        if not ops_rpc:
-            ops_rpc = subprocess.run(os.path.join(__file__, 'dependency/ops_rpc.exe'))
-        if not rpc_client:
-            rpc_client = zerorpc.Client()
-            rpc_client.connect('tcp://127.0.0.1:4242')
+    @resource_name.setter
+    def resource_name(self, value):
+        raise AttributeError('param resource_name is read-only')
 
-    def command(self, cmd):
-        return
-
-    def query(self, cmd):
-        return
-
-    def close(self):
-        global ops_rpc, rpc_client
-        ops_rpc.kill()
-        ops_rpc = None
-        rpc_client = None
+    @classmethod
+    def get_usb_devices(cls, num=9):
+        str_list = subprocess.check_output('%s %s %s' % (cls._depend, 'get_usb_devices', num))
+        list0 = eval(str_list)
+        return list0
 
     def set_channel(self, channel):
         """
         Set channel.
         :param channel: (int) channel number (1 based)
         """
-        rpc_client.select_channel(self.resource_name, self.__index, channel)
-        return self
+        back_str = subprocess.check_output('%s %s %s %s %s' % (self._depend,
+                                                           'select_channel', self.resource_name, self.__index, channel))
+        if "True" in str(back_str):
+            return self
+        else:
+            raise ChildProcessError('Switch select failed.')
 
     def get_channel(self):
         """
         Get selected channel.
         :return: (int) selected channel (1 based)
         """
-        return rpc_client.get_selected_channel(self.resource_name, self.__index)
+        channel_str = subprocess.check_output('%s %s %s %s' % (self._depend,
+                                              'get_selected_channel', self.resource_name, self.__index))
+        channel = int(channel_str)
+        return channel

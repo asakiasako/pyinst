@@ -884,3 +884,4 @@ class TypeSW(TypeIns):
         :return: (int) selected channel (1 based)
         """
         self._raise_no_rewrite()
+
