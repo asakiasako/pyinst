@@ -91,6 +91,7 @@ class VisaInstrument(object):
     brand = ""
     model = ""
     detail = {}
+    params = []
 
     def __init__(self, resource_name, read_termination=READ_TERMINATION, write_termination=WRITE_TERMINATION,
                  timeout=TIMEOUT, open_timeout=OPEN_TIMEOUT, query_delay=QUERY_DELAY, no_idn=False, *args, **kwargs):
@@ -216,6 +217,13 @@ class ModelN7744A(VisaInstrument, TypeOPM):
     detail = {
         "Wavelength Range": "1260~1640 nm"
     }
+    params = [
+        {
+            "name": "channel",
+            "type": "int",
+            "range": [1, 2, 3, 4]
+        }
+    ]
 
     def __init__(self, resource_name, channel, max_channel=4, **kwargs):
         check_type(channel, int, 'channel')
@@ -312,6 +320,13 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         "Wavelength Range": "1260~1640 nm",
         "Att Range": "0~45 dB"
     }
+    params = [
+        {
+            "name": "channel",
+            "type": "int",
+            "range": [1, 3, 5, 6]
+        }
+    ]
 
     def __init__(self, resource_name, channel, max_channel=6, **kwargs):
         super(ModelN7752A, self).__init__(resource_name, channel, max_channel, **kwargs)
@@ -943,6 +958,13 @@ class ModelE3633A(ModelE36xx):
     detail = {
         "Range": "20V,10A | 8V,20A"
     }
+    params = [
+        {
+            "name": "range_level",
+            "type": "str",
+            "range": ["HIGH", "LOW"]
+        }
+    ]
 
     def __init__(self, resource_name, range_level, **kwargs):
         super(ModelE3633A, self).__init__(resource_name, **kwargs)
@@ -980,6 +1002,13 @@ class ModelE3631A(ModelE36xx):
     detail = {
         "Range": "CH1: 6V,5A | CH2: 25V,1A | CH3: -25V,1A"
     }
+    params = [
+        {
+            "name": "select",
+            "type": "int",
+            "range": [1, 2, 3]
+        }
+    ]
 
     def __init__(self, resource_name, select, **kwargs):
         super(ModelE3631A, self).__init__(resource_name, **kwargs)
@@ -1499,12 +1528,19 @@ class ModelNSW(TypeSW):
     model = "Neo_SW"
     brand = "NeoPhotonics"
     detail = {}
+    params = [
+        {
+            "name": "channel",
+            "type": "int",
+            "range": [1, 2, 3]
+        }
+    ]
     _depend = os.path.join(os.path.dirname(__file__), 'dependency/neo_opswitch.exe')
 
-    def __init__(self, resource_name, index):
+    def __init__(self, resource_name, channel):
         super(ModelNSW, self).__init__()
         self.__resource_name = resource_name
-        self.__index = index
+        self.__index = channel - 1
 
     # param encapsulation
     @property
@@ -1528,10 +1564,10 @@ class ModelNSW(TypeSW):
         """
         back_str = subprocess.check_output('%s %s %s %s %s' % (self._depend,
                                                            'select_channel', self.resource_name, self.__index, channel))
-        if "True" in back_str:
+        if "True" in str(back_str):
             return self
         else:
-            raise ChildProcessError('Switch select faild.')
+            raise ChildProcessError('Switch select failed.')
 
     def get_channel(self):
         """
