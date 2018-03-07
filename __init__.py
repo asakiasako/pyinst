@@ -16,22 +16,25 @@ def get_model_lib():
         mod_lib[i.name] = []
     for i in names:
         if 'Model' in i:
-            type_obj = instruments.__dict__[i]
-            if not getattr(type_obj, 'model', None):
+            model_obj = names[i]
+            if not getattr(model_obj, 'model', None):
                 pass
             else:
-                mod_str = type_obj.model
-                if not isinstance(mod_str, str):
-                    mod_str = '/'.join(type_obj.model)
-                brand = type_obj.brand
-                detail = type_obj.detail
-                type_str_list = [m.__name__[4:] for m in type_obj.mro() if
+                model_str = model_obj.model
+                if not isinstance(model_str, str):
+                    model_str = '/'.join(model_obj.model)
+                brand = model_obj.brand
+                class_name = i
+                params = model_obj.params
+                detail = model_obj.detail
+                type_str_list = [m.__name__[4:] for m in model_obj.mro() if
                                  ('Type' in m.__name__ and m.__name__ != 'TypeIns')]
                 for type_str in type_str_list:
-                    mod_lib[type_str].append({'model': mod_str, 'brand': brand, 'detail': detail})
+                    mod_lib[type_str].append({'model': model_str, 'brand': brand, 'class_name': class_name,
+                                              'params': params, 'detail': detail})
     return mod_lib
 
 # Automatically refresh model_lib.json, to show available model information.
-file0 = open(os.path.join(DIR, 'model_lib.json'), 'w')
+file0 = open(os.path.join(DIR, 'ins_lib.json'), 'w')
 file0.write(json.dumps(get_model_lib(), indent=2))
 file0.close()
