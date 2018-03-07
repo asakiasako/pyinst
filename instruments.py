@@ -1471,6 +1471,13 @@ class ModelTC3625(VisaInstrument, TypeTEC):
         result_value = complement_to_int(int(result_content, 16), 4)
         return result_value
 
+    def check_connection(self):
+        unit = self.get_unit()
+        if isinstance(unit, TempUnit):
+            return True
+        else:
+            return False
+
     def set_target_temp(self, value):
         """
         Set the target tempreture.
@@ -1558,6 +1565,21 @@ class ModelNSW(TypeSW):
         list0 = eval(str_list)
         return list0
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
+    def close(self):
+        pass
+
+    def check_connection(self):
+        channel = self.get_channel()
+        if channel > 0:
+            return True
+        return False
+
     def set_channel(self, channel):
         """
         Set channel.
@@ -1579,3 +1601,4 @@ class ModelNSW(TypeSW):
                                               'get_selected_channel', self.resource_name, self.__index))
         channel = int(channel_str)
         return channel
+
