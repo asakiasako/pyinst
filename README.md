@@ -70,6 +70,8 @@ VisaInstruments 为所有符合 VISA 接口的仪器的基类。而具体的仪�
 
 pyinst 会自动搜寻所有以 Model 开头的类，并找出那些属于具体仪器型号的类（即拥有不为空的 model 类属性）来生成这个文件。文件在模块的根目录下生成，文件名为 ins_lib.json。
 
+你也可以通过 get_model_lib() 方法获得与之对应的一个 dict 对象。
+
 Instrument Lib 的结构：
 
 ``` JSON
