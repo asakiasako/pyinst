@@ -1535,7 +1535,6 @@ class ModelTC3625(VisaInstrument, TypeTEC):
 class ModelNSW(TypeSW):
     model = "Neo_SW"
     brand = "NeoPhotonics"
-    detail = {}
     params = [
         {
             "name": "channel",
