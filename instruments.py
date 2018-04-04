@@ -1563,6 +1563,9 @@ class ModelNSW(TypeSW):
             "range": [1, 2, 3]
         }
     ]
+    detail = {
+        "Note": "Valid channel depending on specific instrument."
+    }
     _depend = os.path.join(os.path.dirname(__file__), 'dependency/neo_opswitch.exe')
 
     def __init__(self, resource_name, channel):
