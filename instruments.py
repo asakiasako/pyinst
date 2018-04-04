@@ -216,7 +216,9 @@ class ModelN7744A(VisaInstrument, TypeOPM):
     brand = "Keysight"
     model = "N7744A"
     detail = {
-        "Wavelength Range": "1260~1640 nm"
+        "Wavelength Range": "1250~1625 nm",
+        "Power Range": "-80 ~ +10 dBm",
+        "Safe Power": "+16 dBm"
     }
     params = [
         {
@@ -319,7 +321,10 @@ class ModelN7752A(ModelN7744A, TypeVOA):
     model = "N7752A"
     detail = {
         "Wavelength Range": "1260~1640 nm",
-        "Att Range": "0~45 dB"
+        "Att Range": "0~40 dB",
+        "Att Safe Power": "+23dBm",
+        "PM Power Range": "-80 ~ +10 dBm",
+        "PM Safe Power": "+16 dBm"
     }
     params = [
         {
@@ -455,6 +460,12 @@ class ModelN7752A(ModelN7744A, TypeVOA):
 class ModelAQ6150(VisaInstrument, TypeWM):
     model = ["AQ6150", "AQ6151"]
     brand = "Yokogawa"
+    detail = {
+        "Wavelength Range": "1270 ~ 1650 nm",
+        "Power Accuracy": "+/-0.5 dB",
+        "Input Power Range": "-40 ~ 10 dBm",
+        "Safe Power": "+18 dBm"
+    }
 
     def __init__(self, resource_name, **kwargs):
         super(ModelAQ6150, self).__init__(resource_name, **kwargs)
@@ -574,9 +585,10 @@ class ModelOTF970(VisaInstrument, TypeOTF):
     model = "OTF-970"
     brand = "Santec"
     detail = {
-        "Wavelength Range": "xxx",
-        "Frequency Range": "xxx",
-        "Bandwidth Range": "xxx"
+        "Wavelength Range": "1530 ~ 1610 nm",
+        "Frequency Range": "186.2 ~ 195.8 THz",
+        "Bandwidth @-3dB": "0.08 ~ 4.0 nm",
+        "Max Input Power": "+27 dBm"
     }
 
     def __init__(self, resource_name, read_termination='\r\n', write_termination='\r\n', **kwargs):
@@ -1070,6 +1082,10 @@ class ModelE3631A(ModelE36xx):
 class ModelAQ6370(VisaInstrument, TypeOSA):
     model = "AQ6370"
     brand = "Yokogawa"
+    detail = {
+        "Wavelength Range": "600 ~ 1700 nm",
+        "Max. Resolution": "0.02 nm"
+    }
 
     def __init__(self, resource_name, **kwargs):
         super(ModelAQ6370, self).__init__(resource_name, **kwargs)
@@ -1345,6 +1361,11 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
 class ModelN4392A(VisaInstrument, TypeOMA):
     model = "N4392A"
     brand = "Keysight"
+    detail = {
+        "Optical receiver frequency range": "31 GHz",
+        "Wavelength range (Option 100)": "1527.6 ~ 1565.5 nm (196.25 ~ 191.50 THz)",
+        "Wavelength range (Option 110)": "1570.01 ~ 1608.76 nm (190.95 ~ 186.35 THz)"
+    }
 
     def __init__(self, resource_name, **kwargs):
         super(ModelN4392A, self).__init__(resource_name, **kwargs)
