@@ -56,25 +56,27 @@ VisaInstruments 为所有符合 VISA 接口的仪器的基类。而具体的仪�
 某些仪器虽然不符合 SCPI 接口（不支持通用的 SCPI 接口命令），但仍可使用 VisaInstrument 进行定义。只是初始化父类 VisaInstrument 时，需要指定 no_idn=True, 来表明它并非标准的。例如 ModelTC3625。
 
 某些仪器具有独特的连接方式，例如 ModelNSW。这时你需要自己定义一个类。为了保证通用性，你必须实现以下属性或方法：
+
 * resource_name
 * \_\_enter\_\_()
 * \_\_exit\_\_()
 * close()
 * check_connection()
+* 类属性： brand = str，model = str, detail = dict, params = list of dicts
 
 如果没有必要，你的方法甚至可以不做任何事情，但它们最好存在。
 
 ### Instrument Lib
 
-为了方便了解 pyinst 中可以使用的资源及其基本信息，在每次被 import 时，pyinst 会实时的生成/更新一个json文件，记录每种仪器类型所拥有的型号，及其基本信息。
+为了方便了解 pyinst 中可以使用的资源及其基本信息，在每次被 import 时，pyinst 会实时的生成/更新一个对象，记录每种仪器类型所拥有的型号，及其基本信息。
 
-pyinst 会自动搜寻所有以 Model 开头的类，并找出那些属于具体仪器型号的类（即拥有不为空的 model 类属性）来生成这个文件。文件在模块的根目录下生成，文件名为 ins_lib.json。
+pyinst 会自动搜寻所有以 Model 开头的类，并找出那些属于具体仪器型号的类（即拥有不为空的 model 类属性）来生成这个对象。
 
-你也可以通过 get_model_lib() 方法获得与之对应的一个 dict 对象。
+你可以通过 get_model_lib() 方法获得。
 
 Instrument Lib 的结构：
 
-``` JSON
+``` json
 {
   "OPM": [
     {
