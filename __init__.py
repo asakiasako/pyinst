@@ -1,6 +1,5 @@
 from .instruments import *
 import os.path
-import json
 
 names = instruments.__dict__
 DIR = os.path.dirname(__file__)
@@ -34,7 +33,3 @@ def get_model_lib():
                                               'params': params, 'detail': detail})
     return mod_lib
 
-# Automatically refresh model_lib.json, to show available model information.
-file0 = open(os.path.join(DIR, 'ins_lib.json'), 'w')
-file0.write(json.dumps(get_model_lib(), indent=2))
-file0.close()
