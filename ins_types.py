@@ -35,8 +35,8 @@ class WavelengthUnit(Enum):
     NM = 0
     HZ = 1
 
-# --- Instrument Types ---
 
+# --- Instrument Types ---
 class TypeIns(object):
     # Base Class of Instrument Types
     def __init__(self):
