@@ -655,18 +655,6 @@ class TypePS(TypeIns):
         self._raise_no_rewrite()
 
 
-class TypeOMA(TypeIns):
-    def __init__(self, *args, **kwargs):
-        super(TypeOMA, self).__init__()
-        self._append_ins_type(InstrumentType.OMA)
-
-    def run(self):
-        self._raise_no_rewrite()
-
-    def stop(self):
-        self._raise_no_rewrite()
-
-
 class TypeOSA(TypeIns):
     def __init__(self, *args, **kwargs):
         super(TypeOSA, self).__init__()
@@ -791,6 +779,12 @@ class TypeOMA(TypeIns):
     def __init__(self, *args, **kwargs):
         super(TypeOMA, self).__init__()
         self._append_ins_type(InstrumentType.OMA)
+
+    def run(self):
+        self._raise_no_rewrite()
+
+    def pause(self):
+        self._raise_no_rewrite()
 
     def get_trace_items(self, trace):
         """
