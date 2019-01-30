@@ -51,15 +51,19 @@ class ModelBTF10011(TypeOTF):
         self.__write('b?')
         line_count = 0
         while True:
-            if line_count>=2:
+            if line_count>=3:
                 return False
             line_count += 1
             dataline = self.__readline().decode()
             if 'done' in dataline.lower():
                 return True
+    
+    def __clear_input_buffer(self):
+        self.serial.reset_input_buffer()
 
     def __write(self, cmd):
-        self.serial.write(b'%s%s' % (cmd,self.write_termination))
+        self.__clear_input_buffer()
+        self.serial.write(('%s%s' % (cmd, self.write_termination)).encode())
 
     def __readline(self):
         return self.serial.readline()
@@ -84,13 +88,15 @@ class ModelBTF10011(TypeOTF):
         if 'unknown' in data.lower():
             raise ValueError('Unknown wavelength.')
         else:
-            return float(re.search('.*WL\((.*)\).*', data).group(1))
+            return float(re.search('.*WL\((.*?)\).*', data).group(1))
 
     def set_wavelength(self, value):
         """
         Sets the filter center wavelength.
         :param value: (float|int) wavelength in nm
         """
+        check_type(value, (int, float), 'value')
+        check_range(value, self._min_wl, self._max_wl)
         self.__write('w%.2f' % value)
         line_count = 0
         while True:
@@ -98,7 +104,7 @@ class ModelBTF10011(TypeOTF):
                 raise TimeoutError('No expected end message after 5 lines.')
             line_count += 1
             dataline = self.__readline().decode()
-            if 'done(a)' in dataline.lower():
+            if 'done' in dataline.lower():
                 break
             if 'error' in dataline.lower():
                 raise ValueError('Get error when operating OTF.')
@@ -117,6 +123,8 @@ class ModelBTF10011(TypeOTF):
         Sets the filter center wavelength in frequency(THz).
         :param value: (float|int) optical frequency in THz
         """
+        check_type(value, (int, float), 'value')
+        check_range(value, self._min_freq, self._max_freq)
         wl = round(self.__light_speed/value, 3)
         return self.set_wavelength(wl)
 
@@ -140,13 +148,15 @@ class ModelBTF10011(TypeOTF):
         if 'unknown' in data.lower():
             raise ValueError('Unknown wavelength.')
         else:
-            return float(re.search('.*LW\((.*)\).*', data).group(1))
+            return float(re.search('.*LW\((.*?)nm\).*', data).group(1))
 
     def set_bandwidth(self, value):
         """
         Sets the filter bandwidth.
         :param value: (float|int) bandwidth setting value in nm
         """
+        check_type(value, (int, float), 'value')
+        check_range(value, self._min_bw, self._max_bw)
         wl = self.get_wavelength()
         self.__write('w%.2f,%.2f' % (wl, value))
         line_count = 0

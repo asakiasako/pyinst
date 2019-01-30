@@ -1,6 +1,7 @@
 from .EmptyInstrument import *
 from .AQ6150 import *
 from .AQ6370 import *
+from .BTF10011 import *
 from .E3631A import *
 from .E3633A import *
 from .MPC202 import *
