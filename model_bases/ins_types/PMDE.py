@@ -11,7 +11,7 @@ class TypePMDE(TypeIns):
         Set wavelength setting (nm)
         :param wavelength: (float, int) wavelength in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
     
     def set_pmd_value(self, pmd, sopmd):
         """
@@ -19,4 +19,4 @@ class TypePMDE(TypeIns):
         :param pmd: (float, int) DGD value in ps
         :param sopmd: (float, int) 2nd order pmd in ps**2
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()

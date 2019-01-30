@@ -27,5 +27,5 @@ class TypeIns(object):
         if i_type not in self._ins_type:
             self._ins_type.append(i_type)
 
-    def _raise_no_rewrite(self):
-        raise AttributeError('This function should be rewritten by extension class.')
+    def _raise_no_override(self):
+        raise NotImplementedError('This method should be overridden by instrument model class.')

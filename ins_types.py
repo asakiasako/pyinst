@@ -61,7 +61,7 @@ class TypeIns(object):
         if i_type not in self._ins_type:
             self._ins_type.append(i_type)
 
-    def _raise_no_rewrite(self):
+    def _raise_no_override(self):
         raise AttributeError('This function should be rewritten by extension class.')
 
 
@@ -74,14 +74,14 @@ class TypeOPM(TypeIns):
         """
         :return: (float) value of optical power, ignore power unit
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_unit(self):
         """
         OpticalUnit.DBM.value = 0, OpticalUnit.W.value = 1
         :return: (enum 'OpticalUnit') unit of optical power
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_power(self):
         """
@@ -120,13 +120,13 @@ class TypeOPM(TypeIns):
         """
         :return: (float) calibration offset in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_wavelength(self):
         """
         :return: (float) optical wavelength in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_formatted_w_power(self):
         """
@@ -142,19 +142,19 @@ class TypeOPM(TypeIns):
         """
         Set optical power unit
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_cal(self, value):
         """
         Set calibration offset in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_wavelength(self, value):
         """
         Set optical wavelength in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_to_reference(self):
         """
@@ -175,7 +175,7 @@ class TypeVOA(TypeIns):
         Set VOA output enabled/disabled.
         :param status: (bool=True)
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def disable(self):
         """
@@ -188,48 +188,48 @@ class TypeVOA(TypeIns):
         Get enable status of VOA.
         :return: (bool) if VOA output is enabled.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_att(self):
         """
         Get att value in dB.
         :return: (float) att value in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_offset(self):
         """
         Get offset value in dB.
         :return: (float) offset value in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_wavelength(self):
         """
         :return: (float) optical wavelength in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_att(self, value):
         """
         Set att value in dB.
         :param value: (float|int) att value in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_offset(self, value):
         """
         Set offset value in dB.
         :param value: (float|int) offset value in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_wavelength(self, value):
         """
         Set wavelength value in nm.
         :param value: (float|int) wavelength value in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
 
 class TypeWM(TypeIns):
@@ -241,76 +241,76 @@ class TypeWM(TypeIns):
         """
         Start repeat measurement.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def stop(self):
         """
         Stop repeat measurement.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def is_started(self):
         """
         Get measurement state of WM.
         :return: (bool) if repeat measurement is started.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_frequency_array(self):
         """
         Get wavelength of all peaks in unit of frequency(Hz).
         :return: (dict) {'num': (int), 'values': (tuple of floats)}
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_wavelength_array(self):
         """
         Get wavelength of all peaks in unit of wavelength(m).
         :return: (dict) {'num': (int), 'values': (tuple of floats)}
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_power_array(self):
         """
         Get optical power of all peaks in selected unit.
         :return: (dict) {'num': (int), 'values': (tuple of floats)}
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_power_unit(self):
         """
         Get optical power unit.
         :return: (OpticalUnit) optical power unit.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_power_unit(self, unit):
         """
         Set optical power unit.
         :param unit: (OpticalUnit) optical power unit.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_frequency(self):
         """
         Get frequency of single peak in Hz
         :return: (float) frequency in Hz
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_wavelength(self):
         """
         Get wavelength of single peak in m
         :return: (float) wavelength in m
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_power(self):
         """
         Get wavelength of single peak in selected unit
         :return: (float) optical power in selected unit.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
 
 class TypeOTF(TypeIns):
@@ -369,133 +369,133 @@ class TypeOTF(TypeIns):
         Reads out the setting value of the filter center wavelength.
         :return: (float) wavelength in nm.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_wavelength(self, value):
         """
         Sets the filter center wavelength.
         :param value: (float|int) wavelength in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_wavelength_state(self):
         """
         Reads out the operation state of the filter center wavelength.
         :return: (bool) if setting of the filter center wavelength is in operation.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_frequency(self):
         """
         Reads out the filter center wavelength in optical frequency.
         :return: (float) optical frequency in THz
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_frequency(self, value):
         """
         Sets the filter center wavelength in frequency(THz).
         :param value: (float|int) optical frequency in THz
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_wavelength_offset(self):
         """
         Reads out the offset wavelength of the filter center wavelength.
         :return: (float) wavelength offset in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_wavelength_offset(self, value):
         """
         Sets the offset to the filter center wavelength.
         :param value: (float|int) wavelength
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_bandwidth(self):
         """
         Reads out the filter bandwidth.
         :return: (float) bandwidth setting value in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_bandwidth(self, value):
         """
         Sets the filter bandwidth.
         :param value: (float|int) bandwidth setting value in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_bandwidth_state(self):
         """
         Reads out the setting state of the filter bandwidth.
         :return: (bool) if setting of the filter bandwidth is in operation
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_bandwidth_offset(self):
         """
         Reads out the offset bandwidth of filter bandwidth.
         :return: (float) bandwidth offset in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_bandwidth_offset(self, value):
         """
         Sets the offset to the filter bandwidth.
         :param value: (float|int) bandwidth offset in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_power_unit(self):
         """
         Get optical power unit of power monitor.
         :return: (OpticalUnit) optical power unit of power monitor
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_power_unit(self, unit):
         """
         Set optical power unit of power monitor.
         :param unit: (OpticalUnit) optical power unit of power monitor
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_power_value(self):
         """
         Get optical power value in selected unit. Range: -40dBm ~ 10dBm
         :return: (float) optical power in selected unit.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def _set_peak_search_center(self, center):
         """
         Set peak search center in nm.
         :param center: (float|int) peak search center in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def _set_peak_search_span(self, span):
         """
         Set peak search span in nm.
         :param span: (float|int) peak search span in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def _run_peak_search(self, if_run):
         """
         Run or cancel peak search.
         :param if_run: (bool) if run or cancel
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def _is_peak_search_complete(self):
         """
         If peak search is completed.
         :return: (bool) if peak search is completed.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def peak_search(self, center, span):
         self._set_peak_search_center(center)
@@ -523,7 +523,7 @@ class TypePS(TypeIns):
         Enable power supply output or not.
         :param status: (bool) enable status of power supply output
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def disable(self):
         """
@@ -536,123 +536,123 @@ class TypePS(TypeIns):
         Get the power supply output enable status.
         :return: (bool) if power supply output is enabled.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_voltage(self, value):
         """
         Set voltage (limit).
         :param value: (float|int) voltage value in V
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_voltage(self):
         """
         Get voltage (limit) setting.
         :return: (float) voltage value in V
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def measure_voltage(self):
         """
         Query voltage measured
         :return: (float) voltage measured in V
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_current(self, value):
         """
         Set current (limit).
         :param value: (float|int) current value in A
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_current(self):
         """
         Get current (limit) setting.
         :return: (float) current value in A
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def measure_current(self):
         """
         Query current measured.
         :return: (float) current measured in A
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_ocp(self, value):
         """
         :param value: (float|int) ocp value in A
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_ocp(self):
         """
         :return: (float) ocp value in A
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_ocp_status(self, status):
         """
         :param status: (bool) if ocp is enabled
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_ocp_status(self):
         """
         :return: (bool) if ocp is enabled
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def ocp_is_tripped(self):
         """
         Check if the over-current protection circuit is tripped and not cleared
         :return: (bool) if ocp is tripped
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def clear_ocp(self):
         """
         clear ocp status
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_ovp(self, value):
         """
         :param value: (float|int) ovp value in V
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_ovp(self):
         """
         :return: (float) ovp value in V
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_ovp_status(self, status):
         """
         :param status: (bool) if ovp is enabled
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_ovp_status(self):
         """
         :return: (bool) if ovp is enabled
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def ovp_is_tripped(self):
         """
         Check if the over-voltage protection circuit is tripped and not cleared
         :return: (bool) if ovp is tripped
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def clear_ovp(self):
         """
         clear OVP status
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
 
 class TypeOSA(TypeIns):
@@ -666,21 +666,21 @@ class TypeOSA(TypeIns):
         Set OSA sweep mode. mode = "AUTO"|"REPEAT"|"SINGLE"|"STOP"
         :param mode: (str) "AUTO"|"REPEAT"|"SINGLE"|"STOP"
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_analysis_cat(self, item):
         """
         Set OSA analysis item. Available item depends on specific instrument.
         :param item: (str) analysis item
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_analysis_cat(self):
         """
         Get the current analysis item.
         :return: (str) analysis item
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def analysis_setting(self, cat, param, value):
         """
@@ -689,21 +689,21 @@ class TypeOSA(TypeIns):
         :param param: (str) setting item
         :param value: (str) setting value
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_analysis_setting_map(self):
         """
         Get setting map for all analysis categories.
         :return: (dict) analysis setting map
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_analysis_data(self):
         """
         Get data of current analysis item.
         :return: (str) data of current analysis item
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_center(self, value, unit):
         """
@@ -711,13 +711,13 @@ class TypeOSA(TypeIns):
         :param value: (float) center value
         :param unit: (str) unit
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_peak_to_center(self):
         """
         Set peak wavelength to center.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_span(self, value, unit):
         """
@@ -725,7 +725,7 @@ class TypeOSA(TypeIns):
         :param value: (float) span value
         :param unit: (str) unit
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_start_stop_wavelength(self, start, stop):
         """
@@ -733,7 +733,7 @@ class TypeOSA(TypeIns):
         :param start: (float) start wavelength in nm
         :param stop: (float) stop wavelength in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_start_stop_frequency(self, start, stop):
         """
@@ -741,7 +741,7 @@ class TypeOSA(TypeIns):
         :param start: (float) start frequency in THz
         :param stop: (float) stop frequency in THz
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_ref_level(self, value, unit):
         """
@@ -749,13 +749,13 @@ class TypeOSA(TypeIns):
         :param value: (float) reference level value
         :param unit: (str) unit
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_peak_to_ref(self):
         """
         Set peak level to reference level
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def setup(self, param, value):
         """
@@ -763,7 +763,7 @@ class TypeOSA(TypeIns):
         :param param: (str) param
         :param value: (str) setting value
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def format_data(self, cat, data):
         """
@@ -772,7 +772,7 @@ class TypeOSA(TypeIns):
         :param data: (str) data retruned by method: get_analysis_data
         :return: (dict) a dict of test_item=>value
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
 
 class TypeOMA(TypeIns):
@@ -781,10 +781,10 @@ class TypeOMA(TypeIns):
         self._append_ins_type(InstrumentType.OMA)
 
     def run(self):
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def pause(self):
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_trace_items(self, trace):
         """
@@ -792,7 +792,7 @@ class TypeOMA(TypeIns):
         :param trace: (int) index of trace, 1 based from A. For example: A->1, E->5
         :return: (list of str) trace item names.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_trace_values(self, trace):
         """
@@ -800,7 +800,7 @@ class TypeOMA(TypeIns):
         :param trace: (int) index of trace, 1 based from A. For example: A->1, E->5
         :return: (list of float) trace item values.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_trace_units(self, trace):
         """
@@ -808,7 +808,7 @@ class TypeOMA(TypeIns):
         :param trace: (int) index of trace, 1 based from A. For example: A->1, E->5
         :return: (list of str) units of item values.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_formatted_data(self, trace):
         """
@@ -816,7 +816,7 @@ class TypeOMA(TypeIns):
         :param trace: (int) index of trace, 1 based from A. For example: A->1, E->5
         :return: (dict) { str:item1: (float:value, str:unit), ...}
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
 
 class TypeTEC(TypeIns):
@@ -829,35 +829,35 @@ class TypeTEC(TypeIns):
         Set the target tempreture.
         :param value: <float|int> target temperature value
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_target_temp(self):
         """
         Get the target tempreture
         :return: <float> target temperature value
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_current_temp(self):
         """
         Get the current measured temperature
         :return: <float> current measured temperature
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_unit(self, unit):
         """
         Set temperature unit
         :param unit: <TempUnit> unit
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_unit(self):
         """
         Get temperature unit
         :return: <TempUnit> unit
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
 
 class TypeSW(TypeIns):
@@ -870,12 +870,12 @@ class TypeSW(TypeIns):
         Set channel.
         :param channel: (int) channel number (1 based)
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_channel(self):
         """
         Get selected channel.
         :return: (int) selected channel (1 based)
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 

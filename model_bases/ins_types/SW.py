@@ -11,11 +11,11 @@ class TypeSW(TypeIns):
         Set channel.
         :param channel: (int) channel number (1 based)
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_channel(self):
         """
         Get selected channel.
         :return: (int) selected channel (1 based)
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()

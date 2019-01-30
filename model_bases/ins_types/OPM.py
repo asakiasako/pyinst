@@ -10,14 +10,14 @@ class TypeOPM(TypeIns):
         """
         :return: (float) value of optical power, ignore power unit
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_unit(self):
         """
         OpticalUnit.DBM.value = 0, OpticalUnit.W.value = 1
         :return: (enum 'OpticalUnit') unit of optical power
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_power(self):
         """
@@ -56,13 +56,13 @@ class TypeOPM(TypeIns):
         """
         :return: (float) calibration offset in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_wavelength(self):
         """
         :return: (float) optical wavelength in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_formatted_w_power(self):
         """
@@ -78,19 +78,19 @@ class TypeOPM(TypeIns):
         """
         Set optical power unit
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_cal(self, value):
         """
         Set calibration offset in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_wavelength(self, value):
         """
         Set optical wavelength in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_to_reference(self):
         """
@@ -104,4 +104,4 @@ class TypeOPM(TypeIns):
         """
         set avg time in ms
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()

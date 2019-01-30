@@ -11,25 +11,25 @@ class TypePDLE(TypeIns):
         Get current wavelength setting (nm)
         :return: (float) wavelength
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_wavelength(self, wavelength):
         """
         Set wavelength setting (nm)
         :param wavelength: (float, int) wavelength in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
     
     def get_pdl_value(self):
         """
         Get current pdl value
         :return: (float) pdl value in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_pdl_value(self, value):
         """
         Set pdl value
         :param value: (float, int) pdl value in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()

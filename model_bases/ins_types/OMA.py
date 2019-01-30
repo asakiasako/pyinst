@@ -7,10 +7,10 @@ class TypeOMA(TypeIns):
         self._append_ins_type(InstrumentType.OMA)
 
     def run(self):
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def pause(self):
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_trace_items(self, trace):
         """
@@ -18,7 +18,7 @@ class TypeOMA(TypeIns):
         :param trace: (int) index of trace, 1 based from A. For example: A->1, E->5
         :return: (list of str) trace item names.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_trace_values(self, trace):
         """
@@ -26,7 +26,7 @@ class TypeOMA(TypeIns):
         :param trace: (int) index of trace, 1 based from A. For example: A->1, E->5
         :return: (list of float) trace item values.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_trace_units(self, trace):
         """
@@ -34,7 +34,7 @@ class TypeOMA(TypeIns):
         :param trace: (int) index of trace, 1 based from A. For example: A->1, E->5
         :return: (list of str) units of item values.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_formatted_data(self, trace):
         """
@@ -42,4 +42,4 @@ class TypeOMA(TypeIns):
         :param trace: (int) index of trace, 1 based from A. For example: A->1, E->5
         :return: (dict) { str:item1: (float:value, str:unit), ...}
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()

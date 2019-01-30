@@ -11,14 +11,14 @@ class TypeVOA(TypeIns):
         Get the max att setting value
         :return: (float) max att setting value
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def enable(self, status=True):
         """
         Set VOA output enabled/disabled.
         :param status: (bool=True)
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def disable(self):
         """
@@ -31,57 +31,57 @@ class TypeVOA(TypeIns):
         Get enable status of VOA.
         :return: (bool) if VOA output is enabled.
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_att(self):
         """
         Get att value in dB.
         :return: (float) att value in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_offset(self):
         """
         Get offset value in dB.
         :return: (float) offset value in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_wavelength(self):
         """
         :return: (float) optical wavelength in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_cal(self):
         """
         :return: (float) power monitor calibration offset in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_att(self, value):
         """
         Set att value in dB.
         :param value: (float|int) att value in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_offset(self, value):
         """
         Set offset value in dB.
         :param value: (float|int) offset value in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_wavelength(self, value):
         """
         Set wavelength value in nm.
         :param value: (float|int) wavelength value in nm
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
     
     def set_cal(self, value):
         """
         Set calibration offset in dB
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()

@@ -11,32 +11,32 @@ class TypeTEC(TypeIns):
         Set the target tempreture.
         :param value: <float|int> target temperature value
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_target_temp(self):
         """
         Get the target tempreture
         :return: <float> target temperature value
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_current_temp(self):
         """
         Get the current measured temperature
         :return: <float> current measured temperature
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def set_unit(self, unit):
         """
         Set temperature unit
         :param unit: <TempUnit> unit
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
 
     def get_unit(self):
         """
         Get temperature unit
         :return: <TempUnit> unit
         """
-        self._raise_no_rewrite()
+        self._raise_no_override()
