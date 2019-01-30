@@ -1,3 +1,4 @@
+from . import instruments
 from .instruments import *
 import os.path
 
