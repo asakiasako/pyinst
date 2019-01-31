@@ -1,16 +1,26 @@
-from ..model_bases.ins_base import *
-from ..model_bases.ins_types import *
+from ..model_bases.AQ2200 import *
 
 
-class ModelAQ2200_215(VisaInstrument, TypeWM):
-    model = ["AQ6150", "AQ6151"]
+class ModelAQ2200_215(ModelAQ2200, TypeOPM):
+    model = "AQ2200-215"
     brand = "Yokogawa"
     detail = {
-        "Wavelength Range": "1270 ~ 1650 nm",
-        "Power Accuracy": "+/-0.5 dB",
-        "Input Power Range": "-40 ~ 10 dBm",
-        "Safe Power": "+18 dBm"
+        "Wavelength Range": "970 to 1660 nm",
+        "Input Power Range": "-70 to +30 dBm",
+        "Average Time": "100us"
     }
+    params = [
+        {
+            "name": "slot",
+            "type": "int"
+        }
+    ]
 
-    def __init__(self, resource_name, **kwargs):
-        super(ModelAQ2200_215, self).__init__(resource_name, **kwargs)
+    def __init__(self, resource_name, slot, **kwargs):
+        func_type = ApplicationType.Sensor
+        super(ModelAQ2200_215, self).__init__(self, resource_name, func_type, slot, **kwargs)
+        # ranges
+        self._min_wl = 970
+        self._max_wl = 1660
+        self._min_avg_time = 0.1
+        self._max_avg_time = 1000*100

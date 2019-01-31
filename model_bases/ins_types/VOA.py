@@ -53,12 +53,6 @@ class TypeVOA(TypeIns):
         """
         self._raise_no_override()
 
-    def get_cal(self):
-        """
-        :return: (float) power monitor calibration offset in dB
-        """
-        self._raise_no_override()
-
     def set_att(self, value):
         """
         Set att value in dB.
@@ -77,11 +71,5 @@ class TypeVOA(TypeIns):
         """
         Set wavelength value in nm.
         :param value: (float|int) wavelength value in nm
-        """
-        self._raise_no_override()
-    
-    def set_cal(self, value):
-        """
-        Set calibration offset in dB
         """
         self._raise_no_override()

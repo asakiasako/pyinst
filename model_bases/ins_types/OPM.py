@@ -74,13 +74,19 @@ class TypeOPM(TypeIns):
         unit += 'w'
         return value, unit
 
+    def get_avg_time(self, value):
+        """
+        get avg time in ms
+        """
+        self._raise_no_override()
+
     def set_unit(self, unit):
         """
         Set optical power unit
         """
         self._raise_no_override()
 
-    def set_cal(self, value):
+    def set_cal(self, value): 
         """
         Set calibration offset in dB
         """
