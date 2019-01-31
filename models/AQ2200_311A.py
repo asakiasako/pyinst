@@ -17,7 +17,7 @@ class ModelAQ2200_311A(ModelAQ2200, TypeVOA):
 
     def __init__(self, resource_name, slot, **kwargs):
         func_type = ApplicationType.ATTN
-        super(ModelAQ2200_311A, self).__init__(self, resource_name, func_type, slot, **kwargs)
+        super(ModelAQ2200_311A, self).__init__(resource_name, func_type, slot, **kwargs)
         # ranges
         self._min_wl = 1200
         self._max_wl = 1700

@@ -5,6 +5,7 @@ class TypeOPM(TypeIns):
     def __init__(self, *args, **kwargs):
         super(TypeOPM, self).__init__()
         self._append_ins_type(InstrumentType.OPM)
+        self._is_pos_cal = True
 
     def get_value(self):
         """
@@ -104,7 +105,8 @@ class TypeOPM(TypeIns):
         """
         dbm_value = self.get_dbm_value()
         cal = self.get_cal()
-        self.set_cal(dbm_value + cal)
+        sign = 1 if self._is_pos_cal else -1
+        self.set_cal(-sign*dbm_value + cal)
 
     def set_avg_time(self, value):
         """

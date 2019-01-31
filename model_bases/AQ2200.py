@@ -19,17 +19,17 @@ def checkAppType(*app_types):
         
 
 class ModelAQ2200(VisaInstrument):
-    def __init__(self, resource_name, app_type, slot, channel=None, *args, **kwargs):
+    def __init__(self, resource_name, app_type, slot, channel=1, *args, **kwargs):
         # check param types
         check_type(app_type, ApplicationType, 'app_type')
         check_type(slot, int, 'slot')
         check_type(channel, int, 'channel')
         # super
-        super(ModelAQ2200, self).__init__(resource_name, *args, **kwargs)
+        super(ModelAQ2200, self).__init__(resource_name, read_termination='', *args, **kwargs)
         # attributes
         self._app_type = app_type
         self._slot = slot
-        self._channel = channel if channel else 1
+        self._channel = channel
         # ranges
         self._min_wl = None
         self._max_wl = None
@@ -251,6 +251,7 @@ class ModelAQ2200(VisaInstrument):
         """
         if not self._max_att:
             raise AttributeError('_max_att has no value.')
+        return self._max_att
 
     @ checkAppType(ApplicationType.ATTN)
     def enable(self, status=True):

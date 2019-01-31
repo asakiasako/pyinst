@@ -23,10 +23,10 @@ class ModelAQ2200_342(ModelAQ2200, TypeVOA, TypeOPM):
 
     def __init__(self, resource_name, slot, channel, **kwargs):
         func_type = ApplicationType.ATTN
-        super(ModelAQ2200_342, self).__init__(self, resource_name, func_type, slot, channel, **kwargs)
+        super(ModelAQ2200_342, self).__init__(resource_name, func_type, slot, channel, **kwargs)
         # ranges
         self._min_wl = 1260
         self._max_wl = 1640
         self._min_avg_time = 10
-        self._max_avg_time = 1000*100
+        self._max_avg_time = 1000*10
         self._max_att = 60

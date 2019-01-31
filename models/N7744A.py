@@ -24,6 +24,7 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         if not 1 <= channel <= max_channel:
             raise ValueError('input channel not exist')
         super(ModelN7744A, self).__init__(resource_name, **kwargs)
+        self._is_pos_cal = False
         self.__channel = channel
         self._max_wl = 1640.0
         self._min_wl = 1260.0

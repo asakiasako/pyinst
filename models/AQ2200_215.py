@@ -17,10 +17,10 @@ class ModelAQ2200_215(ModelAQ2200, TypeOPM):
     ]
 
     def __init__(self, resource_name, slot, **kwargs):
-        func_type = ApplicationType.Sensor
-        super(ModelAQ2200_215, self).__init__(self, resource_name, func_type, slot, **kwargs)
+        app_type = ApplicationType.Sensor
+        super(ModelAQ2200_215, self).__init__(resource_name, app_type, slot, **kwargs)
         # ranges
         self._min_wl = 970
         self._max_wl = 1660
         self._min_avg_time = 0.1
-        self._max_avg_time = 1000*100
+        self._max_avg_time = 1000*10
