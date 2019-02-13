@@ -13,6 +13,7 @@ class ModelBTF10011(TypeOTF):
         "Bandwidth @-3dB": "1-18 nm",
         "PDL": "Less than 0.3 dB"
     }
+    params = []
 
     def __init__(self, resource_name, baudrate=115200, write_termination='\r\n', timeout=3, **kwargs):
         super(ModelBTF10011, self).__init__()
