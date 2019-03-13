@@ -101,10 +101,6 @@ class VisaInstrument(object):
                                        timeout=timeout, query_delay=query_delay, **kwargs)
         self.__resource_name = resource_name
         self.__no_idn = no_idn
-        if self.__no_idn:
-            self.__idn = "No IDN. Not a standard VISA instrument."
-        else:
-            self.__idn = self.query('*IDN?')
         super(VisaInstrument, self).__init__()
 
     def __str__(self):
@@ -130,7 +126,10 @@ class VisaInstrument(object):
 
     @property
     def idn(self):
-        return self.__idn
+        if self.__no_idn:
+            return "No IDN. Not a standard VISA instrument."
+        else:
+            return self.query('*IDN?')
 
     @idn.setter
     def idn(self, value):

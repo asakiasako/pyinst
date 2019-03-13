@@ -17,3 +17,4 @@ from .PDLE101 import *
 from .PMD1000 import *
 from .PSY201 import *
 from .TC3625 import *
+from .WaveAnalyzer1500S import *

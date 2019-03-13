@@ -11,7 +11,7 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         "Max. Resolution": "0.02 nm"
     }
 
-    def __init__(self, resource_name, **kwargs):
+    def __init__(self, resource_name, username="anonymous", password="empty", **kwargs):
         super(ModelAQ6370, self).__init__(resource_name, **kwargs)
         self._analysis_cat = ["WDM", "DFBLD", "FPLD", "SMSR"]
         self._analysis_setting_map = {
@@ -31,10 +31,24 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
             }
         }
         self._setup_map = ["BWIDTH:RES"]
+        # init LAN if connection method is TCPIP
+        if self.resource_name.upper().startswith('TCPIP'):
+            self.open_lan_port(username, password)
 
     # param encapsulation
-
     # Method
+    def open_lan_port(self, user="anonymous", password="empty"):
+        usr_rsp = self.query('OPEN "%s"' % user)
+        if usr_rsp.strip() == "AUTHENTICATE CRAM-MD5.":
+            psw_rsp = self.query(password)
+            if psw_rsp.strip() == "ready":
+                return
+        raise PermissionError("Uncorrect LAN username or password for %s" % self.model)
+
+    def close(self):
+        self.command('CLOSE')
+        VisaInstrument.close(self)
+
     def sweep(self, mode="REPEAT"):
         """
         Set OSA sweep mode. mode = "AUTO"|"REPEAT"|"SINGLE"|"STOP"
