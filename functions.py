@@ -24,7 +24,7 @@ def close_resource_manager():
 def list_resources():
     """
     Returns a tuple of all connected devices.
-    Return type: tuple[str]
+    Return type: tuple(str)
     """
     return rm.list_resources()
 
@@ -46,11 +46,15 @@ def resource_info(resource_name, extended=True):
     """
     return rm.resource_info(resource_name, extended)
 
-def get_instrument_lib():
+def get_instrument_lib(detailed=True):
     """
     Get instrument model lib classified by type.
-    Return: model information classified by its type.
-    Return Type: dict{instrument_type => [{model => str, brand => str, class_name => str, params => list, details => dict}]}
+    Return: model information classified by its type. 
+        If detailed is True, the element in the list under instrument_type is a dict, containing details of a instrument model.
+        Otherwise, the element is the model name of instrument.
+    Return Type: 
+        details = True: dict{instrument_type => list[{"model" => str, "brand" => str, "class_name" => str, "params" => list, "details" => dict}]}
+        details = False: dict{instrument_type => list[model_name]}
     """
     model_lib = {}
     model_dict = models.__dict__
@@ -68,6 +72,9 @@ def get_instrument_lib():
             details = model_cls.details
             type_str_list = [m.__name__.replace('Type', '') for m in model_cls.mro() if m.__name__.startswith('Type')]
             for type_str in type_str_list:
-                model_lib[type_str].append({'model': model_str, 'brand': brand, 'class_name': class_name,
-                                            'params': params, 'details': details})
+                if detailed:
+                    model_lib[type_str].append({'model': model_str, 'brand': brand, 'class_name': class_name,
+                                                'params': params, 'details': details})
+                else:
+                    model_lib[type_str].append(model_str)
     return model_lib
