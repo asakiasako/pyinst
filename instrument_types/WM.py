@@ -1,7 +1,7 @@
-from .ins_type_bases import *
+from ._BaseInstrumentType import BaseInstrumentType, InstrumentType
 
 
-class TypeWM(TypeIns):
+class TypeWM(BaseInstrumentType):
     def __init__(self, *args, **kwargs):
         super(TypeWM, self).__init__()
         self._append_ins_type(InstrumentType.WM)

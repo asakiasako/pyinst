@@ -1,10 +1,11 @@
-from ..model_bases.AQ2200 import *
+from ..base_models.AQ2200 import ModelAQ2200, ApplicationType
+from ..instrument_types import TypeOPM
 
 
 class ModelAQ2200_215(ModelAQ2200, TypeOPM):
     model = "AQ2200-215"
     brand = "Yokogawa"
-    detail = {
+    details = {
         "Wavelength Range": "970 to 1660 nm",
         "Input Power Range": "-70 to +30 dBm",
         "Average Time": "100us"

@@ -1,11 +1,12 @@
-from ..model_bases.ins_base import *
-from ..model_bases.ins_types import *
+from ..base_models._VisaInstrument import VisaInstrument
+from ..instrument_types import TypePMDE
+from ..utils import check_range, check_type
 
 
 class ModelPMD1000(VisaInstrument, TypePMDE):
     model = "PMD-1000"
     brand = "General Photonics"
-    detail = {
+    details = {
         "Wavelength Range": "C Band",
         "Insertion Loss": "5.5 dB",
         "1st Order PMD Range": "0.36 to 182.4 ps",

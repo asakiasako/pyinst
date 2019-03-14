@@ -1,11 +1,12 @@
-from ..model_bases.ins_base import *
-from ..model_bases.ins_types import *
+from ..base_models._VisaInstrument import VisaInstrument
+from ..instrument_types import TypeOMA
+from ..utils import check_range, check_type
 
 
 class ModelN4392A(VisaInstrument, TypeOMA):
     model = "N4392A"
     brand = "Keysight"
-    detail = {
+    details = {
         "Optical receiver frequency range": "31 GHz",
         "Wavelength range (Option 100)": "1527.6 ~ 1565.5 nm (196.25 ~ 191.50 THz)",
         "Wavelength range (Option 110)": "1570.01 ~ 1608.76 nm (190.95 ~ 186.35 THz)"

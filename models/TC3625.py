@@ -1,5 +1,8 @@
-from ..model_bases.ins_base import *
-from ..model_bases.ins_types import *
+from ..base_models._VisaInstrument import VisaInstrument
+from ..instrument_types import TypeTEC
+from ..utils import check_range, check_type, int_to_complement, complement_to_int, calc_check_sum
+from ..constants import TemperatureUnit
+import visa
 
 
 class ModelTC3625(VisaInstrument, TypeTEC):
@@ -41,14 +44,14 @@ class ModelTC3625(VisaInstrument, TypeTEC):
 
     def check_connection(self):
         unit = self.get_unit()
-        if isinstance(unit, TempUnit):
+        if isinstance(unit, TemperatureUnit):
             return True
         else:
             return False
 
     def set_target_temp(self, value):
         """
-        Set the target tempreture.
+        Set the target Temperature.
         :param value: <float|int> target temperature value
         """
         check_type(value, (float, int), 'value')
@@ -61,7 +64,7 @@ class ModelTC3625(VisaInstrument, TypeTEC):
 
     def get_target_temp(self):
         """
-        Get the target tempreture
+        Get the target Temperature
         :return: <float> target temperature value
         """
         rtn_value = self.formed_query('03')
@@ -80,7 +83,7 @@ class ModelTC3625(VisaInstrument, TypeTEC):
     def set_unit(self, unit):
         """
         Set temperature unit
-        :param unit: <TempUnit> unit
+        :param unit: <TemperatureUnit> unit
         """
         rtn_value = self.formed_query('32', unit.value)
         if rtn_value == unit.value:
@@ -91,10 +94,10 @@ class ModelTC3625(VisaInstrument, TypeTEC):
     def get_unit(self):
         """
         Get temperature unit
-        :return: <TempUnit> unit
+        :return: <TemperatureUnit> unit
         """
         rtn_value = self.formed_query('4b')
         if rtn_value == 1:
-            return TempUnit.C
+            return TemperatureUnit.C
         else:
-            return TempUnit.F
+            return TemperatureUnit.F

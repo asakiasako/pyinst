@@ -1,11 +1,12 @@
-from ..model_bases.ins_base import *
-from ..model_bases.ins_types import *
+from ..base_models._VisaInstrument import VisaInstrument
+from ..utils import check_range, check_type
+from ..instrument_types import TypePOLC
 
 
 class ModelMPC202(VisaInstrument, TypePOLC):
     model = "MPC-202"
     brand = "General Photonics"
-    detail = {
+    details = {
         'Wavelength Range': '1260-1650 nm',
         'Scrambling Types': 'Discrete, Tornado, Rayleigh, Triangle',
         'Tornado Rate': '0 to 60,000 Rev/s',

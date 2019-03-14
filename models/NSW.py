@@ -1,5 +1,7 @@
-from ..model_bases.ins_base import *
-from ..model_bases.ins_types import *
+from ..base_models._VisaInstrument import VisaInstrument
+from ..instrument_types import TypeSW
+import subprocess
+import os
 import time
 import usb
 
@@ -14,7 +16,7 @@ class ModelNSW(TypeSW):
             "range": [1, 2, 3]
         }
     ]
-    detail = {
+    details = {
         "Note": "Valid channel depending on specific instrument."
     }
     _depend = os.path.join(os.path.dirname(__file__), '../dependency/neo_opswitch.exe')

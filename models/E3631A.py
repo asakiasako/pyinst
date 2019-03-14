@@ -1,10 +1,10 @@
-from ..model_bases.E36xx import *
+from ..base_models.E36xx import ModelE36xx
 
 
 class ModelE3631A(ModelE36xx):
     model = "E3631A"
     brand = "Keysight"
-    detail = {
+    details = {
         "Range": "CH1: 6V,5A | CH2: 25V,1A | CH3: -25V,1A"
     }
     params = [

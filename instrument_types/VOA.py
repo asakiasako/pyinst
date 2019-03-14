@@ -1,7 +1,7 @@
-from .ins_type_bases import *
+from ._BaseInstrumentType import BaseInstrumentType, InstrumentType
 
 
-class TypeVOA(TypeIns):
+class TypeVOA(BaseInstrumentType):
     def __init__(self, *args, **kwargs):
         super(TypeVOA, self).__init__()
         self._append_ins_type(InstrumentType.VOA)

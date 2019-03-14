@@ -1,7 +1,7 @@
-from .ins_type_bases import *
+from ._BaseInstrumentType import BaseInstrumentType, InstrumentType
 
 
-class TypeOMA(TypeIns):
+class TypeOMA(BaseInstrumentType):
     def __init__(self, *args, **kwargs):
         super(TypeOMA, self).__init__()
         self._append_ins_type(InstrumentType.OMA)

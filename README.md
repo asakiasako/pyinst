@@ -25,7 +25,7 @@ with ModelN7752A(resource_name[, **kwargs]) as voa:
 
 模块的命名空间暴露了所有的仪器类，所有的仪器类存放在 models 文件夹内。
 
-模块同时暴露了一系列的枚举类，存放在 instype/ins_type_bases/constants 内，在调用某些方法时可能会用到。
+模块同时暴露了一系列的枚举类，存放在 instype/_BaseInstrumentType/constants 内，在调用某些方法时可能会用到。
 
 ## 结构
 
@@ -33,7 +33,7 @@ with ModelN7752A(resource_name[, **kwargs]) as voa:
 
 ### Instrument Types
 
-TypeIns 为所有仪器类型的基类。仪器类型为所有以 TypeXXX 格式命名的类，例如 TypeVOA。XXX为仪器类型的后缀，字母全部大写。
+BaseInstrumentType 为所有仪器类型的基类。仪器类型为所有以 TypeXXX 格式命名的类，例如 TypeVOA。XXX为仪器类型的后缀，字母全部大写。
 
 仪器类型的后缀来源于 InstrumentType 枚举类，且与对应的枚举名称严格一致。
 
@@ -66,7 +66,7 @@ VisaInstruments 为所有符合 VISA 接口的仪器的基类。而具体的仪�
 * \_\_exit\_\_()
 * close()
 * check_connection()
-* 类属性： brand = str，model = str, detail = dict, params = list of dicts
+* 类属性： brand = str，model = str, details = dict, params = list of dicts
 
 如果没有必要，你的方法甚至可以不做任何事情，但它们必须存在。
 
@@ -76,7 +76,7 @@ VisaInstruments 为所有符合 VISA 接口的仪器的基类。而具体的仪�
 
 pyinst 会自动搜寻所有以 Model 开头的类，并找出那些属于具体仪器型号的类（具有非空的 model 类属性）来生成这个对象。
 
-你可以通过 get_model_lib() 方法获得这个对象。
+你可以通过 get_instrument_lib() 方法获得这个对象。
 
 Instrument Lib 的结构：
 
@@ -99,7 +99,7 @@ Instrument Lib 的结构：
           ]
         }
       ],
-      "detail": {
+      "details": {
         "Wavelength Range": "1260~1640 nm"
       }
     },
@@ -108,8 +108,8 @@ Instrument Lib 的结构：
     ...
 ```
 
-每一个类都可以在类属性中定义 model、brand、params、detail 等属性。如果没有某个属性，例如detail，则不用定义。
+每一个类都可以在类属性中定义 model、brand、params、details 等属性。如果没有某个属性，例如details，则不用定义。
 
-detail 可以写入你认为必要的任何信息。
+details 可以写入你认为必要的任何信息。
 
 这样做的好处是，上层代码可以快速的知晓已有仪器资源的状况。例如在配置仪器时，可以很方便地生成可用仪器型号的列表；在配置仪器参数时，可以给出需要配置的参数及可选项列表。这样就可以在上层代码中通过一段通用代码来生成仪器配置界面。

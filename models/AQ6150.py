@@ -1,11 +1,13 @@
-from ..model_bases.ins_base import *
-from ..model_bases.ins_types import *
+from ..base_models._VisaInstrument import VisaInstrument
+from ..instrument_types import TypeWM
+from ..constants import OpticalUnit
+from ..utils import check_type
 
 
 class ModelAQ6150(VisaInstrument, TypeWM):
     model = ["AQ6150", "AQ6151"]
     brand = "Yokogawa"
-    detail = {
+    details = {
         "Wavelength Range": "1270 ~ 1650 nm",
         "Power Accuracy": "+/-0.5 dB",
         "Input Power Range": "-40 ~ 10 dBm",

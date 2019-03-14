@@ -1,21 +1,21 @@
-from .ins_type_bases import *
+from ._BaseInstrumentType import BaseInstrumentType, InstrumentType
 
 
-class TypeTEC(TypeIns):
+class TypeTEC(BaseInstrumentType):
     def __init__(self, *args, **kwargs):
         super(TypeTEC, self).__init__()
         self._append_ins_type(InstrumentType.TEC)
 
     def set_target_temp(self, value):
         """
-        Set the target tempreture.
+        Set the target Temperature.
         :param value: <float|int> target temperature value
         """
         self._raise_no_override()
 
     def get_target_temp(self):
         """
-        Get the target tempreture
+        Get the target Temperature
         :return: <float> target temperature value
         """
         self._raise_no_override()
@@ -30,13 +30,13 @@ class TypeTEC(TypeIns):
     def set_unit(self, unit):
         """
         Set temperature unit
-        :param unit: <TempUnit> unit
+        :param unit: <TemperatureUnit> unit
         """
         self._raise_no_override()
 
     def get_unit(self):
         """
         Get temperature unit
-        :return: <TempUnit> unit
+        :return: <TemperatureUnit> unit
         """
         self._raise_no_override()

@@ -1,64 +1,18 @@
 import visa
-from .ins_types import *
+from ..utils import check_type, check_range
 from time import sleep
 import subprocess
 import os.path
 
 # define const
-VERSION = '0.0.0 origin'
-UPDATED = '2018/1/17'
-AUTHOR = 'Chongjun Lei'
-AUTHOR_EMAIL = 'chongjun.lei@neophotonics.com'
 OPEN_TIMEOUT = 0  # default open timeout for all instruments if not specified during init.
 TIMEOUT = 8000  # default timeout of operation in ms for all instruments if not specified during init.
 QUERY_DELAY = 0.001  # the default time in seconds to wait after each write operation for all if not specified.
 READ_TERMINATION = '\n'  # default read termination for all instruments if not specified during init.
 WRITE_TERMINATION = '\n'  # default write termination for all instruments if not specified during init.
 
-# description
-__doc__ = "Library of instruments.\n"\
-    "Use visa as control method.\n" \
-    "Version: %s\n"\
-    "Updated: %s\n"\
-    "Author: %s\n"\
-    "E-mail: %s\n"\
-    % (VERSION, UPDATED, AUTHOR, AUTHOR_EMAIL)
-
 # globals
-rm = visa.ResourceManager()  # VISA ResourceManager
-ops_rpc = None
-rpc_client = None
-
-def close():
-    """
-    Close the resource manager session.
-    """
-    rm.close()
-
-
-def list_resources():
-    """
-    :return: (tuple of str) Returns a tuple of all connected devices.
-    """
-    return rm.list_resources()
-
-
-def list_resources_info():
-    """
-    :return: (dict) Returns a dictionary mapping resource names to resource extended information of all connected \
-    devices
-    """
-    return rm.list_resources_info()
-
-
-def resource_info(resource_name):
-    """
-    Get the (extended) information of a particular resource.
-    :param resource_name: (str) resource name of instrument.
-    :return: (ResourceInfo) Returns information of a particular resource.
-    """
-    return rm.resource_info(resource_name)
-
+rm = visa.ResourceManager()
 
 # base class of visa instruments
 class VisaInstrument(object):
@@ -91,7 +45,7 @@ class VisaInstrument(object):
     """
     brand = ""
     model = ""
-    detail = {}
+    details = {}
     params = []
 
     def __init__(self, resource_name, read_termination=READ_TERMINATION, write_termination=WRITE_TERMINATION,

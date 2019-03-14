@@ -1,11 +1,14 @@
-from ..model_bases.ins_base import *
-from ..model_bases.ins_types import *
+from ..base_models._VisaInstrument import VisaInstrument
+from ..instrument_types import TypeOTF
+from ..utils import check_type, check_range
+from ..constants import OpticalUnit
+from time import sleep
 
 
 class ModelOTF970(VisaInstrument, TypeOTF):
     model = "OTF-970"
     brand = "Santec"
-    detail = {
+    details = {
         "Wavelength Range": "1530 ~ 1610 nm",
         "Frequency Range": "186.2 ~ 195.8 THz",
         "Bandwidth @-3dB": "0.08 ~ 4.0 nm",

@@ -1,11 +1,12 @@
-from ..model_bases.ins_base import *
-from ..model_bases.ins_types import *
+from ..base_models._VisaInstrument import VisaInstrument
+from ..instrument_types import TypePOLC
+from ..utils import check_range, check_type
 
 
 class ModelPSY201(VisaInstrument, TypePOLC):
     model = "PSY-201"
     brand = "General Photonics"
-    detail = {
+    details = {
         "Wavelength Range": "1480-1620 nm",
         "Operating power range": "-35 to 10 dBm"
     }

@@ -1,11 +1,13 @@
-from ..model_bases.ins_base import *
-from ..model_bases.ins_types import *
+from ..base_models._VisaInstrument import VisaInstrument
+from ..instrument_types import TypeOPM
+from ..utils import check_range, check_type
+from ..constants import OpticalUnit
 
 
 class ModelN7744A(VisaInstrument, TypeOPM):
     brand = "Keysight"
     model = "N7744A"
-    detail = {
+    details = {
         "Wavelength Range": "1250~1625 nm",
         "Power Range": "-80 ~ +10 dBm",
         "Safe Power": "+16 dBm",

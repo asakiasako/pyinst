@@ -1,10 +1,11 @@
-from ..model_bases.ins_base import *
-from ..model_bases.ins_types import *
-from .N7744A import *
+from ..base_models._VisaInstrument import VisaInstrument
+from ..instrument_types import TypeVOA
+from .N7744A import ModelN7744A
+from ..utils import check_range, check_type
 
 class ModelN7752A(ModelN7744A, TypeVOA):
     model = "N7752A"
-    detail = {
+    details = {
         "Wavelength Range": "1260~1640 nm",
         "Att Range": "0~40 dB",
         "Att Safe Power": "+23dBm",

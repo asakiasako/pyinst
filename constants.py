@@ -1,5 +1,6 @@
 from enum import Enum, unique
 
+__all__ = ['InstrumentType', 'OpticalUnit', 'TemperatureUnit', 'WavelengthUnit']
 
 # define enums
 # no inspection PyArgumentList
@@ -26,7 +27,7 @@ class OpticalUnit(Enum):
 
 
 @unique
-class TempUnit(Enum):
+class TemperatureUnit(Enum):
     F = 0
     C = 1
 

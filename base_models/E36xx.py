@@ -1,5 +1,6 @@
-from .ins_base import *
-from .ins_types import *
+from ._VisaInstrument import VisaInstrument
+from ..instrument_types import TypePS
+from ..utils import check_type, check_range
 
 
 class ModelE36xx(VisaInstrument, TypePS):

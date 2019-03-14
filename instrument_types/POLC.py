@@ -1,7 +1,7 @@
-from .ins_type_bases import *
+from ._BaseInstrumentType import BaseInstrumentType, InstrumentType
 
 
-class TypePOLC(TypeIns):
+class TypePOLC(BaseInstrumentType):
     def __init__(self, *args, **kwargs):
         super(TypePOLC, self).__init__()
         self._append_ins_type(InstrumentType.POLC)

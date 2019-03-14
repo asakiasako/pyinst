@@ -1,12 +1,13 @@
-from ..model_bases.ins_base import *
-from ..model_bases.ins_types import *
+from ..base_models._VisaInstrument import VisaInstrument
+from ..instrument_types import TypeOSA
+from ..utils import check_type, check_selection, check_range
 import time
 
 
 class ModelAQ6370(VisaInstrument, TypeOSA):
     model = "AQ6370"
     brand = "Yokogawa"
-    detail = {
+    details = {
         "Wavelength Range": "600 ~ 1700 nm",
         "Max. Resolution": "0.02 nm"
     }

@@ -1,11 +1,13 @@
-from ..model_bases.ins_base import *
-from ..model_bases.ins_types import *
+from ..base_models._VisaInstrument import VisaInstrument
+from ..instrument_types import TypePDLE
+from ..utils import check_range, check_type
+import visa
 
 
 class ModelPDLE101(VisaInstrument, TypePDLE):
     model = "PDLE-101"
     brand = "General Photonics"
-    detail = {
+    details = {
         "Insertion Loss (Max.)": "3 dB at PDL=0",
         "PDL Range": "0.1 to 20 dB",
         "PDL Resolution": "0.1 dB",

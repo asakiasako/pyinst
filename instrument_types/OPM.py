@@ -1,7 +1,8 @@
-from .ins_type_bases import *
+from ._BaseInstrumentType import BaseInstrumentType, InstrumentType
+from ..utils import dbm_to_w, w_to_dbm, format_unit
 
 
-class TypeOPM(TypeIns):
+class TypeOPM(BaseInstrumentType):
     def __init__(self, *args, **kwargs):
         super(TypeOPM, self).__init__()
         self._append_ins_type(InstrumentType.OPM)

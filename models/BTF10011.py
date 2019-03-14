@@ -1,5 +1,6 @@
-from ..model_bases.ins_base import *
-from ..model_bases.ins_types import *
+from ..base_models._VisaInstrument import VisaInstrument
+from ..instrument_types import TypeOTF
+from ..utils import check_range, check_type
 import serial
 import re
 
@@ -7,7 +8,7 @@ import re
 class ModelBTF10011(TypeOTF):
     model = "BTF-100-11"
     brand = "OZ Optics"
-    detail = {
+    details = {
         "Wavelength Range": "1525-1565 nm",
         "Frequency Range": "191.56-196.58 THz",
         "Bandwidth @-3dB": "1-18 nm",

@@ -1,4 +1,5 @@
-from ..model_bases.ins_types import *
+from ..instrument_types import TypeOSA
+from ..utils import check_range, check_type, check_selection
 import requests
 import subprocess
 import threading
@@ -8,7 +9,7 @@ import time
 class ModelWaveAnalyzer1500S(TypeOSA):
     model = "WaveAnalyzer 1500S"
     brand = "Finisar"
-    detail = {
+    details = {
         "Wavelength Range": "1526.9 to 1568.5 nm",
         "Frequency Range": "191.15 to 196.35 THz",
         "Max Input Power (Normal)": "+23 dBm",

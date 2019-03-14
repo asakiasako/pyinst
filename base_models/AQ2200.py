@@ -1,5 +1,7 @@
-from .ins_base import *
-from .ins_types import *
+from ._VisaInstrument import VisaInstrument
+from ..utils import check_type, check_range
+from ..constants import OpticalUnit
+from enum import unique, Enum
 
 
 @unique

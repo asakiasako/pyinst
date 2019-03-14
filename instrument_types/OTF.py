@@ -1,7 +1,8 @@
-from .ins_type_bases import *
+from ._BaseInstrumentType import BaseInstrumentType, InstrumentType
+from time import sleep
 
 
-class TypeOTF(TypeIns):
+class TypeOTF(BaseInstrumentType):
     def __init__(self, *args, **kwargs):
         super(TypeOTF, self).__init__()
         self._append_ins_type(InstrumentType.OTF)

@@ -1,13 +1,12 @@
-from ....utils import *
-from .constants import *
-from time import sleep
+from ..utils import check_type
+from ..constants import InstrumentType
 
 
-class TypeIns(object):
+class BaseInstrumentType(object):
     # Base Class of Instrument Types
     def __init__(self):
         self._ins_type = []
-        super(TypeIns, self).__init__()
+        super(BaseInstrumentType, self).__init__()
 
     # param encapsulation
     @property
