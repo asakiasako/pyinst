@@ -79,6 +79,14 @@ class VisaInstrument(object):
         raise AttributeError('attr "resource_name" is read-only.')
 
     @property
+    def resource_info(self):
+        return self.__inst.resource_info
+
+    @resource_info.setter
+    def resource_info(self, value):
+        raise AttributeError('attr "resource_info" is read-only.')
+
+    @property
     def idn(self):
         if self.__no_idn:
             return "No IDN. Not a standard VISA instrument."
