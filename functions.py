@@ -10,6 +10,8 @@ __all__ = ['get_resource_manager', 'close_resource_manager', 'list_resources', '
 def get_resource_manager():
     """
     Get the visa.ResourceManager instance that is used globally by py-inst.
+
+    :Return type: <visa.ResourceManager>
     """
     return rm
 
@@ -24,7 +26,8 @@ def close_resource_manager():
 def list_resources():
     """
     Returns a tuple of all connected devices.
-    Return type: tuple(str)
+
+    :Return type: tuple(str)
     """
     return rm.list_resources()
 
@@ -32,8 +35,10 @@ def list_resources():
 def list_resources_info():
     """
     Returns a dictionary mapping resource names to resource extended information of all connected devices.
-    Returns: Mapping of resource name to ResourceInfo
-    Return type: dict{str => pyvisa.highlevel.ResourceInfo}
+
+    :Returns: Mapping of resource name to ResourceInfo
+
+    :Return type: dict{str => pyvisa.highlevel.ResourceInfo}
     """
     return rm.list_resources_info()
 
@@ -41,20 +46,27 @@ def list_resources_info():
 def resource_info(resource_name, extended=True):
     """
     Get the (extended) information of a particular resource.
-    Parameters: resource_name – Unique symbolic name of a resource.
-    Return type: pyvisa.highlevel.ResourceInfo
+
+    :Parameters:
+        - resource_name: Unique symbolic name of a resource.
+
+    :Return type: pyvisa.highlevel.ResourceInfo
     """
     return rm.resource_info(resource_name, extended)
 
 def get_instrument_lib(detailed=True):
     """
     Get instrument model lib classified by type.
-    Return: model information classified by its type. 
-        If detailed is True, the element in the list under instrument_type is a dict, containing details of a instrument model.
-        Otherwise, the element is the model name of instrument.
-    Return Type: 
-        details = True: dict{instrument_type => list[{"model" => str, "brand" => str, "class_name" => str, "params" => list, "details" => dict}]}
-        details = False: dict{instrument_type => list[model_name]}
+
+    :Returns: model information classified by its type.
+    
+        - If detailed is True, the element in the list under instrument_type is a dict, containing details of a instrument model.
+        - Otherwise, the element is the model name of instrument.
+
+    :Return Type:
+        - details = True: dict{instrument_type => list[{"model" => str, "brand" => str, "class_name" => str, "params" => list, "details" => dict}]}
+        - details = False: dict{instrument_type => list[model_name]}
+    
     """
     model_lib = {}
     model_dict = models.__dict__

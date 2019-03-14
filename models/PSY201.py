@@ -37,7 +37,7 @@ class ModelPSY201(VisaInstrument, TypePOLC):
         """
         Set scrambling params.
         :param mode: (str) Scrambling mode: DISCrete | TRIangle | TORNado
-        :param *params: (any, any, ...) Scrambling params.
+        :param params: (any, any, ...) Scrambling params.
         """
         rate = params[0]
         if len(mode) >= 4:

@@ -23,8 +23,8 @@ class TypePOLC(BaseInstrumentType):
     def set_scrambling_param(self, mode, *params):
         """
         Set scrambling params.
-        :param mode: (str) Scrambling mode.
-        :param *params: (any, any, ...) Scrambling params.
+        param mode: (str) Scrambling mode.
+        param params: (any, any, ...) Scrambling params.
         """
         self._raise_no_override()
     

@@ -40,7 +40,7 @@ class ModelMPC202(VisaInstrument, TypePOLC):
         """
         Set scrambling params.
         :param mode: (str) Scrambling mode: DISCrete | TRIangle | RAYLeigh | TORNado
-        :param *params: (any, any, ...) Scrambling params.
+        :param params: (any, any, ...) Scrambling params.
 
         'Tornado Rate': '0 to 60,000 Rev/s',
         'Rayleigh Rate': '0 to 2000 rad/s',
