@@ -8,35 +8,40 @@ class TypeTEC(BaseInstrumentType):
 
     def set_target_temp(self, value):
         """
-        Set the target Temperature.
-        :param value: <float|int> target temperature value
+        Set target temperature.
+
+        :Parameter: **value** - float|int, target temperature value
         """
         self._raise_no_override()
 
     def get_target_temp(self):
         """
-        Get the target Temperature
-        :return: <float> target temperature value
+        Get target Temperature.
+
+        :Returns: float, target temperature value.
         """
         self._raise_no_override()
 
     def get_current_temp(self):
         """
-        Get the current measured temperature
-        :return: <float> current measured temperature
+        Get measured current temperature.
+
+        :Returns: float, current temperature value.
         """
         self._raise_no_override()
 
     def set_unit(self, unit):
         """
-        Set temperature unit
-        :param unit: <TemperatureUnit> unit
+        Set temperature unit.
+
+        :Parameters: **unit** - <enum 'TemperatureUnit'>
         """
         self._raise_no_override()
 
     def get_unit(self):
         """
-        Get temperature unit
-        :return: <TemperatureUnit> unit
+        Get temperature unit.
+
+        :Returns: <enum 'TemperatureUnit'>, unit
         """
         self._raise_no_override()

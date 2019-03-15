@@ -8,15 +8,18 @@ class TypePMDE(BaseInstrumentType):
 
     def set_wavelength(self, wavelength):
         """
-        Set wavelength setting (nm)
-        :param wavelength: (float, int) wavelength in nm
+        Set wavelength in nm.
+        
+        :Parameters: **wavelength** - float, wavelength in nm.
         """
         self._raise_no_override()
     
     def set_pmd_value(self, pmd, sopmd):
         """
-        Set pmd (dgd) and sopmd target (ps, ps**2)
-        :param pmd: (float, int) DGD value in ps
-        :param sopmd: (float, int) 2nd order pmd in ps**2
+        Set PMD(DGD) and SOPMD target value.
+
+        :Parameters: 
+            - **pmd** - float|int, DGD value in ps
+            - **sopmd** - float|int, 2nd order pmd in ps**2
         """
         self._raise_no_override()

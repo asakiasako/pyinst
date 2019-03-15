@@ -53,7 +53,7 @@ class ModelOTF970(VisaInstrument, TypeOTF):
         check_range(value, self._min_wl, self._max_wl)
         return self.command(':WAV '+str(value)+'nm')
 
-    def get_wavelength_state(self):
+    def get_wavelength_setting_state(self):
         """
         Reads out the operation state of the filter center wavelength.
         :return: (bool) if setting of the filter center wavelength is in operation.
@@ -116,7 +116,7 @@ class ModelOTF970(VisaInstrument, TypeOTF):
         check_range(value, self._min_bw, self._max_bw)
         return self.command(':BAND '+str(value)+'nm')
 
-    def get_bandwidth_state(self):
+    def get_bandwidth_setting_state(self):
         """
         Reads out the setting state of the filter bandwidth.
         :return: (bool) if setting of the filter bandwidth is in operation

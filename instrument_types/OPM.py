@@ -3,6 +3,7 @@ from ..utils import dbm_to_w, w_to_dbm, format_unit
 
 
 class TypeOPM(BaseInstrumentType):
+    """Optical Power Meter."""
     def __init__(self, *args, **kwargs):
         super(TypeOPM, self).__init__()
         self._append_ins_type(InstrumentType.OPM)
@@ -10,29 +11,33 @@ class TypeOPM(BaseInstrumentType):
 
     def get_value(self):
         """
-        :return: (float) value of optical power, ignore power unit
+        The value of measured optical power, note that the power unit is not certain.
+
+        :Returns: float, value of optical power
         """
         self._raise_no_override()
 
     def get_unit(self):
         """
-        OpticalUnit.DBM.value = 0, OpticalUnit.W.value = 1
-        :return: (enum 'OpticalUnit') unit of optical power
+        The unit of measured optical power.
+
+        :Return Type: <enum 'OpticalUnit'>
         """
         self._raise_no_override()
 
     def get_power(self):
         """
-        Return a tuple of (value, unit)
-        :return: (tuple) (float:value, OpticalUnit:unit)
+        Get the measured power value and unit.
+
+        :Return Type: tuple(float value, <enum 'OpticalUnit'> unit)
         """
         return self.get_value(), self.get_unit()
 
     def get_dbm_value(self):
         """
-        Return dBm value of optical power.
-        If optical power unit is not dBm, the value will be calculated in math method.
-        :return: (float) optical power in dBm
+        Get dBm value of measured optical power. The value will convert for unit dBm if it is in Watt.
+        
+        :Returns: float, optical power in dBm
         """
         unit = self.get_unit()
         value = self.get_value()
@@ -43,9 +48,9 @@ class TypeOPM(BaseInstrumentType):
 
     def get_w_value(self):
         """
-        Return watt value of optical power.
-        If optical power unit is not watt, the value will be calculated in math method.
-        :return: (float) optical power in watt
+        Get Watt value of measured optical power. The value will convert for unit Watt if it is in dBm.
+        
+        :Returns: float, optical power in Watt
         """
         unit = self.get_unit()
         value = self.get_value()
@@ -56,53 +61,60 @@ class TypeOPM(BaseInstrumentType):
 
     def get_cal(self):
         """
-        :return: (float) calibration offset in dB
+        :Returns: float, calibration offset in dB
         """
         self._raise_no_override()
 
     def get_wavelength(self):
         """
-        :return: (float) optical wavelength in nm
+        :Returns: float, optical wavelength in nm
         """
         self._raise_no_override()
 
     def get_formatted_w_power(self):
         """
-        Return a formatted power in w based unit, such as: (34, 'mw'), (223, 'pw')
-        :return: (tuple) (float:value, str:unit)
+        Return a formatted power in Watt based unit, such as: (34, 'mW'), (223, 'pW')
+
+        :Return Type: tuple(float value, str unit)
         """
         w_value = self.get_w_value()
         value, unit = format_unit(w_value, 3)
-        unit += 'w'
+        unit += 'W'
         return value, unit
 
     def get_avg_time(self, value):
         """
-        get avg time in ms
+        Get averaging time in ms.
         """
         self._raise_no_override()
 
     def set_unit(self, unit):
         """
-        Set optical power unit
+        Set optical power unit.
+
+        :Parameters: **unit** - <enum 'OpticalUnit'>, optical power unit
         """
         self._raise_no_override()
 
     def set_cal(self, value): 
         """
-        Set calibration offset in dB
+        Set calibration offset in dB.
+
+        :Parameters: **value** - float|int, calibration offset in dB.
         """
         self._raise_no_override()
 
     def set_wavelength(self, value):
         """
-        Set optical wavelength in nm
+        Set optical wavelength in nm.
+
+        :Parameters: **value** - float|int, optical wavelength in dB.
         """
         self._raise_no_override()
 
     def set_to_reference(self):
         """
-        Set current optical power as reference
+        Set current optical power to reference power. This action will change calibration offset value.
         """
         dbm_value = self.get_dbm_value()
         cal = self.get_cal()
@@ -111,6 +123,8 @@ class TypeOPM(BaseInstrumentType):
 
     def set_avg_time(self, value):
         """
-        set avg time in ms
+        Set averaging time in ms.
+
+        :Parameters: **value** - averaging time in ms.
         """
         self._raise_no_override()

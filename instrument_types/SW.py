@@ -9,13 +9,15 @@ class TypeSW(BaseInstrumentType):
     def set_channel(self, channel):
         """
         Set channel.
-        :param channel: (int) channel number (1 based)
+
+        :Parameter: **channel** - int, channel number (1 based)
         """
         self._raise_no_override()
 
     def get_channel(self):
         """
         Get selected channel.
-        :return: (int) selected channel (1 based)
+
+        :Returns: int, selected channel (1 based)
         """
         self._raise_no_override()

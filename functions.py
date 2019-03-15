@@ -9,23 +9,23 @@ __all__ = ['get_resource_manager', 'close_resource_manager', 'list_resources', '
 
 def get_resource_manager():
     """
-    Get the visa.ResourceManager instance that is used globally by py-inst.
+    Get the visa.ResourceManager instance that is used globally by PyInst.
 
-    :Return type: <visa.ResourceManager>
+    :Return type: visa.ResourceManager
     """
     return rm
 
 
 def close_resource_manager():
     """
-    Close the resource manager session.
+    Close the global resource manager session.
     """
     rm.close()
 
 
 def list_resources():
     """
-    Returns a tuple of all connected devices.
+    List resource names of all connected devices.
 
     :Return type: tuple(str)
     """
@@ -47,8 +47,7 @@ def resource_info(resource_name, extended=True):
     """
     Get the (extended) information of a particular resource.
 
-    :Parameters:
-        - resource_name: Unique symbolic name of a resource.
+    :Parameters: **resource_name** - Unique symbolic name of a resource.
 
     :Return type: pyvisa.highlevel.ResourceInfo
     """
@@ -58,15 +57,11 @@ def get_instrument_lib(detailed=True):
     """
     Get instrument model lib classified by type.
 
-    :Returns: model information classified by its type.
-    
-        - If detailed is True, the element in the list under instrument_type is a dict, containing details of a instrument model.
-        - Otherwise, the element is the model name of instrument.
+    :Returns: (Detailed) model information classified by its type.
 
     :Return Type:
-        - details = True: dict{instrument_type => list[{"model" => str, "brand" => str, "class_name" => str, "params" => list, "details" => dict}]}
-        - details = False: dict{instrument_type => list[model_name]}
-    
+        - **details = True** - dict{instrument_type => list[{"model" => str, "brand" => str, "class_name" => str, "params" => list, "details" => dict}]}
+        - **details = False** - dict{instrument_type => list[model_name]}
     """
     model_lib = {}
     model_dict = models.__dict__

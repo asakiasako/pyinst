@@ -8,10 +8,9 @@ class TypePS(BaseInstrumentType):
         self._max_volt = self._max_current = 0
 
     # Methods
-    def enable(self, status=True):
+    def enable(self, is_en=True):
         """
-        Enable power supply output or not.
-        :param status: (bool) enable status of power supply output
+        Enable/disable power supply output.
         """
         self._raise_no_override()
 
@@ -23,123 +22,134 @@ class TypePS(BaseInstrumentType):
 
     def is_enabled(self):
         """
-        Get the power supply output enable status.
-        :return: (bool) if power supply output is enabled.
+        If the power supply output is enabled.
         """
         self._raise_no_override()
 
     def set_voltage(self, value):
         """
         Set voltage (limit).
-        :param value: (float|int) voltage value in V
+
+        :Parameters: **value** - float|int, voltage value in V.
         """
         self._raise_no_override()
 
     def get_voltage(self):
         """
         Get voltage (limit) setting.
-        :return: (float) voltage value in V
+
+        :Returns: float|int, voltage value in V.
         """
         self._raise_no_override()
 
     def measure_voltage(self):
         """
-        Query voltage measured
-        :return: (float) voltage measured in V
+        Get measured voltage.
+
+        :Returns: float, voltage measured in V.
         """
         self._raise_no_override()
 
     def set_current(self, value):
         """
         Set current (limit).
-        :param value: (float|int) current value in A
+
+        :Parameters: **value** - float|int, current value in A.
         """
         self._raise_no_override()
 
     def get_current(self):
         """
         Get current (limit) setting.
-        :return: (float) current value in A
+
+        :Returns: float, current value in A.
         """
         self._raise_no_override()
 
     def measure_current(self):
         """
-        Query current measured.
-        :return: (float) current measured in A
+        Get measured current value.
+
+        :Returns: float, measured current value in A.
         """
         self._raise_no_override()
 
     def set_ocp(self, value):
         """
-        :param value: (float|int) ocp value in A
+        :Parameters: **value** - float|int, OCP value in A.
         """
         self._raise_no_override()
 
     def get_ocp(self):
         """
-        :return: (float) ocp value in A
+        :Returns: float, OCP value in A.
         """
         self._raise_no_override()
 
     def set_ocp_status(self, status):
         """
-        :param status: (bool) if ocp is enabled
+        Enable/disable OCP function.
+
+        :Parameters: **status** - True -> enable, False -> disable.
         """
         self._raise_no_override()
 
     def get_ocp_status(self):
         """
-        :return: (bool) if ocp is enabled
+        :Returns: bool, if OCP function is enabled.
         """
         self._raise_no_override()
 
     def ocp_is_tripped(self):
         """
-        Check if the over-current protection circuit is tripped and not cleared
-        :return: (bool) if ocp is tripped
+        Check if OCP is tripped and not cleared
+
+        :Returns: bool, if OCP is tripped
         """
         self._raise_no_override()
 
     def clear_ocp(self):
         """
-        clear ocp status
+        Clear OCP tripped status.
         """
         self._raise_no_override()
 
     def set_ovp(self, value):
         """
-        :param value: (float|int) ovp value in V
+        :Parameters: **value** - float|int, OVP value in V.
         """
         self._raise_no_override()
 
     def get_ovp(self):
         """
-        :return: (float) ovp value in V
+        :Returns: float, OVP value in V.
         """
         self._raise_no_override()
 
     def set_ovp_status(self, status):
         """
-        :param status: (bool) if ovp is enabled
+        Enable/disable OVP function.
+
+        :Parameters: **status** - True -> enable, False -> disable.
         """
         self._raise_no_override()
 
     def get_ovp_status(self):
         """
-        :return: (bool) if ovp is enabled
+        :Returns: bool, if OVP function is enabled.
         """
         self._raise_no_override()
 
     def ovp_is_tripped(self):
         """
-        Check if the over-voltage protection circuit is tripped and not cleared
-        :return: (bool) if ovp is tripped
+        Check if OVP is tripped and not cleared
+
+        :Returns: bool, if OVP is tripped
         """
         self._raise_no_override()
 
     def clear_ovp(self):
         """
-        clear OVP status
+        Clear OVP tripped status.
         """
         self._raise_no_override()

@@ -1,4 +1,5 @@
 from ._BaseInstrumentType import BaseInstrumentType, InstrumentType
+from ..utils import dbm_to_w, w_to_dbm
 
 
 class TypeWM(BaseInstrumentType):
@@ -21,62 +22,73 @@ class TypeWM(BaseInstrumentType):
     def is_started(self):
         """
         Get measurement state of WM.
-        :return: (bool) if repeat measurement is started.
-        """
-        self._raise_no_override()
 
-    def get_frequency_array(self):
-        """
-        Get wavelength of all peaks in unit of frequency(Hz).
-        :return: (dict) {'num': (int), 'values': (tuple of floats)}
-        """
-        self._raise_no_override()
-
-    def get_wavelength_array(self):
-        """
-        Get wavelength of all peaks in unit of wavelength(m).
-        :return: (dict) {'num': (int), 'values': (tuple of floats)}
-        """
-        self._raise_no_override()
-
-    def get_power_array(self):
-        """
-        Get optical power of all peaks in selected unit.
-        :return: (dict) {'num': (int), 'values': (tuple of floats)}
+        :Returns: bool, if repeat measurement is started.
         """
         self._raise_no_override()
 
     def get_power_unit(self):
         """
         Get optical power unit.
-        :return: (OpticalUnit) optical power unit.
+
+        :Returns: <enum 'OpticalUnit'>, optical power unit.
         """
         self._raise_no_override()
 
     def set_power_unit(self, unit):
         """
         Set optical power unit.
-        :param unit: (OpticalUnit) optical power unit.
+
+        :Parameters: **unit** - <enum 'OpticalUnit'>, optical power unit.
         """
         self._raise_no_override()
 
     def get_frequency(self):
         """
-        Get frequency of single peak in Hz
-        :return: (float) frequency in Hz
+        Get frequency of single peak in THz.
+
+        :Returns: float, frequency in THz
         """
         self._raise_no_override()
 
     def get_wavelength(self):
         """
-        Get wavelength of single peak in m
-        :return: (float) wavelength in m
+        Get wavelength of single peak in nm
+
+        :Returns: float, wavelength in nm
         """
         self._raise_no_override()
 
-    def get_power(self):
+    def get_power_value(self):
         """
-        Get wavelength of single peak in selected unit
-        :return: (float) optical power in selected unit.
+        Get power value of single peak in selected unit.
+
+        :Returns: float, optical power in selected unit.
         """
         self._raise_no_override()
+
+    def get_dbm_value(self):
+        """
+        Get dBm value of measured optical power. The value will convert for unit dBm if it is in Watt.
+        
+        :Returns: float, optical power in dBm
+        """
+        unit = self.get_power_unit()
+        value = self.get_power_value()
+        if unit.value == 0:
+            return value
+        elif unit.value == 1:
+            return w_to_dbm(value)
+
+    def get_w_value(self):
+        """
+        Get Watt value of measured optical power. The value will convert for unit Watt if it is in dBm.
+        
+        :Returns: float, optical power in Watt
+        """
+        unit = self.get_power_unit()
+        value = self.get_power_value()
+        if unit.value == 1:
+            return value
+        elif unit.value == 0:
+            return dbm_to_w(value)

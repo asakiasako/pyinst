@@ -8,28 +8,32 @@ class TypePDLE(BaseInstrumentType):
 
     def get_wavelength(self):
         """
-        Get current wavelength setting (nm)
-        :return: (float) wavelength
+        Get the setting value of wavelength in nm.
+        
+        :Returns: float, wavelength setting value in nm.
         """
         self._raise_no_override()
 
     def set_wavelength(self, wavelength):
         """
-        Set wavelength setting (nm)
-        :param wavelength: (float, int) wavelength in nm
+        Set wavelength in nm.
+        
+        :Parameters: **wavelength** - float, wavelength in nm.
         """
         self._raise_no_override()
     
     def get_pdl_value(self):
         """
-        Get current pdl value
-        :return: (float) pdl value in dB
+        Get current PDL value
+        
+        :Returns: float, PDL value in dB
         """
         self._raise_no_override()
 
     def set_pdl_value(self, value):
         """
-        Set pdl value
-        :param value: (float, int) pdl value in dB
+        Set PDL value
+
+        :Parameters: **value** - float|int, pdl value in dB
         """
         self._raise_no_override()

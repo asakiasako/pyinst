@@ -102,23 +102,25 @@ class ModelAQ6150(VisaInstrument, TypeWM):
 
     def get_frequency(self):
         """
-        Get frequency of single peak in Hz
-        :return: (float) frequency in Hz
+        Get frequency of single peak in THz.
+
+        :Returns: float, frequency in THz
         """
         freq_str = self.query(":FETC:POW:FREQ?")
-        freq = float(freq_str)
+        freq = round(float(freq_str)/10**12, 3)
         return freq
 
     def get_wavelength(self):
         """
-        Get wavelength of single peak in m
-        :return: (float) wavelength in m
+        Get wavelength of single peak in nm
+
+        :Returns: float, wavelength in nm
         """
         wl_str = self.query(":FETC:POW:WAV?")
-        wl = float(wl_str)
+        wl = round(float(wl_str)*10**9, 3)
         return wl
 
-    def get_power(self):
+    def get_power_value(self):
         """
         Get wavelength of single peak in selected unit
         :return: (float) optical power in selected unit.
