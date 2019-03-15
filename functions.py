@@ -60,8 +60,8 @@ def get_instrument_lib(detailed=True):
     :Returns: (Detailed) model information classified by its type.
 
     :Return Type:
-        - **details = True** - dict{instrument_type => list[{"model" => str, "brand" => str, "class_name" => str, "params" => list, "details" => dict}]}
-        - **details = False** - dict{instrument_type => list[model_name]}
+        - **details = True** - ``dict{instrument_type => list[{"model" => str, "brand" => str, "class_name" => str, "params" => list, "details" => dict}]}``
+        - **details = False** - ``dict{instrument_type => list[model_name]}``
     """
     model_lib = {}
     model_dict = models.__dict__
