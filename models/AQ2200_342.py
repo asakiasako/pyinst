@@ -14,7 +14,8 @@ class ModelAQ2200_342(ModelAQ2200, TypeVOA, TypeOPM):
         {
             "name": "slot",
             "type": "int",
-            "min": 1
+            "min": 1,
+            "max": 10
         },
         {
             "name": "channel",

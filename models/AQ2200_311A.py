@@ -13,7 +13,8 @@ class ModelAQ2200_311A(ModelAQ2200, TypeVOA):
         {
             "name": "slot",
             "type": "int",
-            "min": 1
+            "min": 1,
+            "max": 10
         }
     ]
 

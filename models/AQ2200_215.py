@@ -14,7 +14,8 @@ class ModelAQ2200_215(ModelAQ2200, TypeOPM):
         {
             "name": "slot",
             "type": "int",
-            "min": 1
+            "min": 1,
+            "max": 10
         }
     ]
 
