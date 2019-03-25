@@ -11,7 +11,7 @@ class ModelE3631A(ModelE36xx):
         {
             "name": "select",
             "type": "int",
-            "range": [1, 2, 3]
+            "options": [1, 2, 3]
         }
     ]
 

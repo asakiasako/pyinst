@@ -13,7 +13,8 @@ class ModelAQ2200_215(ModelAQ2200, TypeOPM):
     params = [
         {
             "name": "slot",
-            "type": "int"
+            "type": "int",
+            "min": 1
         }
     ]
 

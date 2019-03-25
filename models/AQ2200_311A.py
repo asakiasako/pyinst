@@ -12,7 +12,8 @@ class ModelAQ2200_311A(ModelAQ2200, TypeVOA):
     params = [
         {
             "name": "slot",
-            "type": "int"
+            "type": "int",
+            "min": 1
         }
     ]
 

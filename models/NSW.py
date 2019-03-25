@@ -13,7 +13,7 @@ class ModelNSW(TypeSW):
         {
             "name": "channel",
             "type": "int",
-            "range": [1, 2, 3]
+            "options": [1, 2, 3]
         }
     ]
     details = {
