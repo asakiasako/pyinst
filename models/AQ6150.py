@@ -107,7 +107,7 @@ class ModelAQ6150(VisaInstrument, TypeWM):
         :Returns: float, frequency in THz
         """
         freq_str = self.query(":FETC:POW:FREQ?")
-        freq = round(float(freq_str)/10**12, 3)
+        freq = round(float(freq_str)/10**12, 6)
         return freq
 
     def get_wavelength(self):
@@ -117,7 +117,7 @@ class ModelAQ6150(VisaInstrument, TypeWM):
         :Returns: float, wavelength in nm
         """
         wl_str = self.query(":FETC:POW:WAV?")
-        wl = round(float(wl_str)*10**9, 3)
+        wl = round(float(wl_str)*10**9, 6)
         return wl
 
     def get_power_value(self):
