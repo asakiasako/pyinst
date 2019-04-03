@@ -164,6 +164,12 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         :return: (float) center wavelength in nm
         """
         return float(self.query(":SENS:WAV:CENT?")) * 10**9
+    
+    def set_marker_active_state(self, num, is_active):
+        check_type(num, int, 'num')
+        check_range(num, 1, 4)
+        check_type(is_active, bool, 'is_active')
+        return self.command(':CALCULATE:MARKER:STATE %d,%d' % (num, int(is_active)))
 
     def set_marker_x(self, num, value, unit):
         """
