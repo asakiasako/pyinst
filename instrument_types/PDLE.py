@@ -12,7 +12,7 @@ class TypePDLE(BaseInstrumentType):
         
         :Returns: float, wavelength setting value in nm.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_wavelength(self, wavelength):
         """
@@ -20,7 +20,7 @@ class TypePDLE(BaseInstrumentType):
         
         :Parameters: **wavelength** - float, wavelength in nm.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
     
     def get_pdl_value(self):
         """
@@ -28,7 +28,7 @@ class TypePDLE(BaseInstrumentType):
         
         :Returns: float, PDL value in dB
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_pdl_value(self, value):
         """
@@ -36,4 +36,4 @@ class TypePDLE(BaseInstrumentType):
 
         :Parameters: **value** - float|int, pdl value in dB
         """
-        self._raise_no_override()
+        self._raise_not_implemented()

@@ -12,7 +12,7 @@ class TypeTEC(BaseInstrumentType):
 
         :Parameter: **value** - float|int, target temperature value
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_target_temp(self):
         """
@@ -20,7 +20,7 @@ class TypeTEC(BaseInstrumentType):
 
         :Returns: float, target temperature value.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_current_temp(self):
         """
@@ -28,7 +28,7 @@ class TypeTEC(BaseInstrumentType):
 
         :Returns: float, current temperature value.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_unit(self, unit):
         """
@@ -36,7 +36,7 @@ class TypeTEC(BaseInstrumentType):
 
         :Parameters: **unit** - <enum 'TemperatureUnit'>
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_unit(self):
         """
@@ -44,4 +44,4 @@ class TypeTEC(BaseInstrumentType):
 
         :Returns: <enum 'TemperatureUnit'>, unit
         """
-        self._raise_no_override()
+        self._raise_not_implemented()

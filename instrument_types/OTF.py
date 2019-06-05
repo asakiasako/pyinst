@@ -65,7 +65,7 @@ class TypeOTF(BaseInstrumentType):
         
         :Returns: float, wavelength setting value in nm.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_wavelength(self, value):
         """
@@ -73,7 +73,7 @@ class TypeOTF(BaseInstrumentType):
         
         :Parameters: **value** - float, center wavelength in nm.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_frequency(self):
         """
@@ -81,7 +81,7 @@ class TypeOTF(BaseInstrumentType):
 
         :Return Type: float
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_frequency(self, value):
         """
@@ -89,7 +89,7 @@ class TypeOTF(BaseInstrumentType):
 
         :Parameters: **value** - float|int, optical frequency in THz
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_wavelength_offset(self):
         """
@@ -97,7 +97,7 @@ class TypeOTF(BaseInstrumentType):
 
         :Return Type: float
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_wavelength_offset(self, value):
         """
@@ -105,7 +105,7 @@ class TypeOTF(BaseInstrumentType):
 
         :Parameters: **value** - float|int, wavelength offset in nm.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_bandwidth(self):
         """
@@ -113,7 +113,7 @@ class TypeOTF(BaseInstrumentType):
 
         :Return Type: float
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_bandwidth(self, value):
         """
@@ -121,7 +121,7 @@ class TypeOTF(BaseInstrumentType):
 
         :Parameters: **value** - float|int, bandwidth setting value in nm
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_bandwidth_offset(self):
         """
@@ -129,7 +129,7 @@ class TypeOTF(BaseInstrumentType):
 
         :Return Type: float
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_bandwidth_offset(self, value):
         """
@@ -137,7 +137,7 @@ class TypeOTF(BaseInstrumentType):
 
         :Parameters: **value** - float|int, bandwidth offset in nm
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def _set_peak_search_center(self, center):
         """
@@ -145,7 +145,7 @@ class TypeOTF(BaseInstrumentType):
 
         :Parameters: **center** - float|int, peak search center in nm
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def _set_peak_search_span(self, span):
         """
@@ -153,7 +153,7 @@ class TypeOTF(BaseInstrumentType):
 
         :Parameters: **span** - float|int, peak search span in nm.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def _run_peak_search(self, if_run):
         """
@@ -161,7 +161,7 @@ class TypeOTF(BaseInstrumentType):
 
         :Parameters: **if_run** - bool, True -> run, False -> cancel.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def _is_peak_search_complete(self):
         """
@@ -169,7 +169,7 @@ class TypeOTF(BaseInstrumentType):
 
         :Returns: bool, if peak search is completed.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def peak_search(self, center, span):
         """

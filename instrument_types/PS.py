@@ -12,7 +12,7 @@ class TypePS(BaseInstrumentType):
         """
         Enable/disable power supply output.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def disable(self):
         """
@@ -24,7 +24,7 @@ class TypePS(BaseInstrumentType):
         """
         If the power supply output is enabled.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_voltage(self, value):
         """
@@ -32,7 +32,7 @@ class TypePS(BaseInstrumentType):
 
         :Parameters: **value** - float|int, voltage value in V.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_voltage(self):
         """
@@ -40,7 +40,7 @@ class TypePS(BaseInstrumentType):
 
         :Returns: float|int, voltage value in V.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def measure_voltage(self):
         """
@@ -48,7 +48,7 @@ class TypePS(BaseInstrumentType):
 
         :Returns: float, voltage measured in V.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_current(self, value):
         """
@@ -56,7 +56,7 @@ class TypePS(BaseInstrumentType):
 
         :Parameters: **value** - float|int, current value in A.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_current(self):
         """
@@ -64,7 +64,7 @@ class TypePS(BaseInstrumentType):
 
         :Returns: float, current value in A.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def measure_current(self):
         """
@@ -72,19 +72,19 @@ class TypePS(BaseInstrumentType):
 
         :Returns: float, measured current value in A.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_ocp(self, value):
         """
         :Parameters: **value** - float|int, OCP value in A.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_ocp(self):
         """
         :Returns: float, OCP value in A.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_ocp_status(self, status):
         """
@@ -92,13 +92,13 @@ class TypePS(BaseInstrumentType):
 
         :Parameters: **status** - True -> enable, False -> disable.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_ocp_status(self):
         """
         :Returns: bool, if OCP function is enabled.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def ocp_is_tripped(self):
         """
@@ -106,25 +106,25 @@ class TypePS(BaseInstrumentType):
 
         :Returns: bool, if OCP is tripped
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def clear_ocp(self):
         """
         Clear OCP tripped status.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_ovp(self, value):
         """
         :Parameters: **value** - float|int, OVP value in V.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_ovp(self):
         """
         :Returns: float, OVP value in V.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_ovp_status(self, status):
         """
@@ -132,13 +132,13 @@ class TypePS(BaseInstrumentType):
 
         :Parameters: **status** - True -> enable, False -> disable.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_ovp_status(self):
         """
         :Returns: bool, if OVP function is enabled.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def ovp_is_tripped(self):
         """
@@ -146,10 +146,10 @@ class TypePS(BaseInstrumentType):
 
         :Returns: bool, if OVP is tripped
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def clear_ovp(self):
         """
         Clear OVP tripped status.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()

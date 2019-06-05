@@ -26,5 +26,5 @@ class BaseInstrumentType(object):
         if i_type not in self._ins_type:
             self._ins_type.append(i_type)
 
-    def _raise_no_override(self):
-        raise NotImplementedError('This method should be overridden by instrument model class.')
+    def _raise_not_implemented(self):
+        raise NotImplementedError('This method is not implemented.')

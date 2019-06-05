@@ -13,13 +13,13 @@ class TypeOMA(BaseInstrumentType):
         """
         Run OMA, the test data will refresh after OMA started running.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def pause(self):
         """
         Pause OMA, the test data will stop refreshing.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_trace_items(self, trace):
         """
@@ -29,7 +29,7 @@ class TypeOMA(BaseInstrumentType):
 
         :Returns: A list of trace item names.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_trace_values(self, trace):
         """
@@ -41,7 +41,7 @@ class TypeOMA(BaseInstrumentType):
 
         :Return Type: list[float]
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_trace_units(self, trace):
         """
@@ -53,7 +53,7 @@ class TypeOMA(BaseInstrumentType):
 
         :Return Type: list[str]
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_formatted_data(self, trace):
         """
@@ -65,4 +65,4 @@ class TypeOMA(BaseInstrumentType):
 
         :Return Type: dict{item_name => tuple(float value, str unit)}
         """
-        self._raise_no_override()
+        self._raise_not_implemented()

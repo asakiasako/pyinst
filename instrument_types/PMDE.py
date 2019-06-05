@@ -12,7 +12,7 @@ class TypePMDE(BaseInstrumentType):
         
         :Parameters: **wavelength** - float, wavelength in nm.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
     
     def set_pmd_value(self, pmd, sopmd):
         """
@@ -22,4 +22,4 @@ class TypePMDE(BaseInstrumentType):
             - **pmd** - float|int, DGD value in ps
             - **sopmd** - float|int, 2nd order pmd in ps**2
         """
-        self._raise_no_override()
+        self._raise_not_implemented()

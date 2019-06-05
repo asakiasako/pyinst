@@ -12,7 +12,7 @@ class TypeSW(BaseInstrumentType):
 
         :Parameter: **channel** - int, channel number (1 based)
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_channel(self):
         """
@@ -20,4 +20,4 @@ class TypeSW(BaseInstrumentType):
 
         :Returns: int, selected channel (1 based)
         """
-        self._raise_no_override()
+        self._raise_not_implemented()

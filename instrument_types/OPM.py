@@ -15,7 +15,7 @@ class TypeOPM(BaseInstrumentType):
 
         :Returns: float, value of optical power
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_unit(self):
         """
@@ -23,7 +23,7 @@ class TypeOPM(BaseInstrumentType):
 
         :Return Type: <enum 'OpticalUnit'>
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_power(self):
         """
@@ -63,13 +63,13 @@ class TypeOPM(BaseInstrumentType):
         """
         :Returns: float, calibration offset in dB
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_wavelength(self):
         """
         :Returns: float, optical wavelength in nm
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_formatted_w_power(self):
         """
@@ -86,7 +86,7 @@ class TypeOPM(BaseInstrumentType):
         """
         Get averaging time in ms.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_unit(self, unit):
         """
@@ -94,7 +94,7 @@ class TypeOPM(BaseInstrumentType):
 
         :Parameters: **unit** - <enum 'OpticalUnit'>, optical power unit
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_cal(self, value): 
         """
@@ -102,7 +102,7 @@ class TypeOPM(BaseInstrumentType):
 
         :Parameters: **value** - float|int, calibration offset in dB.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_wavelength(self, value):
         """
@@ -110,7 +110,7 @@ class TypeOPM(BaseInstrumentType):
 
         :Parameters: **value** - float|int, optical wavelength in dB.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_to_reference(self):
         """
@@ -127,4 +127,4 @@ class TypeOPM(BaseInstrumentType):
 
         :Parameters: **value** - averaging time in ms.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()

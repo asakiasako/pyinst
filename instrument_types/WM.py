@@ -11,13 +11,13 @@ class TypeWM(BaseInstrumentType):
         """
         Start repeat measurement.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def stop(self):
         """
         Stop repeat measurement.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def is_started(self):
         """
@@ -25,7 +25,7 @@ class TypeWM(BaseInstrumentType):
 
         :Returns: bool, if repeat measurement is started.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_power_unit(self):
         """
@@ -33,7 +33,7 @@ class TypeWM(BaseInstrumentType):
 
         :Returns: <enum 'OpticalUnit'>, optical power unit.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def set_power_unit(self, unit):
         """
@@ -41,7 +41,7 @@ class TypeWM(BaseInstrumentType):
 
         :Parameters: **unit** - <enum 'OpticalUnit'>, optical power unit.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_frequency(self):
         """
@@ -49,7 +49,7 @@ class TypeWM(BaseInstrumentType):
 
         :Returns: float, frequency in THz
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_wavelength(self):
         """
@@ -57,7 +57,7 @@ class TypeWM(BaseInstrumentType):
 
         :Returns: float, wavelength in nm
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_power_value(self):
         """
@@ -65,7 +65,7 @@ class TypeWM(BaseInstrumentType):
 
         :Returns: float, optical power in selected unit.
         """
-        self._raise_no_override()
+        self._raise_not_implemented()
 
     def get_dbm_value(self):
         """
