@@ -14,12 +14,16 @@ class ModelPDLE101(VisaInstrument, TypePDLE):
         "PDL Accuracy": "2 ± (0.1 dB +1% of PDL)"
     }
 
-    def __init__(self, resource_name, write_termination='', read_termination='#', baud_rate=9600, data_bits=8,
-                 flow_control=0, parity=visa.constants.Parity.none, stop_bits=visa.constants.StopBits.one, **kwargs):
-        super(ModelPDLE101, self).__init__(
-            resource_name, write_termination=write_termination, read_termination=read_termination, baud_rate=baud_rate,
-            data_bits=data_bits, flow_control=flow_control, parity=parity, stop_bits=stop_bits, **kwargs
-        )
+    def __init__(self, resource_name, write_termination='', read_termination='#', **kwargs):
+        if resource_name.startswith('COM'):
+            super(ModelPDLE101, self).__init__(
+                resource_name, write_termination=write_termination, read_termination=read_termination, baud_rate=9600, data_bits=8,
+                 flow_control=0, parity=visa.constants.Parity.none, stop_bits=visa.constants.StopBits.one, **kwargs
+            )
+        else:
+            super(ModelPDLE101, self).__init__(
+                resource_name, write_termination=write_termination, read_termination=read_termination, **kwargs
+            )
 
     def _formatted_query(self, cmd):
         return self.query(cmd)[1:]

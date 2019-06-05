@@ -13,12 +13,14 @@ class ModelAQ2200_342(ModelAQ2200, TypeVOA, TypeOPM):
     params = [
         {
             "name": "slot",
-            "type": "int"
+            "type": "int",
+            "min": 1,
+            "max": 10
         },
         {
             "name": "channel",
             "type": "int",
-            "range": [1, 2]
+            "options": [1, 2]
         }
     ]
 

@@ -164,6 +164,13 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         :return: (float) center wavelength in nm
         """
         return float(self.query(":SENS:WAV:CENT?")) * 10**9
+    
+    def set_marker_active_state(self, num, is_active):
+        check_type(num, int, 'num')
+        check_range(num, 0, 4)
+        check_type(is_active, bool, 'is_active')
+        print(':CALCULATE:MARKER:STATE %d,%d' % (num, int(is_active)))
+        return self.command(':CALCULATE:MARKER:STATE %d,%d' % (num, int(is_active)))
 
     def set_marker_x(self, num, value, unit):
         """
@@ -175,7 +182,7 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         check_type(value, (float, int), 'value')
         check_type(unit, str, 'unit')
         check_selection(unit, ['NM', 'THZ'])
-        return self.command(':CALC:AMARKER%d:X %.3f%s' % (num, value, unit))
+        return self.command(':CALCULATE:MARKER:X %d,%.3f%s' % (num, value, unit))
 
     def get_marker_x(self, num):
         """
@@ -184,7 +191,7 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         """
         check_type(num, int, 'num')
         check_range(num, 1, 4)
-        return float(self.query(':CALCULATE:AMARKER%d:X?' % num))
+        return float(self.query(':CALCULATE:MARKER:X? %d') % num)
 
     def get_marker_y(self, num):
         """
@@ -192,7 +199,7 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         """
         check_type(num, int, 'num')
         check_range(num, 1, 4)
-        return float(self.query(':CALCULATE:AMARKER%d:Y?' % num))
+        return float(self.query(':CALCULATE:MARKER:Y? %d' % num))
 
     def set_peak_to_center(self):
         """
@@ -360,4 +367,4 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
     def clear_all_markers(self):
         """
         """
-        return self.command(':CALCULATE:AMARKER:AOFF')
+        return self.command(':CALCULATE:MARKER:AOFF')

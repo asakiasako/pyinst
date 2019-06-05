@@ -11,7 +11,7 @@ class ModelE3633A(ModelE36xx):
         {
             "name": "range_level",
             "type": "str",
-            "range": ["HIGH", "LOW"]
+            "options": ["HIGH", "LOW"]
         }
     ]
 

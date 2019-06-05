@@ -91,7 +91,7 @@ Instrument Lib 的结构：
         {
           "name": "channel",
           "type": "int",
-          "range": [
+          "options": [
             1,
             2,
             3,

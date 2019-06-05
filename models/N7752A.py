@@ -17,7 +17,7 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         {
             "name": "channel",
             "type": "int",
-            "range": [1, 3, 5, 6]
+            "options": [1, 3, 5, 6]
         }
     ]
 

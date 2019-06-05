@@ -17,7 +17,7 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         {
             "name": "channel",
             "type": "int",
-            "range": [1, 2, 3, 4]
+            "options": [1, 2, 3, 4]
         }
     ]
 
