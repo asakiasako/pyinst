@@ -1,7 +1,7 @@
 from ..base_models._VisaInstrument import VisaInstrument
 from ..instrument_types import TypeOPM
 from ..utils import check_range, check_type
-from ..constants import OpticalUnit
+from ..constants import OpticalUnit, LIGHT_SPEED
 
 
 class ModelN7744A(VisaInstrument, TypeOPM):
@@ -43,17 +43,17 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         raise AttributeError('attr "channel" is read-only.')
 
     # Rewrite TypeOPM Methods
-    def get_value(self):
+    def get_power_value(self):
         """
         :return: (float) value of optical power, ignore power unit
         """
         value_str = self.query(":FETC"+str(self.channel)+":POW?")
         if not value_str:
-            raise ValueError('Empty return for get_value')
+            raise ValueError('Empty return for get_power_value')
         value = float(value_str)
         return value
 
-    def get_unit(self):
+    def get_power_unit(self):
         """
         OpticalUnit.DBM.value = 0, OpticalUnit.W.value = 1
         :return: (enum 'OpticalUnit') unit of optical power
@@ -83,7 +83,10 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         wl = float(wl_str) * 10 ** 9
         return wl
 
-    def set_unit(self, unit):
+    def get_frequency(self):
+        return LIGHT_SPEED/self.get_wavelength()
+
+    def set_power_unit(self, unit):
         """
         Set optical power unit
         """
@@ -104,6 +107,9 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         check_type(value, (int, float), 'value')
         check_range(value, self._min_wl, self._max_wl)
         return self.command(":sens" + str(self.channel) + ":pow:wav " + str(value) + "NM")
+
+    def set_frequency(self, value):
+        return self.set_wavelength(round(LIGHT_SPEED/value, 4))
 
     def get_wavelength_range(self):
         """

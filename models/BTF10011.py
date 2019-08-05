@@ -1,11 +1,11 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ..base_models._BaseInstrument import BaseInstrument
 from ..instrument_types import TypeOTF
 from ..utils import check_range, check_type
 import serial
 import re
 
 
-class ModelBTF10011(TypeOTF):
+class ModelBTF10011(BaseInstrument, TypeOTF):
     model = "BTF-100-11"
     brand = "OZ Optics"
     details = {
@@ -28,26 +28,11 @@ class ModelBTF10011(TypeOTF):
         self.__resource_name = resource_name
         self.__light_speed = 299792.458
 
-        self.serial = serial.Serial(resource_name, baudrate=baudrate, timeout=timeout)
-        self.write_termination = write_termination
-
-     # param encapsulation
-    @property
-    def resource_name(self):
-        return self.__resource_name
-
-    @resource_name.setter
-    def resource_name(self, value):
-        raise AttributeError('param resource_name is read-only')
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
+        self.__serial = serial.Serial(resource_name, baudrate=baudrate, timeout=timeout)
+        self.__write_termination = write_termination
     
     def close(self):
-        self.serial.close()
+        self.__serial.close()
     
     def check_connection(self):
         self.__write('b?')
@@ -61,14 +46,14 @@ class ModelBTF10011(TypeOTF):
                 return True
     
     def __clear_input_buffer(self):
-        self.serial.reset_input_buffer()
+        self.__serial.reset_input_buffer()
 
     def __write(self, cmd):
         self.__clear_input_buffer()
-        self.serial.write(('%s%s' % (cmd, self.write_termination)).encode())
+        self.__serial.write(('%s%s' % (cmd, self.__write_termination)).encode())
 
     def __readline(self):
-        return self.serial.readline()
+        return self.__serial.readline()
 
     def get_wavelength(self):
         """

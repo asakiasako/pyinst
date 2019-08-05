@@ -9,7 +9,7 @@ class TypeOPM(BaseInstrumentType):
         self._append_ins_type(InstrumentType.OPM)
         self._is_pos_cal = True
 
-    def get_value(self):
+    def get_power_value(self):
         """
         The value of measured optical power, note that the power unit is not certain.
 
@@ -17,7 +17,7 @@ class TypeOPM(BaseInstrumentType):
         """
         self._raise_not_implemented()
 
-    def get_unit(self):
+    def get_power_unit(self):
         """
         The unit of measured optical power.
 
@@ -31,7 +31,7 @@ class TypeOPM(BaseInstrumentType):
 
         :Return Type: tuple(float value, <enum 'OpticalUnit'> unit)
         """
-        return self.get_value(), self.get_unit()
+        return self.get_power_value(), self.get_power_unit()
 
     def get_dbm_value(self):
         """
@@ -39,8 +39,8 @@ class TypeOPM(BaseInstrumentType):
         
         :Returns: float, optical power in dBm
         """
-        unit = self.get_unit()
-        value = self.get_value()
+        unit = self.get_power_unit()
+        value = self.get_power_value()
         if unit.value == 0:
             return value
         elif unit.value == 1:
@@ -52,8 +52,8 @@ class TypeOPM(BaseInstrumentType):
         
         :Returns: float, optical power in Watt
         """
-        unit = self.get_unit()
-        value = self.get_value()
+        unit = self.get_power_unit()
+        value = self.get_power_value()
         if unit.value == 1:
             return value
         elif unit.value == 0:
@@ -71,16 +71,11 @@ class TypeOPM(BaseInstrumentType):
         """
         self._raise_not_implemented()
 
-    def get_formatted_w_power(self):
+    def get_frequency(self):
         """
-        Return a formatted power in Watt based unit, such as: (34, 'mW'), (223, 'pW')
-
-        :Return Type: tuple(float value, str unit)
+        :Returns: float, optical frequency in THz
         """
-        w_value = self.get_w_value()
-        value, unit = format_unit(w_value, 3)
-        unit += 'W'
-        return value, unit
+        self._raise_not_implemented()
 
     def get_avg_time(self, value):
         """
@@ -88,7 +83,7 @@ class TypeOPM(BaseInstrumentType):
         """
         self._raise_not_implemented()
 
-    def set_unit(self, unit):
+    def set_power_unit(self, unit):
         """
         Set optical power unit.
 
@@ -109,6 +104,14 @@ class TypeOPM(BaseInstrumentType):
         Set optical wavelength in nm.
 
         :Parameters: **value** - float|int, optical wavelength in dB.
+        """
+        self._raise_not_implemented()
+
+    def set_frequency(self, value):
+        """
+        Set optical frequency in THz.
+
+        :Parameters: **value** - float|int, optical frequency in THz
         """
         self._raise_not_implemented()
 

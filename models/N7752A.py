@@ -1,6 +1,7 @@
 from ..base_models._VisaInstrument import VisaInstrument
 from ..instrument_types import TypeVOA
 from .N7744A import ModelN7744A
+from ..constants import LIGHT_SPEED
 from ..utils import check_range, check_type
 
 class ModelN7752A(ModelN7744A, TypeVOA):
@@ -97,6 +98,9 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         wl = float(wl_str)*10**9
         return wl
 
+    def get_frequency(self):
+        return LIGHT_SPEED/self.get_wavelength()
+
     def get_cal(self):
         """
         :return: (float) power monitor calibration offset in dB
@@ -136,6 +140,9 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         check_type(value, (float, int), 'value')
         check_range(value, self._min_wl, self._max_wl)
         return self.command(":INP"+str(self.channel)+":WAV " + str(value) + "NM")
+
+    def set_frequency(self, value):
+        return self.set_wavelength(round(LIGHT_SPEED/value, 4))
 
     def set_cal(self, value):
         """

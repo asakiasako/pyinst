@@ -22,6 +22,12 @@ class TypePOLC(BaseInstrumentType):
         """
         self._raise_not_implemented()
     
+    def get_frequency(self):
+        self._raise_not_implemented()
+
+    def set_frequency(self, wavelength):
+        self._raise_not_implemented()
+        
     def set_scrambling_param(self, mode, *params):
         """
         Set scrambling params.

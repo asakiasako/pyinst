@@ -27,7 +27,7 @@ class ModelN4392A(VisaInstrument, TypeOMA):
         """
         self.command(':INIT:RES')
         
-    def pause(self):
+    def stop(self):
         """
         Pause OMA
         """

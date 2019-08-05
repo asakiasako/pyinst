@@ -1,4 +1,4 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ..base_models._BaseInstrument import BaseInstrument
 from ..instrument_types import TypeSW
 import subprocess
 import os
@@ -6,7 +6,7 @@ import time
 import usb
 
 
-class ModelNSW(TypeSW):
+class ModelNSW(BaseInstrument, TypeSW):
     model = "Neo_SW"
     brand = "NeoPhotonics"
     params = [
@@ -19,6 +19,8 @@ class ModelNSW(TypeSW):
     details = {
         "Note": "Valid channel depending on specific instrument."
     }
+
+    # if python is running on 64-bit, we need a dependency, because driver for this instrument is a com component on 32-bit and no source code.
     _depend = os.path.join(os.path.dirname(__file__), '../dependency/neo_opswitch.exe')
 
     def __init__(self, resource_name, channel):
@@ -26,26 +28,11 @@ class ModelNSW(TypeSW):
         self.__resource_name = resource_name
         self.__index = channel - 1
 
-    # param encapsulation
-    @property
-    def resource_name(self):
-        return self.__resource_name
-
-    @resource_name.setter
-    def resource_name(self, value):
-        raise AttributeError('param resource_name is read-only')
-
     @classmethod
     def get_usb_devices(cls, num=9):
         str_list = subprocess.check_output('%s %s %s' % (cls._depend, 'get_usb_devices', num))
         list0 = eval(str_list)
         return list0
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
 
     def close(self):
         pass

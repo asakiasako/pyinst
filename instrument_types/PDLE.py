@@ -21,6 +21,18 @@ class TypePDLE(BaseInstrumentType):
         :Parameters: **wavelength** - float, wavelength in nm.
         """
         self._raise_not_implemented()
+
+    def get_frequency(self):
+        """
+        Get the setting value of frequency in THz.
+        """
+        self._raise_not_implemented()
+
+    def set_frequency(self, freq):
+        """
+        Set frequency in THz
+        """
+        self._raise_not_implemented()
     
     def get_pdl_value(self):
         """

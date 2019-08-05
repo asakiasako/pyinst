@@ -1,6 +1,9 @@
 from enum import Enum, unique
 
-__all__ = ['InstrumentType', 'OpticalUnit', 'TemperatureUnit', 'WavelengthUnit']
+__all__ = ['LIGHT_SPEED', 'InstrumentType', 'OpticalUnit', 'TemperatureUnit', 'WavelengthUnit']
+
+# define constants
+LIGHT_SPEED = 299792.458  # km/s
 
 # define enums
 # no inspection PyArgumentList

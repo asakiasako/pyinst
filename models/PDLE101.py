@@ -1,6 +1,7 @@
 from ..base_models._VisaInstrument import VisaInstrument
 from ..instrument_types import TypePDLE
 from ..utils import check_range, check_type
+from ..constants import LIGHT_SPEED
 import visa
 
 
@@ -36,6 +37,9 @@ class ModelPDLE101(VisaInstrument, TypePDLE):
         wl_str = self._formatted_query('*WAV?')
         return float(wl_str)
 
+    def get_frequency(self):
+        return LIGHT_SPEED/self.get_wavelength()
+
     def set_wavelength(self, wavelength):
         """
         Set wavelength setting (nm)
@@ -46,6 +50,9 @@ class ModelPDLE101(VisaInstrument, TypePDLE):
         backcode = self._formatted_query('*WAV %d#' % wavelength)
         if backcode != 'E00':
             raise visa.Error('PDLE-101 Error: %s' % backcode)
+
+    def set_frequency(self, freq):
+        return self.set_wavelength(round(LIGHT_SPEED/freq, 4))
     
     def get_pdl_value(self):
         """

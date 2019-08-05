@@ -15,7 +15,7 @@ class TypeOMA(BaseInstrumentType):
         """
         self._raise_not_implemented()
 
-    def pause(self):
+    def stop(self):
         """
         Pause OMA, the test data will stop refreshing.
         """

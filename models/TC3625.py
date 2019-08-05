@@ -1,22 +1,39 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ..base_models._BaseInstrument import BaseInstrument
 from ..instrument_types import TypeTEC
 from ..utils import check_range, check_type, int_to_complement, complement_to_int, calc_check_sum
 from ..constants import TemperatureUnit
-import visa
+import serial
 
 
-class ModelTC3625(VisaInstrument, TypeTEC):
+class ModelTC3625(BaseInstrument, TypeTEC):
     model = "TC-36-25"
     brand = "TE Technology"
 
-    def __init__(self, resource_name, write_termination='\r', read_termination='^', baud_rate=9600, data_bits=8,
-                 flow_control=0, parity=visa.constants.Parity.none, stop_bits=visa.constants.StopBits.one, **kwargs):
-        super(ModelTC3625, self).__init__(
-            resource_name, write_termination=write_termination, read_termination=read_termination, baud_rate=baud_rate,
-            data_bits=data_bits, flow_control=flow_control, parity=parity, stop_bits=stop_bits, no_idn=True, **kwargs
-        )
+    def __init__(self, resource_name, write_termination='\r', read_termination='^', baud_rate=9600, **kwargs):
+        super(ModelTC3625, self).__init__()
+        self.__serial = serial.Serial(port=resource_name, baudrate=baud_rate)
+        self.__write_termination = write_termination
+        self.__read_termination = read_termination
 
-    # param enconsulation
+    def command(self, cmd):
+        cmd_str = '{cmd}{write_termination}'.format(cmd=cmd, write_termination = self.__write_termination)
+        self.__serial.write(cmd_str.encode())
+        return self  # reserved for chained calling
+
+    def read(self):
+        result_bytes = b''
+        while True:
+            tmp = self.__serial.read(1)
+            if tmp == self.__read_termination.encode():
+                break
+            else:
+                result_bytes += tmp
+        result_str = result_bytes.decode()
+        return result_str
+
+    def query(self, cmd):
+        self.command(cmd)
+        return self.read()
 
     def formed_query(self, cmd, value=0):
         """

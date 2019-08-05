@@ -1,6 +1,7 @@
 from ..base_models._VisaInstrument import VisaInstrument
 from ..utils import check_range, check_type
 from ..instrument_types import TypePOLC
+from ..constants import LIGHT_SPEED
 
 
 class ModelMPC202(VisaInstrument, TypePOLC):
@@ -27,6 +28,9 @@ class ModelMPC202(VisaInstrument, TypePOLC):
         """
         return float(self.query(':CONF:WLEN?'))
 
+    def get_frequency(self):
+        return LIGHT_SPEED/self.get_wavelength()
+
     def set_wavelength(self, wavelength):
         """
         Set wavelength setting (nm)
@@ -35,6 +39,9 @@ class ModelMPC202(VisaInstrument, TypePOLC):
         check_type(wavelength, (int, float), wavelength)
         check_range(wavelength, 1260, 1650)
         return self.command(':CONF:WLEN %.1f' % wavelength)
+
+    def set_frequency(self, freq):
+        return self.set_wavelength(LIGHT_SPEED/freq)
     
     def set_scrambling_param(self, mode, *params):
         """

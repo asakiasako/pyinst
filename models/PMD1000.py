@@ -1,6 +1,7 @@
 from ..base_models._VisaInstrument import VisaInstrument
 from ..instrument_types import TypePMDE
 from ..utils import check_range, check_type
+from ..constants import LIGHT_SPEED
 
 
 class ModelPMD1000(VisaInstrument, TypePMDE):
@@ -26,12 +27,24 @@ class ModelPMD1000(VisaInstrument, TypePMDE):
         Set wavelength setting (nm)
         :param wavelength: (float, int) wavelength in nm
         """
-        c = 299792.458
-        freq = c/wavelength
-        # Notice that the starting freq of channels of PMD is different from our module.
+        return self.set_frequency(round(LIGHT_SPEED/wavelength, 4))
+
+    def set_frequency(self, freq):
         ch = round((freq - 191.6)/0.05)+1
         return self.command('*CHC %03d#' % ch)
-    
+
+    def get_wavelength(self):
+        return LIGHT_SPEED/self.get_frequency()
+
+    def get_frequency(self):
+        ch_str = self.query('*CHA?')
+        # *C012#
+        if ch_str[0] != 'C':
+            raise ValueError('Unexpected Reply')
+        ch = int(ch_str[1:])
+        freq = 191.6 + (ch-1)*0.05
+        return freq
+
     def set_pmd_value(self, pmd, sopmd):
         """
         Set pmd (dgd) and sopmd target (ps, ps**2)

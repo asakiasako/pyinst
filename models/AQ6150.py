@@ -34,7 +34,7 @@ class ModelAQ6150(VisaInstrument, TypeWM):
         rtn_dict = {"num": num, "values": value_tuple}
         return rtn_dict
 
-    def start(self):
+    def run(self):
         """
         Start repeat measurement.
         """
@@ -46,7 +46,7 @@ class ModelAQ6150(VisaInstrument, TypeWM):
         """
         return self.command(":ABOR")
 
-    def is_started(self):
+    def is_running(self):
         """
         Get measurement state of WM.
         :return: (bool) if repeat measurement is started.

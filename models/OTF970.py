@@ -209,11 +209,7 @@ class ModelOTF970(VisaInstrument, TypeOTF):
         self._set_peak_search_center(center)
         self._set_peak_search_span(span)
         self._run_peak_search(True)
-        print('1')
         while True:
-            print('2')
             sleep(0.5)
-            print('3')
             if self._is_peak_search_complete():
-                print('4')
                 return self

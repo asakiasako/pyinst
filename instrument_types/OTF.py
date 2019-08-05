@@ -19,46 +19,6 @@ class TypeOTF(BaseInstrumentType):
         self._min_bw_offs = 0
 
     # Method
-    def get_wavelength_range(self):
-        """
-        Get valid setting range of center wavelength in nm.
-
-        :Return Type: tuple(float min, float max)
-        """
-        return self._min_wl, self._max_wl
-
-    def get_frequency_range(self):
-        """
-        Get valid setting range of center frequency in THz.
-
-        :Return Type: tuple(float min, float max)
-        """
-        return self._min_freq, self._max_freq
-
-    def get_bandwidth_range(self):
-        """
-        Get valid setting range of filter bandwidth in nm.
-
-        :Return Type: tuple(float min, float max)
-        """
-        return self._min_bw, self._max_bw
-
-    def get_wavelength_offset_range(self):
-        """
-        Get valid setting range of wavelength offset in nm.
-
-        :Return Type: tuple(float min, float max)
-        """
-        return self._min_wl_offs, self._max_wl_offs
-
-    def get_bandwidth_offset_range(self):
-        """
-        Get valid setting range of filter bandwidth offset in nm.
-
-        :Return Type: tuple(float min, float max)
-        """
-        return self._min_bw_offs, self._max_bw_offs
-
     def get_wavelength(self):
         """
         Get the setting value of center wavelength in nm.
@@ -139,38 +99,6 @@ class TypeOTF(BaseInstrumentType):
         """
         self._raise_not_implemented()
 
-    def _set_peak_search_center(self, center):
-        """
-        Set peak search center in nm.
-
-        :Parameters: **center** - float|int, peak search center in nm
-        """
-        self._raise_not_implemented()
-
-    def _set_peak_search_span(self, span):
-        """
-        Set peak search span in nm.
-
-        :Parameters: **span** - float|int, peak search span in nm.
-        """
-        self._raise_not_implemented()
-
-    def _run_peak_search(self, if_run):
-        """
-        Run or cancel peak search.
-
-        :Parameters: **if_run** - bool, True -> run, False -> cancel.
-        """
-        self._raise_not_implemented()
-
-    def _is_peak_search_complete(self):
-        """
-        If peak search is completed.
-
-        :Returns: bool, if peak search is completed.
-        """
-        self._raise_not_implemented()
-
     def peak_search(self, center, span):
         """
         Search peak near the given center wavelength.
@@ -179,10 +107,4 @@ class TypeOTF(BaseInstrumentType):
             - **center** - int|float, center wavelength in nm.
             - **span** - int|float, span in nm.
         """
-        self._set_peak_search_center(center)
-        self._set_peak_search_span(span)
-        self._run_peak_search(True)
-        while True:
-            sleep(0.5)
-            if self._is_peak_search_complete():
-                return self
+        self._raise_not_implemented()

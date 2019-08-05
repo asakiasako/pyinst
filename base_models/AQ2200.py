@@ -1,6 +1,6 @@
 from ._VisaInstrument import VisaInstrument
 from ..utils import check_type, check_range
-from ..constants import OpticalUnit
+from ..constants import OpticalUnit, LIGHT_SPEED
 from enum import unique, Enum
 
 
@@ -40,7 +40,7 @@ class ModelAQ2200(VisaInstrument):
         self._max_att = None
 
     @ checkAppType(ApplicationType.Sensor, ApplicationType.ATTN)
-    def get_value(self):
+    def get_power_value(self):
         '''
         Reads out the currently displayed measurement value.
         The measurement value includes the power offset value.
@@ -49,11 +49,11 @@ class ModelAQ2200(VisaInstrument):
         '''
         pwr_str = self.query(':FETC%d:CHAN%d:POW?' % (self._slot, self._channel))
         if not pwr_str:
-            raise ValueError('Empty return for get_value')
+            raise ValueError('Empty return for get_power_value')
         return float(pwr_str)
 
     @ checkAppType(ApplicationType.Sensor, ApplicationType.ATTN)
-    def get_unit(self):
+    def get_power_unit(self):
         if ApplicationType.ATTN == self._app_type:
             return self._get_outp_unit()
         elif ApplicationType.Sensor == self._app_type:
@@ -117,6 +117,9 @@ class ModelAQ2200(VisaInstrument):
         elif ApplicationType.Sensor == self._app_type:
             return self._get_sens_wavelength()
 
+    def get_frequency(self):
+        return LIGHT_SPEED/self.get_wavelength()
+
     def _get_sens_wavelength(self):
         """
         :return: (float) optical wavelength in nm
@@ -157,7 +160,7 @@ class ModelAQ2200(VisaInstrument):
         return value
 
     @ checkAppType(ApplicationType.Sensor, ApplicationType.ATTN)
-    def set_unit(self, unit):
+    def set_power_unit(self, unit):
         if ApplicationType.ATTN == self._app_type:
             return self._set_outp_unit(unit)
         elif ApplicationType.Sensor == self._app_type:
@@ -204,6 +207,9 @@ class ModelAQ2200(VisaInstrument):
             return self._set_inp_wavelength(value)
         elif ApplicationType.Sensor == self._app_type:
             return self._set_sens_wavelength(value)
+
+    def set_frequency(self, value):
+        return self.set_wavelength(round(LIGHT_SPEED/value, 4))
 
     def _set_sens_wavelength(self, value):
         """

@@ -57,6 +57,9 @@ class TypeVOA(BaseInstrumentType):
         :Returns: float, optical wavelength in nm
         """
         self._raise_not_implemented()
+    
+    def get_frequency(self):
+        self._raise_not_implemented()
 
     def set_att(self, value):
         """
@@ -80,4 +83,7 @@ class TypeVOA(BaseInstrumentType):
 
         :Parameters: **value** - float|int, wavelength value in nm.
         """
+        self._raise_not_implemented()
+
+    def set_frequency(self, value):
         self._raise_not_implemented()
