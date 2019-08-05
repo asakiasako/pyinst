@@ -7,7 +7,7 @@ class TypeWM(BaseInstrumentType):
         super(TypeWM, self).__init__()
         self._append_ins_type(InstrumentType.WM)
 
-    def start(self):
+    def run(self):
         """
         Start repeat measurement.
         """
@@ -19,7 +19,7 @@ class TypeWM(BaseInstrumentType):
         """
         self._raise_not_implemented()
 
-    def is_started(self):
+    def is_running(self):
         """
         Get measurement state of WM.
 
