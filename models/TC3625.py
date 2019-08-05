@@ -35,6 +35,9 @@ class ModelTC3625(BaseInstrument, TypeTEC):
         self.command(cmd)
         return self.read()
 
+    def close(self):
+        self.__serial.close()
+
     def formed_query(self, cmd, value=0):
         """
         Send a command to instrument and read back immediately.
@@ -61,9 +64,12 @@ class ModelTC3625(BaseInstrument, TypeTEC):
 
     def check_connection(self):
         unit = self.get_unit()
-        if isinstance(unit, TemperatureUnit):
-            return True
-        else:
+        try:
+            if isinstance(unit, TemperatureUnit):
+                return True
+            else:
+                return False
+        except Exception:
             return False
 
     def set_target_temp(self, value):
