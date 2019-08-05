@@ -1,6 +1,7 @@
 from ..base_models._BaseInstrument import BaseInstrument
 from ..instrument_types import TypeOTF
 from ..utils import check_range, check_type
+from ..constants import LIGHT_SPEED
 import serial
 import re
 
@@ -26,7 +27,6 @@ class ModelBTF10011(BaseInstrument, TypeOTF):
         self._max_bw = 18
 
         self.__resource_name = resource_name
-        self.__light_speed = 299792.458
 
         self.__serial = serial.Serial(resource_name, baudrate=baudrate, timeout=timeout)
         self.__write_termination = write_termination
@@ -102,7 +102,7 @@ class ModelBTF10011(BaseInstrument, TypeOTF):
         :return: (float) optical frequency in THz
         """
         wl = self.get_wavelength()
-        freq = round(self.__light_speed/wl, 3)
+        freq = round(LIGHT_SPEED/wl, 3)
         return freq
 
     def set_frequency(self, value):
@@ -112,7 +112,7 @@ class ModelBTF10011(BaseInstrument, TypeOTF):
         """
         check_type(value, (int, float), 'value')
         check_range(value, self._min_freq, self._max_freq)
-        wl = round(self.__light_speed/value, 3)
+        wl = round(LIGHT_SPEED/value, 3)
         return self.set_wavelength(wl)
 
     def get_bandwidth(self):
