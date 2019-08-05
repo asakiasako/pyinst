@@ -1,4 +1,4 @@
-pyinst 的目的是将具体仪器抽象化，为同类型的仪器提供统一的接口，以提高代码对不同型号仪器的兼容性、一致性和可维护性。
+PyInst 的目的是将具体仪器抽象化，为同类型的仪器提供统一的接口，以提高代码对不同型号仪器的兼容性、一致性和可维护性。
 
 对于绝大多数符合VISA接口标准的仪器，使用 pyvisa 模块实现；对于少数无法支持VISA接口标准的仪器，使用其物理接口对应的方法来实现。
 
@@ -40,24 +40,21 @@ pyinst 的目的是将具体仪器抽象化，为同类型的仪器提供统一�
 
 ## 原则
 
-pyinst 的基本原则是一致性。
+pyinst 的基本原则是**一致性**。
 
 1.  同类型的仪器 (model) 从 instrument type 中继承了一系列标准的方法，model 类必须尽可能重写这些方法以实现其功能。除此之外，一些仪器可能会有其特有的方法。有些仪器由于其功能限制，可能无法实现所有的标准方法。如果该方法没有重写，在调用它时，会 (由 instrument type 类) 抛出一个 `NotImplementedError`。
 
 2.  不同类型的仪器，实现同类型方法时，必须依照标准函数命名列表来命名。例如，对于“开始运行”这个功能，有的仪器命令中可能称为 run，有的仪器命令中可能称为 start，但在 model 的方法中都应依照标准命名列表，命名为 run。
 
     A. 具有波长 (或频率) 设置功能的仪器，必须同时实现以下方法：
-
     * set_frequency
     * set_wavelength
 
     B. 具有波长 (或频率) 查询功能的仪器，必须同时实现以下方法：
-
     * get_frequency
     * get_wavelength
 
     C. 功率监测相关的标准命名：
-
     * get_power_value
     * get_power_unit
     * set_power_unit
@@ -68,7 +65,6 @@ pyinst 的基本原则是一致性。
     * get_avg_time
 
     D. 控制相关的标准命名：
-
     * run
     * stop
     * is_running
@@ -91,9 +87,7 @@ pyinst 的基本原则是一致性。
 1. 对于符合 visa 标准接口的类，同时继承 VisaInstrument 类和对应的 instrument type 类。
 
     需要实现的属性和方法：
-
     *  类属性：
-    
         * brand = ""
         * model = ""
         * details = {}
@@ -104,9 +98,7 @@ pyinst 的基本原则是一致性。
 2. 对于不符合 visa 标准接口的类，同时继承 BaseInstrument 类和对应的仪器类。
 
     需要实现的属性和方法：
-
     *  类属性：
-    
         * brand = ""
         * model = ""
         * details = {}
@@ -115,7 +107,6 @@ pyinst 的基本原则是一致性。
         缺少这些属性不会影响对象的功能，但这些信息有助于提供与仪器有关的信息。
 
     *  对象属性和方法：
-
         * self.__resource_name
         * self.close()
         * self.check_connection()
