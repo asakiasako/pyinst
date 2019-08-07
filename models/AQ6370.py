@@ -2,6 +2,7 @@ from ..base_models._VisaInstrument import VisaInstrument
 from ..instrument_types import TypeOSA
 from ..utils import check_type, check_selection, check_range
 import time
+from ..constants import LIGHT_SPEED
 
 
 class ModelAQ6370(VisaInstrument, TypeOSA):
@@ -158,12 +159,24 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         if unit.upper() == 'THZ':
             return self.command(":SENS:WAV:CENT " + str(value) + 'THZ')
 
+    def set_wavelength(self, value):
+        return self.set_center(value, 'NM')
+
+    def set_frequency(self, value):
+        return self.set_center(value, 'THZ')
+
     def get_center(self):
         """
         Get center wavelength setting
         :return: (float) center wavelength in nm
         """
         return float(self.query(":SENS:WAV:CENT?")) * 10**9
+    
+    def get_wavelength(self):
+        return self.get_center()
+
+    def get_frequency(self):
+        return LIGHT_SPEED/self.get_wavelength()
     
     def set_marker_active_state(self, num, is_active):
         check_type(num, int, 'num')

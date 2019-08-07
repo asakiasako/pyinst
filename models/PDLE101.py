@@ -45,8 +45,9 @@ class ModelPDLE101(VisaInstrument, TypePDLE):
         Set wavelength setting (nm)
         :param wavelength: (int) wavelength in nm
         """
-        check_type(wavelength, int, 'wavelength')
+        check_type(wavelength, (int, float), 'wavelength')
         check_range(wavelength, 1520, 1570)
+        wavelength = round(wavelength)
         backcode = self._formatted_query('*WAV %d#' % wavelength)
         if backcode != 'E00':
             raise visa.Error('PDLE-101 Error: %s' % backcode)
