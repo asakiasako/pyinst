@@ -25,7 +25,7 @@ class ModelNSW(BaseInstrument, TypeSW):
 
     def __init__(self, resource_name, channel):
         super(ModelNSW, self).__init__()
-        self.__resource_name = resource_name
+        self._resource_name = resource_name
         self.__index = channel - 1
 
     @classmethod
@@ -76,7 +76,7 @@ class ModelNSW(BaseInstrument, TypeSW):
         Neo Optical Switch may lose USB control during auto test.
         This method reset the USB port to solve the connection issue.
         """
-        serial_number = self.__resource_name
+        serial_number = self._resource_name
         dev = usb.core.find(serial_number=serial_number)
         if not dev:
             raise AttributeError('USB Device not found: SN = %s' % serial_number)

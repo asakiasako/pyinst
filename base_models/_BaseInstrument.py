@@ -26,7 +26,7 @@ class BaseInstrument(object):
 
     @property
     def resource_name(self):
-        return self.__resource_name
+        return self._resource_name
 
     @resource_name.setter
     def resource_name(self, value):

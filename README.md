@@ -106,7 +106,7 @@ pyinst 的基本原则是**一致性**。
 
         缺少这些属性不会影响对象的功能，但这些信息有助于提供与仪器有关的信息。
     *  对象属性和方法：
-        * self.__resource_name
+        * self._resource_name
         * self.close()
         * self.check_connection()
 

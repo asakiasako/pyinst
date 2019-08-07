@@ -26,7 +26,7 @@ class ModelBTF10011(BaseInstrument, TypeOTF):
         self._min_bw = 1
         self._max_bw = 18
 
-        self.__resource_name = resource_name
+        self._resource_name = resource_name
 
         self.__serial = serial.Serial(resource_name, baudrate=baudrate, timeout=timeout)
         self.__write_termination = write_termination

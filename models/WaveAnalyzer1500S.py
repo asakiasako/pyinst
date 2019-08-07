@@ -23,7 +23,7 @@ class ModelWaveAnalyzer1500S(TypeOSA):
         self._max_wl = 1568.5
         self._min_freq = 191.15
         self._max_freq = 196.35
-        self.__resource_name = resource_name
+        self._resource_name = resource_name
         self.__analysis_addr = '127.0.0.1'
         self.__analysis_port = analysis_port
         self.__analysis_exe_path = analysis_exe_path
@@ -32,7 +32,7 @@ class ModelWaveAnalyzer1500S(TypeOSA):
      # param encapsulation
     @property
     def resource_name(self):
-        return self.__resource_name
+        return self._resource_name
 
     @resource_name.setter
     def resource_name(self, value):
