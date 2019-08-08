@@ -22,7 +22,7 @@ PyInst 的目的是将具体仪器抽象化，为同类型的仪器提供统一�
 
 2.  instrument type 类
 
-    instrument type 类是仪器类型的类。以单文件形式存放在 `/instrument_types/` 路径下。每个类都以 Type 开头。例如 ModelOPM。
+    instrument type 类是仪器类型的类。以单文件形式存放在 `/instrument_types/` 路径下。每个类都以 Type 开头。例如 TypeOPM。
 
     instrument type 类是同类型所有仪器 (model 类) 的一个父类 (add-in)，它的作用是为同类型的仪器定义统一的接口，从而使得调用 pyinst 的顶层代码能够较好的在不同型号的仪器间切换。
 
