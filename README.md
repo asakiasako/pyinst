@@ -26,6 +26,8 @@ PyInst 的目的是将具体仪器抽象化，为同类型的仪器提供统一�
 
     instrument type 类是同类型所有仪器 (model 类) 的一个父类 (add-in)，它的作用是为同类型的仪器定义统一的接口，从而使得调用 pyinst 的顶层代码能够较好的在不同型号的仪器间切换。
 
+    每个 model 类可以继承一个或多个 instrument_type 类。
+
     通常你不需要在外层代码中调用这些类。
 
 3.  constants
@@ -34,7 +36,7 @@ PyInst 的目的是将具体仪器抽象化，为同类型的仪器提供统一�
 
 4.  functions
 
-    定义了一些顶层的方法，方便你对整个资源进行管理。路径为 `/functions.py`。
+    定义了一些顶层的方法，方便你对仪器资源进行管理。路径为 `/functions.py`。
 
 5.  package information
 
