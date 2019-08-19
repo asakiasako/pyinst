@@ -67,6 +67,14 @@ class ModelN7744A(VisaInstrument, TypeOPM):
             unit = None
         return unit
 
+    def get_avg_time(self):
+        """
+        Get averaging time in ms.
+        """
+        avg_in_s = float(self.query(":sens" + str(self.channel) + ":pow:atim?"))
+        avg_in_ms = avg_in_s*1E+3
+        return avg_in_ms
+
     def get_cal(self):
         """
         :return: (float) calibration offset in dB

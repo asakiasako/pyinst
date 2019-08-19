@@ -77,7 +77,7 @@ class TypeOPM(BaseInstrumentType):
         """
         self._raise_not_implemented()
 
-    def get_avg_time(self, value):
+    def get_avg_time(self):
         """
         Get averaging time in ms.
         """

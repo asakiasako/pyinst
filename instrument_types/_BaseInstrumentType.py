@@ -27,4 +27,4 @@ class BaseInstrumentType(object):
             self._ins_type.append(i_type)
 
     def _raise_not_implemented(self):
-        raise NotImplementedError('This method is not implemented.')
+        raise NotImplementedError('This attribute is not implemented.')
