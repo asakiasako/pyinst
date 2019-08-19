@@ -13,16 +13,20 @@ PyInst 的目的是将具体仪器抽象化，为同类型的仪器提供统一�
     ``` python
     from pyinst import ModelN7752A
     voa = ModelN7752A('GPIB0::7::INSTR', 3)
-    dbm_power = voa.get_dbm_value()
+    dbm_power = voa.get_att_value()
     ```
 
-    model 类都有一个参数 resource_name, 为该仪器对应的 visa 资源名称(或别名(alias))。如果该仪器不是 visa 仪器对象，则该参数表示仪器的接口地址，如 'COM2' 等。除了该参数以外，model 类还可能有其它一系列特有的参数。
+    model 类都有一个参数 resource_name, 为该仪器对应的 visa 资源名称(或别名(alias))。如果该仪器不是 visa 仪器对象，则该参数表示仪器的接口地址，如 'COM2' 等。除了该参数以外，model 类还可能有其它一系列特有的参数，例如 N7752A 的第二个参数为通道号。
+
+    需要注意的是，一个 model 对象对应的是逻辑上作为一个功能单元的实体，而非与仪器的物理形态相对应。例如，一个具有4通道的 OPM，它的 4 个通道在逻辑上是 4 个独立的功能单元，每个通道都可以作为一个 OPM 对象使用。一个同时具有光功率监测功能的 VOA，在逻辑上既可以视为 OPM，也可以视为 VOA。
 
 2.  instrument type 类
 
-    instrument type 类是仪器类型的类。以单文件形式存放在 `/instrument_types/` 路径下。每个类都以 Type 开头。例如 ModelOPM。
+    instrument type 类是仪器类型的类。以单文件形式存放在 `/instrument_types/` 路径下。每个类都以 Type 开头。例如 TypeOPM。
 
     instrument type 类是同类型所有仪器 (model 类) 的一个父类 (add-in)，它的作用是为同类型的仪器定义统一的接口，从而使得调用 pyinst 的顶层代码能够较好的在不同型号的仪器间切换。
+
+    每个 model 类可以继承一个或多个 instrument_type 类。
 
     通常你不需要在外层代码中调用这些类。
 
@@ -32,7 +36,7 @@ PyInst 的目的是将具体仪器抽象化，为同类型的仪器提供统一�
 
 4.  functions
 
-    定义了一些顶层的方法，方便你对整个资源进行管理。路径为 `/functions.py`。
+    定义了一些顶层的方法，方便你对仪器资源进行管理。路径为 `/functions.py`。
 
 5.  package information
 
