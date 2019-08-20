@@ -2,6 +2,7 @@ from ..base_models._VisaInstrument import VisaInstrument
 from ..instrument_types import TypePMDE
 from ..utils import check_range, check_type
 from ..constants import LIGHT_SPEED
+import math
 
 
 class ModelPMD1000(VisaInstrument, TypePMDE):
@@ -18,6 +19,11 @@ class ModelPMD1000(VisaInstrument, TypePMDE):
         super(ModelPMD1000, self).__init__(
             resource_name, write_termination=write_termination, read_termination=read_termination, **kwargs
         )
+        # thresholds
+        self._min_freq = 191.6
+        self._max_freq = 191.6 + (96-1)*0.05 # 96 channels
+        self._min_wl = math.floor(LIGHT_SPEED*1000/self._max_freq)/1000 + 0.001
+        self._max_wl = math.floor(LIGHT_SPEED*1000/self._min_freq)/1000
 
     def _formatted_query(self, cmd):
         return self.query(cmd)[1:]

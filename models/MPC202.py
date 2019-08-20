@@ -2,6 +2,7 @@ from ..base_models._VisaInstrument import VisaInstrument
 from ..utils import check_range, check_type
 from ..instrument_types import TypePOLC
 from ..constants import LIGHT_SPEED
+import math
 
 
 class ModelMPC202(VisaInstrument, TypePOLC):
@@ -20,6 +21,11 @@ class ModelMPC202(VisaInstrument, TypePOLC):
         super(ModelMPC202, self).__init__(
             resource_name, write_termination=write_termination, read_termination=read_termination, **kwargs
         )
+        # thresholds
+        self._min_wl = 1260
+        self._max_wl = 1650
+        self._min_freq = math.floor(LIGHT_SPEED*1000/self._max_wl)/1000 + 0.001
+        self._max_freq = math.floor(LIGHT_SPEED*1000/self._min_wl)/1000
     
     def get_wavelength(self):
         """
@@ -37,7 +43,7 @@ class ModelMPC202(VisaInstrument, TypePOLC):
         :param wavelength: (float, int) wavelength in nm
         """
         check_type(wavelength, (int, float), wavelength)
-        check_range(wavelength, 1260, 1650)
+        check_range(wavelength, self._min_wl, self._max_wl)
         return self.command(':CONF:WLEN %.1f' % wavelength)
 
     def set_frequency(self, freq):

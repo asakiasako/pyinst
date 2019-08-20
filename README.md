@@ -68,7 +68,11 @@ pyinst 的基本原则是**一致性**。
     * set_avg_time
     * get_avg_time
 
-    D. 控制相关的标准命名：
+    D. 滤波器相关
+    * get_bandwidth
+    * set_bandwidth
+
+    E. 控制相关的标准命名：
     * run
     * stop
     * is_running
@@ -78,9 +82,30 @@ pyinst 的基本原则是**一致性**。
 
     其中，run/enable 可接收一个 bool 参数，若为 True 则 run/enable，为 False 则 stop/disable，该参数缺省为 True。
 
-3.  默认单位：
+3.  具有设置范围的参数，必须通过属性定义其范围。不同类型的仪器，实现相同属性时，必须依照标准函数命名列表来命名。
+
+    A. 具有波长 (或频率) 设置功能的仪器，必须同时实现以下方法：
+    * min_frequency
+    * max_frequency
+    * min_wavelength
+    * max_wavelength
+
+    B. 功率检测、衰减相关的命名：
+    * max_att
+    * min_avg_time
+    * max_avg_time
+    * min_cal
+    * max_cal
+    * min_offset
+    * max_offset
+
+    C. 滤波器相关
+    * min_bandwidth
+    * max_bandwidth
+
+4.  默认单位：
     
-    默认的光功率单位为 dBm/W，默认的光波长单位为 nm，默认的光频率单位为 THz。
+    默认的光功率单位为 dBm/W，默认的光波长单位为 nm，默认的光频率单位为 THz，默认的带宽单位为 nm (而非 GHz)。
     
     缺省的单位前缀应与之相同，例如返回光波长的函数，应返回 nm 为单位的值，而不得返回以 m 为单位的值。
 

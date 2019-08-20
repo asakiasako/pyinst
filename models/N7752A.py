@@ -40,13 +40,6 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         if not self.__is_att():
             raise ValueError('channel '+str(self.channel)+' has no att function.')
 
-    def get_max_att(self):
-        """
-        Get the max att setting value
-        :return: (float) max att setting value
-        """
-        return self._max_att
-
     def enable(self, status=True):
         """
         Set VOA output enabled/disabled.

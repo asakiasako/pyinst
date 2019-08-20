@@ -7,18 +7,88 @@ class TypeOTF(BaseInstrumentType):
     def __init__(self, *args, **kwargs):
         super(TypeOTF, self).__init__()
         self._append_ins_type(InstrumentType.OTF)
-        self._max_wl = 0
-        self._min_wl = 0
-        self._max_freq = 0
-        self._min_freq = 0
-        self._max_bw = 0
-        self._min_bw = 0
-        self._max_wl_offs = 0
-        self._min_wl_offs = 0
-        self._max_bw_offs = 0
-        self._min_bw_offs = 0
+        # thresholds
+        self._min_wl = None
+        self._max_wl = None
+        self._min_freq = None
+        self._max_freq = None
+        self._min_bw = None
+        self._max_bw = None
 
-    # Method
+    # -- properties --
+    # min_wavelength
+    @ property
+    def min_wavelength(self):
+        if self._min_wl is None:
+            self._raise_not_implemented()
+        else:
+            return self._min_wl
+
+    @ min_wavelength.setter
+    def min_wavelength(self, value):
+        raise AttributeError('Attribute "min_wavelength" is read-only.')
+
+    # max_wavelength
+    @ property
+    def max_wavelength(self):
+        if self._max_wl is None:
+            self._raise_not_implemented()
+        else:
+            return self._max_wl
+
+    @ max_wavelength.setter
+    def max_wavelength(self, value):
+        raise AttributeError('Attribute "max_wavelength" is read-only.')
+
+    # min_frequency
+    @ property
+    def min_frequency(self):
+        if self._min_freq is None:
+            self._raise_not_implemented()
+        else:
+            return self._min_freq
+
+    @ min_frequency.setter
+    def min_frequency(self, value):
+        raise AttributeError('Attribute "min_frequency" is read-only.')
+
+    # max_frequency
+    @ property
+    def max_frequency(self):
+        if self._max_freq is None:
+            self._raise_not_implemented()
+        else:
+            return self._max_freq
+
+    @ max_frequency.setter
+    def max_frequency(self, value):
+        raise AttributeError('Attribute "max_frequency" is read-only.')
+
+    # min_bandwidth
+    @ property
+    def min_bandwidth(self):
+        if self._min_bw is None:
+            self._raise_not_implemented()
+        else:
+            return self._min_bw
+
+    @ min_bandwidth.setter
+    def min_bandwidth(self, value):
+        raise AttributeError('Attribute "min_bandwidth" is read-only.')
+
+    # max_bandwidth
+    @ property
+    def max_bandwidth(self):
+        if self._max_bw is None:
+            self._raise_not_implemented()
+        else:
+            return self._max_bw
+
+    @ max_bandwidth.setter
+    def max_bandwidth(self, value):
+        raise AttributeError('Attribute "max_bandwidth" is read-only.')
+
+    # -- methods --
     def get_wavelength(self):
         """
         Get the setting value of center wavelength in nm.

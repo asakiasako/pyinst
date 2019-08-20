@@ -32,12 +32,18 @@ class ModelAQ2200(VisaInstrument):
         self._app_type = app_type
         self._slot = slot
         self._channel = channel
-        # ranges
+        # thresholds
         self._min_wl = None
         self._max_wl = None
+        self._min_freq = None
+        self._max_freq = None
         self._min_avg_time = None
         self._max_avg_time = None
+        self._min_cal = None
+        self._max_cal = None
         self._max_att = None
+        self._min_offset = None
+        self._max_offset = None
 
     @ checkAppType(ApplicationType.Sensor, ApplicationType.ATTN)
     def get_power_value(self):

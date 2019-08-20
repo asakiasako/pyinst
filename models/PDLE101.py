@@ -3,12 +3,14 @@ from ..instrument_types import TypePDLE
 from ..utils import check_range, check_type
 from ..constants import LIGHT_SPEED
 import visa
+import math
 
 
 class ModelPDLE101(VisaInstrument, TypePDLE):
     model = "PDLE-101"
     brand = "General Photonics"
     details = {
+        "Wavelength Range": "1520~1570 nm",
         "Insertion Loss (Max.)": "3 dB at PDL=0",
         "PDL Range": "0.1 to 20 dB",
         "PDL Resolution": "0.1 dB",
@@ -25,6 +27,11 @@ class ModelPDLE101(VisaInstrument, TypePDLE):
             super(ModelPDLE101, self).__init__(
                 resource_name, write_termination=write_termination, read_termination=read_termination, **kwargs
             )
+        # thresholds
+        self._min_wl = 1520
+        self._max_wl = 1570
+        self._min_freq = math.floor(LIGHT_SPEED*1000/self._max_wl)/1000 + 0.001
+        self._max_freq = math.floor(LIGHT_SPEED*1000/self._min_wl)/1000
 
     def _formatted_query(self, cmd):
         return self.query(cmd)[1:]
@@ -46,7 +53,7 @@ class ModelPDLE101(VisaInstrument, TypePDLE):
         :param wavelength: (int) wavelength in nm
         """
         check_type(wavelength, (int, float), 'wavelength')
-        check_range(wavelength, 1520, 1570)
+        check_range(wavelength, self._min_wl, self._max_wl)
         wavelength = round(wavelength)
         backcode = self._formatted_query('*WAV %d#' % wavelength)
         if backcode != 'E00':

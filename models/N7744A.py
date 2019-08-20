@@ -2,7 +2,7 @@ from ..base_models._VisaInstrument import VisaInstrument
 from ..instrument_types import TypeOPM
 from ..utils import check_range, check_type
 from ..constants import OpticalUnit, LIGHT_SPEED
-
+import math
 
 class ModelN7744A(VisaInstrument, TypeOPM):
     brand = "Keysight"
@@ -28,10 +28,15 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         super(ModelN7744A, self).__init__(resource_name, **kwargs)
         self._is_pos_cal = False
         self.__channel = channel
-        self._max_wl = 1640.0
-        self._min_wl = 1260.0
+        # thresholds
+        self._max_wl = 1625.0
+        self._min_wl = 1250.0
+        self._min_freq = math.floor(LIGHT_SPEED*1000/self._max_wl)/1000 + 0.001
+        self._max_freq = math.floor(LIGHT_SPEED*1000/self._min_wl)/1000
         self._min_avg_time = 0.001
         self._max_avg_time = 10000
+        self._min_cal = float('-inf')
+        self._max_cal = float('inf')
 
     # param encapsulation
     @property
