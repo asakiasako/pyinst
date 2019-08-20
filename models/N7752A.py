@@ -26,6 +26,8 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         super(ModelN7752A, self).__init__(resource_name, channel, max_channel, **kwargs)
         self._max_att = 45.0
         self._min_avg_time = 2
+        self._min_offset = float('-inf')
+        self._max_offset = float('inf')
 
     # param encapsulation
 
