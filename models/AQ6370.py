@@ -131,6 +131,21 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         cmd_str = ":CALC:PAR:%s%s%s" % (cat, route_str, value)
         return self.command(cmd_str)
 
+    def get_analysis_setting(self, cat, param, subcat=None):
+        check_type(cat, str, 'cat')
+        check_type(param, str, 'param')
+        check_type(subcat, (str, type(None)), 'subcat')
+        check_selection(cat, self._analysis_cat)
+        if subcat:
+            check_selection(subcat, tuple(self._analysis_setting_map[cat].keys()))
+            check_selection(param, self._analysis_setting_map[cat][subcat])
+            route_str = "? %s,%s" % (subcat, param)
+        else:
+            check_selection(param, self._analysis_setting_map[cat])
+            route_str = ":%s?" % param
+        cmd_str = ":CALC:PAR:%s%s" % (cat, route_str)
+        return self.query(cmd_str)
+
     def get_analysis_setting_map(self):
         """
         Get setting map for all analysis categories.
@@ -285,6 +300,9 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         check_type(param, str, 'param')
         check_type(value, str, 'value')
         return self.command(':SENS:%s %s' % (param, value))
+
+    def get_setup(self, param):
+        return self.query(':SENS:%s?' % param)
 
     def format_data(self, cat, data):
         """
