@@ -30,7 +30,8 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
                 "MWAVE": ["ALGO", "TH", "TH2", "K", "MFIT", "MDIFF"],
                 "TPOWER": ["OFFSET"],
                 "MNUMBER": ["ALGO", "TH", "TH2", "K", "MFIT", "MDIFF"],
-            }
+            },
+            "SMSR": ["MASK", "MODE"]
         }
         self._setup_map = ["BWIDTH:RES"]
         # init LAN if connection method is TCPIP
@@ -399,3 +400,37 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         """
         """
         return self.command(':CALCULATE:MARKER:AOFF')
+
+    def set_active_trace(self, trace_name):
+        check_selection(trace_name, ['TRA', 'TRB', 'TRC', 'TRD', 'TRE', 'TRF', 'TRG'])
+        return self.command(':TRAC:ACT %s' % trace_name)
+
+    def set_trace_attribute(self, trace_name, attr):
+        check_selection(trace_name, ['TRA', 'TRB', 'TRC', 'TRD', 'TRE', 'TRF', 'TRG'])
+        check_selection(attr, ['WRIT', 'FIX', 'MAX', 'MIN', 'RAVG', 'CALC'])
+        return self.command(':TRAC:ATTR:%s %s' % (trace_name, attr))
+
+    def set_trace_display(self, trace_name, state):
+        check_selection(trace_name, ['TRA', 'TRB', 'TRC', 'TRD', 'TRE', 'TRF', 'TRG'])
+        check_type(state, bool, 'state')
+        state_str = 'ON' if state else 'OFF'
+        return self.command(':TRAC:STAT:%s %s' % (trace_name, state_str))
+
+    def clear_trace(self, trace_name):
+        check_selection(trace_name, ['TRA', 'TRB', 'TRC', 'TRD', 'TRE', 'TRF', 'TRG'])
+        return self.command(':TRAC:DEL %s' % trace_name)
+
+    def clear_all_traces(self):
+        return self.command(':TRAC:DEL:ALL')
+
+    def get_trace_data_x(self, trace_name):
+        check_selection(trace_name, ['TRA', 'TRB', 'TRC', 'TRD', 'TRE', 'TRF', 'TRG'])
+        result_str = self.query(':TRACE:X? %s' % trace_name)
+        result_list = [float(i) for i in result_str.split(',')]
+        return result_list
+
+    def get_trace_data_y(self, trace_name):
+        check_selection(trace_name, ['TRA', 'TRB', 'TRC', 'TRD', 'TRE', 'TRF', 'TRG'])
+        result_str = self.query(':TRACE:Y? %s' % trace_name)
+        result_list = [float(i) for i in result_str.split(',')]
+        return result_list

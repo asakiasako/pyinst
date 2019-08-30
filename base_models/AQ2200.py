@@ -258,16 +258,6 @@ class ModelAQ2200(VisaInstrument):
         return self.command(":sens%d:CHAN%d:pow:atim " % (self._slot, self._channel) + str(value) + "MS")
 
     @ checkAppType(ApplicationType.ATTN)
-    def get_max_att(self):
-        """
-        Get the max att setting value
-        :return: (float) max att setting value
-        """
-        if not self._max_att:
-            raise AttributeError('_max_att has no value.')
-        return self._max_att
-
-    @ checkAppType(ApplicationType.ATTN)
     def enable(self, status=True):
         """
         Set VOA output enabled/disabled.
