@@ -4,6 +4,7 @@ import subprocess
 import os
 import time
 import usb
+import win32com.client
 
 
 class ModelNSW(BaseInstrument, TypeSW):
@@ -20,8 +21,7 @@ class ModelNSW(BaseInstrument, TypeSW):
         "Note": "Valid channel depending on specific instrument."
     }
 
-    # if python is running on 64-bit, we need a dependency, because driver for this instrument is a com component on 32-bit and no source code.
-    _depend = os.path.join(os.path.dirname(__file__), '../dependency/neo_opswitch.exe')
+    _ops = win32com.client.Dispatch('Neo_SmartOpticalSwitch.SmartOpticalSwitch')
 
     def __init__(self, resource_name, channel):
         super(ModelNSW, self).__init__()
@@ -30,9 +30,9 @@ class ModelNSW(BaseInstrument, TypeSW):
 
     @classmethod
     def get_usb_devices(cls, num=9):
-        str_list = subprocess.check_output('%s %s %s' % (cls._depend, 'get_usb_devices', num))
-        list0 = eval(str_list)
-        return list0
+        cls._ops.InitIntefaceType = 3
+        dev_list = [cls._ops.GetMultiUSBDeviceName(i) for i in range(num) if cls._ops.GetMultiUSBDeviceName(i) != 'NoDevice']
+        return dev_list
 
     def close(self):
         pass
@@ -43,32 +43,46 @@ class ModelNSW(BaseInstrument, TypeSW):
             return True
         return False
 
+    def _select_device(self):
+        dev_list = self.get_usb_devices()
+        if self.resource_name not in dev_list:
+            raise ValueError('Invalid device name: %s' % self.resource_name)
+        self._ops.USBDeviceName = self.resource_name
+        self._ops.InitIntefaceType = 2
+
     def set_channel(self, channel, retry=3):
         """
         Set channel.
         :param channel: (int) channel number (1 based)
         """
+
+        index = self.__index
+        self._select_device()
+        self._ops.SetSelectChannel(index, channel)
+        count = 0
         tried = 0
-        while tried <= retry:
-            back_str = subprocess.check_output('%s %s %s %s %s' % (self._depend,
-                                                            'select_channel', self.resource_name, self.__index, channel))
-            if "True" in str(back_str):
-                return self
+        while True:
+            current_channel = self.get_channel()
+            if current_channel != channel:
+                time.sleep(0.4)
+                count += 1
+                if count % 5 == 0:
+                    tried += 1
+                    if tried >= retry:
+                        raise RuntimeError('Unable to select Neo_Opswitch channel. DeviceName: %s' % self._resource_name)
+                    else:
+                        self.reset()
             else:
-                self.reset()
-                time.sleep(10)
-                tried += 1
-        else:
-            raise ChildProcessError('Switch select failed.', 'NSW_USB_ERROR')
+                break
 
     def get_channel(self):
         """
         Get selected channel.
         :return: (int) selected channel (1 based)
         """
-        channel_str = subprocess.check_output('%s %s %s %s' % (self._depend,
-                                              'get_selected_channel', self.resource_name, self.__index))
-        channel = int(channel_str)
+        index = self.__index
+        self._select_device()
+        channel = self._ops.GetSelectChannel(index)
         return channel
 
     def reset(self):
@@ -79,6 +93,5 @@ class ModelNSW(BaseInstrument, TypeSW):
         serial_number = self._resource_name
         dev = usb.core.find(serial_number=serial_number)
         if not dev:
-            raise AttributeError('USB Device not found: SN = %s' % serial_number)
-
+            raise AttributeError('Error on Reset: USB Device not found. SN = %s' % serial_number)
         dev.reset()
