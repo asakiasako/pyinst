@@ -1,0 +1,6 @@
+{
+  "pyvisa": "*",
+  "pyserial": "*",
+  "pyusb": "*",
+  "requests": "*"
+}
