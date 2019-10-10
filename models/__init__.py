@@ -6,6 +6,7 @@ from .AQ6370 import ModelAQ6370
 from .BTF10011 import ModelBTF10011
 from .E3631A import ModelE3631A
 from .E3633A import ModelE3633A
+from .GwsSysControl import ModelGwsSysControl
 from .MPC202 import ModelMPC202
 from .N4392A import ModelN4392A
 from .N7744A import ModelN7744A
