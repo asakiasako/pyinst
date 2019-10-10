@@ -146,20 +146,19 @@ class ModelOTF970(VisaInstrument, TypeOTF):
     def get_power_unit(self):
         """
         Get optical power unit of power monitor.
-        :return: (OpticalUnit) optical power unit of power monitor
+        :return: int, value of enum (OpticalUnit) optical power unit of power monitor
         """
         unit_str = self.query(':POW:UNIT?')
-        unit_list = [OpticalUnit.DBM, OpticalUnit.W]
-        unit = unit_list[int(unit_str.strip())]
+        unit = int(unit_str.strip())
         return unit
 
     def set_power_unit(self, unit):
         """
         Set optical power unit of power monitor.
-        :param unit: (OpticalUnit) optical power unit of power monitor
+        :param unit: int, value of (OpticalUnit) optical power unit of power monitor
         """
-        check_type(unit, OpticalUnit, 'unit')
-        return self.command(":POW:UNIT "+str(unit.value))
+        OpticalUnit(unit)  # check if unit is a valid value
+        return self.command(":POW:UNIT "+str(unit))
 
     def get_power_value(self):
         """

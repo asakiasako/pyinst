@@ -196,9 +196,10 @@ class ModelGwsSysControl(BaseInstrument, TypeTEC):
     def set_unit(self, unit):
         """
         Set temperature unit
-        :param unit: <TemperatureUnit> unit
+        :param unit: int, value of <TemperatureUnit> unit
         """
-        if unit == TemperatureUnit.C:
+        TemperatureUnit(unit)
+        if unit == TemperatureUnit.C.value:
             return
         else:
             raise ValueError('Chamber temperature unit is fixed as "C".')
@@ -206,6 +207,6 @@ class ModelGwsSysControl(BaseInstrument, TypeTEC):
     def get_unit(self):
         """
         Get temperature unit
-        :return: <TemperatureUnit> unit
+        :return: int, value of <TemperatureUnit> unit
         """
-        return TemperatureUnit.C
+        return TemperatureUnit.C.value

@@ -61,13 +61,13 @@ class ModelN7744A(VisaInstrument, TypeOPM):
     def get_power_unit(self):
         """
         OpticalUnit.DBM.value = 0, OpticalUnit.W.value = 1
-        :return: (enum 'OpticalUnit') unit of optical power
+        :return: int, value of (enum 'OpticalUnit') unit of optical power
         """
         unit_int = int(self.query(":SENS" + str(self.channel) + ":POW:UNIT?"))
         if unit_int == 0:
-            unit = OpticalUnit.DBM
+            unit = OpticalUnit.DBM.value
         elif unit_int == 1:
-            unit = OpticalUnit.W
+            unit = OpticalUnit.W.value
         else:
             unit = None
         return unit
@@ -103,8 +103,8 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         """
         Set optical power unit
         """
-        check_type(unit, OpticalUnit, 'unit')
-        return self.command(":SENS" + str(self.channel) + ":POW:UNIT " + str(unit.value))
+        OpticalUnit(unit)  # check if unit is a valid value
+        return self.command(":SENS" + str(self.channel) + ":POW:UNIT " + str(unit))
 
     def set_cal(self, value):
         """

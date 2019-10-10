@@ -82,22 +82,21 @@ class ModelAQ6150(VisaInstrument, TypeWM):
     def get_power_unit(self):
         """
         Get optical power unit.
-        :return: (OpticalUnit) optical power unit.
+        :return: int, value of <enum 'OpticalUnit'>, optical power unit.
         """
         unit_str = self.query(":UNIT?")
         if unit_str.strip() == "DBM":
-            return OpticalUnit.DBM
+            return OpticalUnit.DBM.value
         if unit_str.strip() == "W":
-            return OpticalUnit.W
+            return OpticalUnit.W.value
 
     def set_power_unit(self, unit):
         """
         Set optical power unit.
-        :param unit: (OpticalUnit) optical power unit.
+        :Parameters: **unit** - int, value of <enum 'OpticalUnit'>, optical power unit.
         """
-        check_type(unit, OpticalUnit, 'unit')
-        unit_list = ["DBM", "W"]
-        unit_str = unit_list[unit.value]
+        unit_enum = OpticalUnit(unit)  # check if unit is a valid value
+        unit_str = unit_enum.name
         return self.command(":UNIT "+unit_str)
 
     def get_frequency(self):

@@ -34,7 +34,7 @@ class TypeTEC(BaseInstrumentType):
         """
         Set temperature unit.
 
-        :Parameters: **unit** - <enum 'TemperatureUnit'>
+        :Parameters: **unit** - int, value of <enum 'TemperatureUnit'>
         """
         self._raise_not_implemented()
 
@@ -42,6 +42,6 @@ class TypeTEC(BaseInstrumentType):
         """
         Get temperature unit.
 
-        :Returns: <enum 'TemperatureUnit'>, unit
+        :Returns: int, value of <enum 'TemperatureUnit'>, unit
         """
         self._raise_not_implemented()

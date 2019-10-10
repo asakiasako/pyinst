@@ -31,7 +31,7 @@ class TypeWM(BaseInstrumentType):
         """
         Get optical power unit.
 
-        :Returns: <enum 'OpticalUnit'>, optical power unit.
+        :Returns: int, value of <enum 'OpticalUnit'>, optical power unit.
         """
         self._raise_not_implemented()
 
@@ -39,7 +39,7 @@ class TypeWM(BaseInstrumentType):
         """
         Set optical power unit.
 
-        :Parameters: **unit** - <enum 'OpticalUnit'>, optical power unit.
+        :Parameters: **unit** - int, value of <enum 'OpticalUnit'>, optical power unit.
         """
         self._raise_not_implemented()
 
@@ -75,9 +75,9 @@ class TypeWM(BaseInstrumentType):
         """
         unit = self.get_power_unit()
         value = self.get_power_value()
-        if unit.value == 0:
+        if unit == 0:
             return value
-        elif unit.value == 1:
+        elif unit == 1:
             return w_to_dbm(value)
 
     def get_w_value(self):
@@ -88,7 +88,7 @@ class TypeWM(BaseInstrumentType):
         """
         unit = self.get_power_unit()
         value = self.get_power_value()
-        if unit.value == 1:
+        if unit == 1:
             return value
-        elif unit.value == 0:
+        elif unit == 0:
             return dbm_to_w(value)

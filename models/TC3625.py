@@ -63,12 +63,10 @@ class ModelTC3625(BaseInstrument, TypeTEC):
         return result_value
 
     def check_connection(self):
-        unit = self.get_unit()
         try:
-            if isinstance(unit, TemperatureUnit):
-                return True
-            else:
-                return False
+            unit = self.get_unit()
+            TemperatureUnit(unit)
+            return True
         except Exception:
             return False
 
@@ -106,10 +104,10 @@ class ModelTC3625(BaseInstrument, TypeTEC):
     def set_unit(self, unit):
         """
         Set temperature unit
-        :param unit: <TemperatureUnit> unit
+        :param unit: int, value of enum <TemperatureUnit> unit
         """
-        rtn_value = self.formed_query('32', unit.value)
-        if rtn_value == unit.value:
+        rtn_value = self.formed_query('32', unit)
+        if rtn_value == unit:
             return True
         else:
             return False
@@ -117,10 +115,7 @@ class ModelTC3625(BaseInstrument, TypeTEC):
     def get_unit(self):
         """
         Get temperature unit
-        :return: <TemperatureUnit> unit
+        :return: int, value of <TemperatureUnit> unit
         """
         rtn_value = self.formed_query('4b')
-        if rtn_value == 1:
-            return TemperatureUnit.C
-        else:
-            return TemperatureUnit.F
+        return rtn_value

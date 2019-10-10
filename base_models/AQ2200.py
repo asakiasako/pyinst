@@ -68,13 +68,13 @@ class ModelAQ2200(VisaInstrument):
     def _get_sens_unit(self):
         """
         OpticalUnit.DBM.value = 0, OpticalUnit.W.value = 1
-        :return: (enum 'OpticalUnit') unit of optical power
+        :return: int, value of enum 'OpticalUnit', unit of optical power
         """
         unit_int = int(self.query(":SENS%d:CHAN%d:POW:UNIT?" % (self._slot, self._channel)))
         if unit_int == 0:
-            unit = OpticalUnit.DBM
+            unit = OpticalUnit.DBM.value
         elif unit_int == 1:
-            unit = OpticalUnit.W
+            unit = OpticalUnit.W.value
         else:
             unit = None
         return unit
@@ -82,13 +82,13 @@ class ModelAQ2200(VisaInstrument):
     def _get_outp_unit(self):
         """
         OpticalUnit.DBM.value = 0, OpticalUnit.W.value = 1
-        :return: (enum 'OpticalUnit') unit of optical power
+        :return: int, value of (enum 'OpticalUnit') unit of optical power
         """
         unit_int = int(self.query(":OUTP%d:CHAN%d:POW:UNIT?" % (self._slot, self._channel)))
         if unit_int == 0:
-            unit = OpticalUnit.DBM
+            unit = OpticalUnit.DBM.value
         elif unit_int == 1:
-            unit = OpticalUnit.W
+            unit = OpticalUnit.W.value
         else:
             unit = None
         return unit
@@ -176,15 +176,15 @@ class ModelAQ2200(VisaInstrument):
         """
         Set optical power unit
         """
-        check_type(unit, OpticalUnit, 'unit')
-        return self.command(":OUTP%d:CHAN%d:POW:UNIT " % (self._slot, self._channel) + str(unit.value))
+        OpticalUnit(unit)  # check if unit is a valid value
+        return self.command(":OUTP%d:CHAN%d:POW:UNIT " % (self._slot, self._channel) + str(unit))
 
     def _set_sens_unit(self, unit):
         """
         Set optical power unit
         """
-        check_type(unit, OpticalUnit, 'unit')
-        return self.command(":SENS%d:CHAN%d:POW:UNIT " % (self._slot, self._channel) + str(unit.value))
+        OpticalUnit(unit)  # check if unit is a valid value
+        return self.command(":SENS%d:CHAN%d:POW:UNIT " % (self._slot, self._channel) + str(unit))
 
     @ checkAppType(ApplicationType.Sensor, ApplicationType.ATTN)
     def set_cal(self, value):
