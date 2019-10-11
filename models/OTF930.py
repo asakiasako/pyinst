@@ -92,7 +92,6 @@ class ModelOTF930(VisaInstrument, TypeOTF):
         :param value: (float|int) bandwidth offset in nm
         """
         check_type(value, (int, float), 'value')
-        check_range(value, self._min_bw_offs, self._max_bw_offs)
         return self.command(':OFFS:Band '+str(value)+'nm')
 
     def get_power_unit(self):
