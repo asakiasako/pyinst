@@ -2,5 +2,6 @@
   "pyvisa": "*",
   "pyserial": "*",
   "pyusb": "*",
-  "requests": "*"
+  "requests": "*",
+  "pywin32": "*"
 }
