@@ -5,7 +5,7 @@ from ..constants import TemperatureUnit
 from ..dependencies import DEPEND_PATH
 import os.path
 import enum
-from ctypes import * 
+from ctypes import cdll, c_long, c_ulong, pointer, byref
 import time
 
 # Constants
@@ -170,6 +170,7 @@ class ModelGwsSysControl(BaseInstrument, TypeTEC):
         result =GWSdll.GWS_SetSetValue(0, temp_set_param, 0, 0, 0, 0)
         if result != 0:
             raise ValueError('Set temp fail. Error Code: %d - %s' % (result, ERR_CODE(result).name))
+        time.sleep(8)
 
     def get_target_temp(self):
         """
