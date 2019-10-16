@@ -14,7 +14,7 @@ class ModelNSW(BaseInstrument, TypeSW):
         {
             "name": "channel",
             "type": "int",
-            "options": [1, 2, 3]
+            "options": [1, 2, 3, 4, 5]
         }
     ]
     details = {

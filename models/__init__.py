@@ -1,5 +1,7 @@
 from .AQ2200_215 import ModelAQ2200_215
+from .AQ2200_221 import ModelAQ2200_221
 from .AQ2200_311A import ModelAQ2200_311A
+from .AQ2200_331 import ModelAQ2200_331
 from .AQ2200_342 import ModelAQ2200_342
 from .AQ6150 import ModelAQ6150
 from .AQ6370 import ModelAQ6370

@@ -4,8 +4,8 @@ from ..constants import LIGHT_SPEED
 import math
 
 
-class ModelAQ2200_342(ModelAQ2200, TypeVOA, TypeOPM):
-    model = "AQ2200-342"
+class ModelAQ2200_331(ModelAQ2200, TypeVOA, TypeOPM):
+    model = "AQ2200-331"
     brand = "Yokogawa"
     details = {
         "Wavelength Range": "1260 to 1640 nm",
@@ -18,17 +18,12 @@ class ModelAQ2200_342(ModelAQ2200, TypeVOA, TypeOPM):
             "type": "int",
             "min": 1,
             "max": 10
-        },
-        {
-            "name": "channel",
-            "type": "int",
-            "options": [1, 2]
         }
     ]
 
     def __init__(self, resource_name, slot, channel, **kwargs):
         func_type = ApplicationType.ATTN
-        super(ModelAQ2200_342, self).__init__(resource_name, func_type, slot, channel, **kwargs)
+        super(ModelAQ2200_331, self).__init__(resource_name, func_type, slot, channel, **kwargs)
         # thresholds
         self._min_wl = 1260
         self._max_wl = 1640

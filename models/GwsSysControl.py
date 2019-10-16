@@ -74,8 +74,9 @@ class ModelGwsSysControl(BaseInstrument, TypeTEC):
     model = "GWS System Control"
     brand = "GWS"
 
-    def __init__(self, resource_name, select_id, **kwargs):
+    def __init__(self, resource_name, **kwargs):
         super(ModelGwsSysControl, self).__init__(resource_name, **kwargs)
+        select_id = 0
         if not resource_name.upper().startswith('COM'):
             raise ValueError('invalid COM port name')
         self._resource_name = resource_name
@@ -99,6 +100,8 @@ class ModelGwsSysControl(BaseInstrument, TypeTEC):
     def close(self):
         self.__connected = False
         GWSdll.GWS_Close()
+        # serial port needs some time to release
+        time.sleep(5)
 
     def check_connection(self):
         return self.__connected
