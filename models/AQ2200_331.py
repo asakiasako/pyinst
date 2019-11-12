@@ -21,9 +21,9 @@ class ModelAQ2200_331(ModelAQ2200, TypeVOA, TypeOPM):
         }
     ]
 
-    def __init__(self, resource_name, slot, channel, **kwargs):
+    def __init__(self, resource_name, slot, **kwargs):
         func_type = ApplicationType.ATTN
-        super(ModelAQ2200_331, self).__init__(resource_name, func_type, slot, channel, **kwargs)
+        super(ModelAQ2200_331, self).__init__(resource_name, func_type, slot, **kwargs)
         # thresholds
         self._min_wl = 1260
         self._max_wl = 1640
