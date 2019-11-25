@@ -11,6 +11,7 @@ from .E3633A import ModelE3633A
 from .GwsSysControl import ModelGwsSysControl
 from .M81571A import Model81571A
 from .M8163A import Model81635A
+from .M8292A import ModelM8292A
 from .MPC202 import ModelMPC202
 from .N4392A import ModelN4392A
 from .N7744A import ModelN7744A
