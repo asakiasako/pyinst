@@ -11,7 +11,7 @@ class ModelTC3625(BaseInstrument, TypeTEC):
 
     def __init__(self, resource_name, write_termination='\r', read_termination='^', baud_rate=9600, **kwargs):
         super(ModelTC3625, self).__init__()
-        self.__serial = serial.Serial(port=resource_name, baudrate=baud_rate, timeout=5)
+        self.__serial = serial.Serial(port=resource_name, baudrate=baud_rate, timeout=3)
         self.__write_termination = write_termination
         self.__read_termination = read_termination
 
