@@ -16,14 +16,14 @@ class Model81571A(VisaInstrument, TypeVOA):
         {
             "name": "slot",
             "type": "int",
-            "options": [1, 3, 5, 6]
+            "options": [1, 2, 3, 4]
         }
     ]
 
     def __init__(self, resource_name, slot, **kwargs):
         check_type(slot, int, 'slot')
         self.__slot = slot
-        super(Model81571A, self).__init__(resource_name, slot, **kwargs)
+        super(Model81571A, self).__init__(resource_name, **kwargs)
         self._max_att = 60.0
         self._min_offset = float('-inf')
         self._max_offset = float('inf')
