@@ -11,7 +11,7 @@ class ModelTC3625(BaseInstrument, TypeTEC):
 
     def __init__(self, resource_name, write_termination='\r', read_termination='^', baud_rate=9600, **kwargs):
         super(ModelTC3625, self).__init__()
-        self.__serial = serial.Serial(port=resource_name, baudrate=baud_rate)
+        self.__serial = serial.Serial(port=resource_name, baudrate=baud_rate, timeout=5)
         self.__write_termination = write_termination
         self.__read_termination = read_termination
 
@@ -24,10 +24,13 @@ class ModelTC3625(BaseInstrument, TypeTEC):
         result_bytes = b''
         while True:
             tmp = self.__serial.read(1)
-            if tmp == self.__read_termination.encode():
-                break
+            if tmp:
+                if tmp == self.__read_termination.encode():
+                    break
+                else:
+                    result_bytes += tmp
             else:
-                result_bytes += tmp
+                raise TimeoutError('No reply from %s. TIMEOUT=%ds' % (self.model, self.__serial.timeout))
         result_str = result_bytes.decode()
         return result_str
 
