@@ -60,21 +60,33 @@ class MESSAGE_ID(enum.Enum):
     UPLOAD_PROGRAM = 37
     GWS_REAL_TIME_DATA = 38
 
-# load dlls
-GWSdll = cdll.LoadLibrary(os.path.join(DEPEND_PATH, 'dll', 'GWSDll.dll'))
-ReadMsgdll = cdll.LoadLibrary(os.path.join(DEPEND_PATH, 'dll', 'ReadMessage.dll'))  
-
 # pre-defined types
 BufDWORD16 = c_ulong * 16
 Buflong32 = c_long * 32
-# Message Process
-MsgProc = ReadMsgdll.GetMessageProAddr()
 
 class ModelGwsSysControl(BaseInstrument, TypeTEC):
     model = "GWS System Control"
     brand = "GWS"
+    # load dll
+    GWSdll = None
+    ReadMsgdll = None
+    MsgProc = None
+
+    @classmethod
+    def __load_dlls(cls):
+        if not (cls.GWSdll and cls.ReadMsgdll and cls.MsgProc):
+            try:
+                cls.GWSdll = cdll.LoadLibrary(os.path.join(DEPEND_PATH, 'dll', 'GWSDll.dll'))
+                cls.ReadMsgdll = cdll.LoadLibrary(os.path.join(DEPEND_PATH, 'dll', 'ReadMessage.dll'))
+                # Message Process
+                cls.MsgProc = cls.ReadMsgdll.GetMessageProAddr()
+            except OSError as e:
+                cls.GWSdll = cls.ReadMsgdll = cls.MsgProc = None
+                raise e
 
     def __init__(self, resource_name, **kwargs):
+        # load dlls to class attributes if none.
+        self.__load_dlls()
         super(ModelGwsSysControl, self).__init__(resource_name, **kwargs)
         select_id = 0
         if not resource_name.upper().startswith('COM'):
@@ -88,7 +100,7 @@ class ModelGwsSysControl(BaseInstrument, TypeTEC):
         selectFlag = BufDWORD16(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         Flag2000A = BufDWORD16(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         selectFlag[select_id] = 1
-        result = GWSdll.GWS_Init(com_id, 19200, 78, 8, 1, 0, pointer(selectFlag), pointer(Flag2000A), MsgProc)
+        result = self.GWSdll.GWS_Init(com_id, 19200, 78, 8, 1, 0, pointer(selectFlag), pointer(Flag2000A), self.MsgProc)
         self.__connected = False
         if result != 0:
             raise ValueError("Init Failed. Error code: %d - %s" % (result, ERR_CODE(result).name))
@@ -99,7 +111,7 @@ class ModelGwsSysControl(BaseInstrument, TypeTEC):
 
     def close(self):
         self.__connected = False
-        GWSdll.GWS_Close()
+        self.GWSdll.GWS_Close()
         # serial port needs some time to release
         time.sleep(5)
 
@@ -113,7 +125,7 @@ class ModelGwsSysControl(BaseInstrument, TypeTEC):
         # Add time delay, chamber needs time
         time.sleep(0.5)
 
-        result = ReadMsgdll.GetGWSMessage(byref(MessageID), byref(MacID), pointer(mParam))
+        result = self.ReadMsgdll.GetGWSMessage(byref(MessageID), byref(MacID), pointer(mParam))
         
         if result == 0:
             msg_id = mac_id = m_param = None
@@ -153,7 +165,7 @@ class ModelGwsSysControl(BaseInstrument, TypeTEC):
             MacID = c_ulong()
             mParam = Buflong32()
 
-            result = ReadMsgdll.GetGWSMessage(byref(MessageID), byref(MacID), pointer(mParam))
+            result = self.ReadMsgdll.GetGWSMessage(byref(MessageID), byref(MacID), pointer(mParam))
 
             if result == 0:
                 break
@@ -170,7 +182,7 @@ class ModelGwsSysControl(BaseInstrument, TypeTEC):
         """
         check_type(value, (int, float), 'value')
         temp_set_param = round(value * 10)
-        result =GWSdll.GWS_SetSetValue(0, temp_set_param, 0, 0, 0, 0)
+        result =self.GWSdll.GWS_SetSetValue(0, temp_set_param, 0, 0, 0, 0)
         if result != 0:
             raise ValueError('Set temp fail. Error Code: %d - %s' % (result, ERR_CODE(result).name))
         time.sleep(8)
@@ -180,7 +192,7 @@ class ModelGwsSysControl(BaseInstrument, TypeTEC):
         Get the target Temperature
         :return: <float> target temperature value
         """
-        result = GWSdll.GWS_GetSetTemp(0)
+        result = self.GWSdll.GWS_GetSetTemp(0)
         if result != 0:
             raise ValueError('Get target temp fail. Error Code: %d - %s' % (result, ERR_CODE(result).name))
         m_param = self.__read_chamber_message(expected_msg_id=MESSAGE_ID.GET_SET_TEMP)
@@ -191,7 +203,7 @@ class ModelGwsSysControl(BaseInstrument, TypeTEC):
         Get the current measured temperature
         :return: <float> current measured temperature
         """
-        result = GWSdll.GWS_GetActTemp(0)
+        result = self.GWSdll.GWS_GetActTemp(0)
         if result != 0:
             raise ValueError('Get current temp monitor fail. Error Code: %d - %s' % (result, ERR_CODE(result).name))
         m_param = self.__read_chamber_message(expected_msg_id=MESSAGE_ID.GET_ACT_TEMP)
