@@ -33,8 +33,8 @@ class Model81635A(VisaInstrument, TypeOPM):
         self.__slot = slot
         self.__channel = channel
         # thresholds
-        self._max_wl = 800.0
-        self._min_wl = 1650.0
+        self._max_wl = 1650.0
+        self._min_wl = 800.0
         self._min_freq = math.floor(LIGHT_SPEED*1000/self._max_wl)/1000 + 0.001
         self._max_freq = math.floor(LIGHT_SPEED*1000/self._min_wl)/1000
         self._min_avg_time = 0.1
