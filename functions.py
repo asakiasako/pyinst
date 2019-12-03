@@ -1,4 +1,4 @@
-import visa
+import pyvisa
 from .base_models._VisaInstrument import rm
 from .constants import InstrumentType
 from . import models
@@ -9,9 +9,9 @@ __all__ = ['get_resource_manager', 'close_resource_manager', 'list_resources', '
 
 def get_resource_manager():
     """
-    Get the visa.ResourceManager instance that is used globally by PyInst.
+    Get the pyvisa.ResourceManager instance that is used globally by PyInst.
 
-    :Return type: visa.ResourceManager
+    :Return type: pyvisa.ResourceManager
     """
     return rm
 

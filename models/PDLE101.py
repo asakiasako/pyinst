@@ -2,7 +2,7 @@ from ..base_models._VisaInstrument import VisaInstrument
 from ..instrument_types import TypePDLE
 from ..utils import check_range, check_type
 from ..constants import LIGHT_SPEED
-import visa
+import pyvisa
 import math
 
 
@@ -21,7 +21,7 @@ class ModelPDLE101(VisaInstrument, TypePDLE):
         if resource_name.startswith('COM'):
             super(ModelPDLE101, self).__init__(
                 resource_name, write_termination=write_termination, read_termination=read_termination, baud_rate=9600, data_bits=8,
-                 flow_control=0, parity=visa.constants.Parity.none, stop_bits=visa.constants.StopBits.one, **kwargs
+                 flow_control=0, parity=pyvisa.constants.Parity.none, stop_bits=pyvisa.constants.StopBits.one, **kwargs
             )
         else:
             super(ModelPDLE101, self).__init__(
@@ -57,7 +57,7 @@ class ModelPDLE101(VisaInstrument, TypePDLE):
         wavelength = round(wavelength)
         backcode = self._formatted_query('*WAV %d#' % wavelength)
         if backcode != 'E00':
-            raise visa.Error('PDLE-101 Error: %s' % backcode)
+            raise pyvisa.Error('PDLE-101 Error: %s' % backcode)
 
     def set_frequency(self, freq):
         return self.set_wavelength(round(LIGHT_SPEED/freq, 4))
@@ -79,4 +79,4 @@ class ModelPDLE101(VisaInstrument, TypePDLE):
         cmd_str = '*PDL %.1f#' % value
         backcode = self._formatted_query(cmd_str)
         if backcode != 'E00':
-            raise visa.Error('PDLE-101 Error: %s' % backcode)
+            raise pyvisa.Error('PDLE-101 Error: %s' % backcode)

@@ -1,4 +1,4 @@
-import visa
+import pyvisa
 from ._BaseInstrument import BaseInstrument
 from ..utils import check_type, check_range
 from time import sleep
@@ -13,7 +13,7 @@ READ_TERMINATION = '\n'  # default read termination for all instruments if not s
 WRITE_TERMINATION = '\n'  # default write termination for all instruments if not specified during init.
 
 # globals
-rm = visa.ResourceManager()
+rm = pyvisa.ResourceManager()
 
 # base class of visa instruments
 class VisaInstrument(BaseInstrument):
@@ -80,7 +80,7 @@ class VisaInstrument(BaseInstrument):
                 return True
             else:
                 return False
-        except visa.VisaIOError:
+        except pyvisa.VisaIOError:
             return False
 
     def command(self, cmd):
