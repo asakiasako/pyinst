@@ -188,6 +188,7 @@ class ModelAQ2200(VisaInstrument):
 
     @ checkAppType(ApplicationType.Sensor, ApplicationType.ATTN)
     def set_cal(self, value):
+        value = round(value, 3)
         if ApplicationType.ATTN == self._app_type:
             return self._set_outp_cal(value)
         elif ApplicationType.Sensor == self._app_type:
@@ -209,6 +210,7 @@ class ModelAQ2200(VisaInstrument):
     
     @ checkAppType(ApplicationType.Sensor, ApplicationType.ATTN)
     def set_wavelength(self, value):
+        value = round(value, 1)
         if ApplicationType.ATTN == self._app_type:
             return self._set_inp_wavelength(value)
         elif ApplicationType.Sensor == self._app_type:
@@ -311,7 +313,8 @@ class ModelAQ2200(VisaInstrument):
         Set att value in dB.
         :param value: (float|int) att value in dB
         """
-        print('ATT: %.2f' % value)
+        value = round(value, 3)
+        print('ATT: %.f' % value)
         check_type(value, (int, float), 'value')
         check_range(value, 0, self._max_att)
         return self.command(":INP%d:CHAN%d:ATT " % (self._slot, self._channel) + str(value) + "dB")
@@ -322,4 +325,5 @@ class ModelAQ2200(VisaInstrument):
         Set att offset value in dB.
         :param value: (float|int) att offset value in dB
         """
+        value = round(value, 3)
         return self.command(":INP%d:CHAN%d:OFFS " % (self._slot, self._channel) + str(value) + "dB")
