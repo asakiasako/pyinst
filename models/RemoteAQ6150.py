@@ -56,7 +56,7 @@ class ModelRemoteAQ6150(BaseInstrument, TypeWM):
         """
         Stop repeat measurement.
         """
-        return self.__client.call_method('stop')
+        pass
 
     def is_running(self):
         """
