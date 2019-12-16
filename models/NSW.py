@@ -21,15 +21,22 @@ class ModelNSW(BaseInstrument, TypeSW):
         "Note": "Valid channel depending on specific instrument."
     }
 
-    _ops = win32com.client.Dispatch('Neo_SmartOpticalSwitch.SmartOpticalSwitch')
+    try:
+        _ops = win32com.client.Dispatch('Neo_SmartOpticalSwitch.SmartOpticalSwitch')
+    except Exception:
+        _ops = None
 
     def __init__(self, resource_name, channel):
         super(ModelNSW, self).__init__()
         self._resource_name = resource_name
         self.__index = channel - 1
+        if not self._ops:
+            raise ModuleNotFoundError('Neo_SmartOpticalSwitch.SmartOpticalSwitch')
 
     @classmethod
     def get_usb_devices(cls, num=9):
+        if not cls._ops:
+            raise ModuleNotFoundError('Neo_SmartOpticalSwitch.SmartOpticalSwitch')
         cls._ops.InitIntefaceType = 3
         dev_list = [cls._ops.GetMultiUSBDeviceName(i) for i in range(num) if cls._ops.GetMultiUSBDeviceName(i) != 'NoDevice']
         return dev_list
