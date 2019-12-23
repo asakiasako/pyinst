@@ -16,14 +16,14 @@ class ModelN7752A(ModelN7744A, TypeVOA):
     }
     params = [
         {
-            "name": "channel",
+            "name": "slot",
             "type": "int",
             "options": [1, 3, 5, 6]
         }
     ]
 
-    def __init__(self, resource_name, channel, max_channel=6, **kwargs):
-        super(ModelN7752A, self).__init__(resource_name, channel, max_channel, **kwargs)
+    def __init__(self, resource_name, slot, max_slot=6, **kwargs):
+        super(ModelN7752A, self).__init__(resource_name, slot, max_slot, **kwargs)
         self._max_att = 45.0
         self._min_avg_time = 2
         self._min_offset = float('-inf')
@@ -33,14 +33,14 @@ class ModelN7752A(ModelN7744A, TypeVOA):
 
     # Methods
     def __is_att(self):
-        if self.channel in (1, 2, 3, 4):
+        if self.slot in (1, 2, 3, 4):
             return True
         else:
             return False
 
     def __check_is_att(self):
         if not self.__is_att():
-            raise ValueError('channel '+str(self.channel)+' has no att function.')
+            raise ValueError('slot '+str(self.slot)+' has no att function.')
 
     def enable(self, status=True):
         """
@@ -50,7 +50,7 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         self.__check_is_att()
         check_type(status, bool, 'status')
         status_str = str(int(status))
-        return self.command(":OUTP" + str(self.channel) + " " + status_str)
+        return self.command(":OUTP" + str(self.slot) + " " + status_str)
 
     def is_enabled(self):
         """
@@ -58,7 +58,7 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         :return: (bool) if VOA output is enabled.
         """
         self.__check_is_att()
-        status = self.query(":OUTP" + str(self.channel) + "?")
+        status = self.query(":OUTP" + str(self.slot) + "?")
         if status:
             status = bool(int(status))
         return status
@@ -69,7 +69,7 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         :return: (float) att value in dB
         """
         self.__check_is_att()
-        att_str = self.query(":INP" + str(self.channel) + ":ATT?")
+        att_str = self.query(":INP" + str(self.slot) + ":ATT?")
         att = float(att_str)
         return att
 
@@ -79,7 +79,7 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         :return: (float) att offset value in dB
         """
         self.__check_is_att()
-        offset_str = self.query("INP" + str(self.channel) + ":OFFS?")
+        offset_str = self.query("INP" + str(self.slot) + ":OFFS?")
         offset = float(offset_str)
         return offset
 
@@ -87,9 +87,9 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         """
         :return: (float) optical wavelength in nm
         """
-        if self.channel >= 5:
+        if self.slot >= 5:
             return ModelN7744A.get_wavelength(self)
-        wl_str = self.query(":INP"+str(self.channel)+":WAV?")
+        wl_str = self.query(":INP"+str(self.slot)+":WAV?")
         wl = float(wl_str)*10**9
         return wl
 
@@ -100,9 +100,9 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         """
         :return: (float) power monitor calibration offset in dB
         """
-        if self.channel >= 5:
+        if self.slot >= 5:
             return ModelN7744A.get_cal(self)
-        cal_str = self.query("OUTP" + str(self.channel) + ":POW:OFFS?")
+        cal_str = self.query("OUTP" + str(self.slot) + ":POW:OFFS?")
         cal = float(cal_str)
         return cal
 
@@ -115,7 +115,7 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         print('ATT: %.2f' % value)
         check_type(value, (int, float), 'value')
         check_range(value, 0, self._max_att)
-        return self.command("INP" + str(self.channel) + ":ATT " + str(value) + "dB")
+        return self.command("INP" + str(self.slot) + ":ATT " + str(value) + "dB")
 
     def set_offset(self, value):
         """
@@ -123,18 +123,18 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         :param value: (float|int) att offset value in dB
         """
         self.__check_is_att()
-        return self.command("INP"+str(self.channel)+":OFFS "+str(value)+"dB")
+        return self.command("INP"+str(self.slot)+":OFFS "+str(value)+"dB")
 
     def set_wavelength(self, value):
         """
         Set wavelength value in nm.
         :param value: (float|int) wavelength value in nm
         """
-        if self.channel >= 5:
+        if self.slot >= 5:
             return ModelN7744A.set_wavelength(self, value)
         check_type(value, (float, int), 'value')
         check_range(value, self._min_wl, self._max_wl)
-        return self.command(":INP"+str(self.channel)+":WAV " + str(value) + "NM")
+        return self.command(":INP"+str(self.slot)+":WAV " + str(value) + "NM")
 
     def set_frequency(self, value):
         return self.set_wavelength(round(LIGHT_SPEED/value, 4))
@@ -143,6 +143,6 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         """
         Set calibration offset in dB
         """
-        if self.channel >= 5:
+        if self.slot >= 5:
             return ModelN7744A.set_cal(self, value)
-        return self.command("OUTP" + str(self.channel) + ":POW:OFFS " + str(value))
+        return self.command("OUTP" + str(self.slot) + ":POW:OFFS " + str(value))

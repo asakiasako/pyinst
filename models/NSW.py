@@ -12,13 +12,13 @@ class ModelNSW(BaseInstrument, TypeSW):
     brand = "NeoPhotonics"
     params = [
         {
-            "name": "channel",
+            "name": "slot",
             "type": "int",
             "options": [1, 2, 3, 4, 5]
         }
     ]
     details = {
-        "Note": "Valid channel depending on specific instrument."
+        "Note": "Valid slot depending on specific instrument."
     }
 
     try:
@@ -26,10 +26,10 @@ class ModelNSW(BaseInstrument, TypeSW):
     except Exception:
         _ops = None
 
-    def __init__(self, resource_name, channel):
+    def __init__(self, resource_name, slot):
         super(ModelNSW, self).__init__()
         self._resource_name = resource_name
-        self.__index = channel - 1
+        self.__index = slot - 1
         if not self._ops:
             raise ModuleNotFoundError('Neo_SmartOpticalSwitch.SmartOpticalSwitch')
 

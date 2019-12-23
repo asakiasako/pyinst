@@ -15,19 +15,19 @@ class ModelN7744A(VisaInstrument, TypeOPM):
     }
     params = [
         {
-            "name": "channel",
+            "name": "slot",
             "type": "int",
             "options": [1, 2, 3, 4]
         }
     ]
 
-    def __init__(self, resource_name, channel, max_channel=4, **kwargs):
-        check_type(channel, int, 'channel')
-        if not 1 <= channel <= max_channel:
-            raise ValueError('input channel not exist')
+    def __init__(self, resource_name, slot, max_slot=4, **kwargs):
+        check_type(slot, int, 'slot')
+        if not 1 <= slot <= max_slot:
+            raise ValueError('slot out of range.')
         super(ModelN7744A, self).__init__(resource_name, **kwargs)
         self._is_pos_cal = False
-        self.__channel = channel
+        self.__slot = slot
         # thresholds
         self._max_wl = 1625.0
         self._min_wl = 1250.0
@@ -40,19 +40,19 @@ class ModelN7744A(VisaInstrument, TypeOPM):
 
     # param encapsulation
     @property
-    def channel(self):
-        return self.__channel
+    def slot(self):
+        return self.__slot
 
-    @channel.setter
-    def channel(self, value):
-        raise AttributeError('attr "channel" is read-only.')
+    @slot.setter
+    def slot(self, value):
+        raise AttributeError('attr "slot" is read-only.')
 
     # Rewrite TypeOPM Methods
     def get_power_value(self):
         """
         :return: (float) value of optical power, ignore power unit
         """
-        value_str = self.query(":FETC"+str(self.channel)+":POW?")
+        value_str = self.query(":FETC"+str(self.slot)+":POW?")
         if not value_str:
             raise ValueError('Empty return for get_power_value')
         value = float(value_str)
@@ -63,7 +63,7 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         OpticalUnit.DBM.value = 0, OpticalUnit.W.value = 1
         :return: int, value of (enum 'OpticalUnit') unit of optical power
         """
-        unit_int = int(self.query(":SENS" + str(self.channel) + ":POW:UNIT?"))
+        unit_int = int(self.query(":SENS" + str(self.slot) + ":POW:UNIT?"))
         if unit_int == 0:
             unit = OpticalUnit.DBM.value
         elif unit_int == 1:
@@ -76,7 +76,7 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         """
         Get averaging time in ms.
         """
-        avg_in_s = float(self.query(":sens" + str(self.channel) + ":pow:atim?"))
+        avg_in_s = float(self.query(":sens" + str(self.slot) + ":pow:atim?"))
         avg_in_ms = avg_in_s*1E+3
         return avg_in_ms
 
@@ -84,7 +84,7 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         """
         :return: (float) calibration offset in dB
         """
-        cal_str = self.query(':sens' + str(self.channel) + ':corr?')
+        cal_str = self.query(':sens' + str(self.slot) + ':corr?')
         cal = float(cal_str)
         return cal
 
@@ -92,7 +92,7 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         """
         :return: (float) optical wavelength in nm
         """
-        wl_str = self.query(":sens" + str(self.channel) + ":pow:wav?")
+        wl_str = self.query(":sens" + str(self.slot) + ":pow:wav?")
         wl = float(wl_str) * 10 ** 9
         return wl
 
@@ -104,14 +104,14 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         Set optical power unit
         """
         OpticalUnit(unit)  # check if unit is a valid value
-        return self.command(":SENS" + str(self.channel) + ":POW:UNIT " + str(unit))
+        return self.command(":SENS" + str(self.slot) + ":POW:UNIT " + str(unit))
 
     def set_cal(self, value):
         """
         Set calibration offset in dB
         """
         check_type(value, (int, float), 'value')
-        return self.command(':sens' + str(self.channel) + ':corr ' + str(value) + 'DB')
+        return self.command(':sens' + str(self.slot) + ':corr ' + str(value) + 'DB')
 
     def set_wavelength(self, value):
         """
@@ -119,7 +119,7 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         """
         check_type(value, (int, float), 'value')
         check_range(value, self._min_wl, self._max_wl)
-        return self.command(":sens" + str(self.channel) + ":pow:wav " + str(value) + "NM")
+        return self.command(":sens" + str(self.slot) + ":pow:wav " + str(value) + "NM")
 
     def set_frequency(self, value):
         return self.set_wavelength(round(LIGHT_SPEED/value, 4))
@@ -137,4 +137,4 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         """
         check_type(value, (int, float), 'value')
         check_range(value, self._min_avg_time, self._max_avg_time)
-        return self.command(":sens" + str(self.channel) + ":pow:atim " + str(value) + "MS")
+        return self.command(":sens" + str(self.slot) + ":pow:atim " + str(value) + "MS")
