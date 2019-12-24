@@ -1,10 +1,19 @@
 from ._BaseInstrumentType import BaseInstrumentType, InstrumentType
 
 
-class TypeTEC(BaseInstrumentType):
+class TypeTS(BaseInstrumentType):
     def __init__(self, *args, **kwargs):
-        super(TypeTEC, self).__init__()
-        self._append_ins_type(InstrumentType.TEC)
+        super(TypeTS, self).__init__()
+        self._append_ins_type(InstrumentType.TS)
+        self.__ts_type = 'Undefined'
+    
+    @property
+    def ts_type(self):
+        return self.__ts_type
+
+    @ts_type.setter
+    def ts_type(self, value):
+        raise PermissionError('ts_type is immutable')
 
     def set_target_temp(self, value):
         """

@@ -5,6 +5,7 @@ from .AQ2200_331 import ModelAQ2200_331
 from .AQ2200_342 import ModelAQ2200_342
 from .AQ6150 import ModelAQ6150
 from .AQ6370 import ModelAQ6370
+from .ATS535 import ModelATS535
 from .BTF10011 import ModelBTF10011
 from .E3631A import ModelE3631A
 from .E3633A import ModelE3633A

@@ -11,21 +11,6 @@ LIGHT_SPEED = 299792.458  # km/s
 class InstrumentType(Enum):
     """
     Enum of instrument types.
-    
-    ::
-
-        OPM:  Optical Power Meter
-        VOA:  Variable Optical Attenuator
-        OMA:  Optical Modulation Analyser
-        OSA:  Optical Spectrum Analyser
-        WM:   Optical Wavelength Meter
-        OTF:  Optical Tunable Filter
-        TEC:  Temp Control
-        SW:   Optical Switcher
-        PS:   Power Supply
-        PDLE: PDL Emulator/Source
-        POLC: Polarization Controller/Synthesizer
-        PMDE: PMD Emulator/Source
     """
     OPM = 1     # Optical Power Meter
     VOA = 2     # Variable Optical Attenuator
@@ -33,7 +18,7 @@ class InstrumentType(Enum):
     OSA = 4     # Optical Spectrum Analyser
     WM = 5      # Optical Wavelength Meter
     OTF = 6     # Optical Tunable Filter
-    TEC = 7     # Temp Control
+    TS = 7      # Temperature Source
     SW = 8      # Optical Switcher
     PS = 9      # Power Supply
     PDLE = 10   # PDL Emulator/Source

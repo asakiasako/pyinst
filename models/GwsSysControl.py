@@ -1,5 +1,5 @@
 from ..base_models._BaseInstrument import BaseInstrument
-from ..instrument_types import TypeTEC
+from ..instrument_types import TypeTS
 from ..utils import check_range, check_type
 from ..constants import TemperatureUnit
 from ..dependencies import DEPEND_PATH
@@ -64,7 +64,7 @@ class MESSAGE_ID(enum.Enum):
 BufDWORD16 = c_ulong * 16
 Buflong32 = c_long * 32
 
-class ModelGwsSysControl(BaseInstrument, TypeTEC):
+class ModelGwsSysControl(BaseInstrument, TypeTS):
     model = "GWS System Control"
     brand = "GWS"
     # load dll
@@ -87,6 +87,7 @@ class ModelGwsSysControl(BaseInstrument, TypeTEC):
     def __init__(self, resource_name, **kwargs):
         # load dlls to class attributes if none.
         self.__load_dlls()
+        self.__ts_type = 'Chamber'
         super(ModelGwsSysControl, self).__init__(resource_name, **kwargs)
         select_id = 0
         if not resource_name.upper().startswith('COM'):

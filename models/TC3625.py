@@ -1,16 +1,17 @@
 from ..base_models._BaseInstrument import BaseInstrument
-from ..instrument_types import TypeTEC
+from ..instrument_types import TypeTS
 from ..utils import check_range, check_type, int_to_complement, complement_to_int, calc_check_sum
 from ..constants import TemperatureUnit
 import serial
 
 
-class ModelTC3625(BaseInstrument, TypeTEC):
+class ModelTC3625(BaseInstrument, TypeTS):
     model = "TC-36-25"
     brand = "TE Technology"
 
     def __init__(self, resource_name, write_termination='\r', read_termination='^', baud_rate=9600, **kwargs):
         super(ModelTC3625, self).__init__()
+        self.__ts_type = 'TEC'
         self.__serial = serial.Serial(port=resource_name, baudrate=baud_rate, timeout=3)
         self.__write_termination = write_termination
         self.__read_termination = read_termination

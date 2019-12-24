@@ -4,7 +4,7 @@ from .OMA import TypeOMA
 from .OSA import TypeOSA
 from .WM import TypeWM
 from .OTF import TypeOTF
-from .TEC import TypeTEC
+from .TS import TypeTS
 from .SW import TypeSW
 from .PS import TypePS
 from .PDLE import TypePDLE
