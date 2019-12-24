@@ -4,15 +4,7 @@ from ..constants import OpticalUnit
 from ..utils import check_type
 import zerorpc
 
-
 __all__ = ['ModelRemoteAQ6150']
-
-
-def set_switch(func):
-    def wrapper(self, *args, **kwargs):
-        self.__client.set_switch(self.__osw_ch)
-        return func(self, *args, **kwargs)
-    return wrapper
 
 
 class ModelRemoteAQ6150(BaseInstrument, TypeWM):
@@ -43,14 +35,18 @@ class ModelRemoteAQ6150(BaseInstrument, TypeWM):
         self.__client.close()
 
     def check_connection(self):
-        return self.__client.call_method('check_connection')
+        return self.__client.call_method({
+            'method_name': 'check_connection'
+        })
 
     # param encapsulation
     def run(self):
         """
         Start repeat measurement.
         """
-        return self.__client.call_method('run')
+        return self.__client.call_method({
+            'method_name': 'run'
+        })
 
     def stop(self):
         """
@@ -63,68 +59,93 @@ class ModelRemoteAQ6150(BaseInstrument, TypeWM):
         Get measurement state of WM.
         :return: (bool) if repeat measurement is started.
         """
-        return self.__client.call_method('is_running')
+        return self.__client.call_method({
+            'method_name': 'is_running'
+        })
 
-    @ set_switch
     def get_frequency_array(self):
         """
         Get wavelength of all peaks in unit of frequency.
         :return: (dict) {'num': (int), 'values': (tuple of floats)}
         """
-        return self.__client.call_method('get_frequency_array')
+        return self.__client.call_method({
+            'method_name': 'get_frequency_array',
+            'set_switch': True,
+            'sw_channel': self.__osw_ch
+        })
 
-    @ set_switch
     def get_wavelength_array(self):
         """
         Get wavelength of all peaks in unit of wavelength.
         :return: (dict) {'num': (int), 'values': (tuple of floats)}
         """
-        return self.__client.call_method('get_wavelength_array')
+        return self.__client.call_method({
+            'method_name': 'get_wavelength_array',
+            'set_switch': True,
+            'sw_channel': self.__osw_ch
+        })
 
-    @ set_switch
     def get_power_array(self):
         """
         Get optical power of all peaks in selected unit.
         :return: (dict) {'num': (int), 'values': (tuple of floats)}
         """
-        return self.__client.call_method('get_power_array')
+        return self.__client.call_method({
+            'method_name': 'get_power_array',
+            'set_switch': True,
+            'sw_channel': self.__osw_ch
+        })
 
     def get_power_unit(self):
         """
         Get optical power unit.
         :return: int, value of <enum 'OpticalUnit'>, optical power unit.
         """
-        return self.__client.call_method('get_power_unit')
+        return self.__client.call_method({
+            'method_name': 'get_power_unit'
+        })
 
     def set_power_unit(self, unit):
         """
         Set optical power unit.
         :Parameters: **unit** - int, value of <enum 'OpticalUnit'>, optical power unit.
         """
-        return self.__client.call_method('set_power_unit', unit)
+        return self.__client.call_method({
+            'method_name': 'set_power_unit',
+            'args': [unit]
+        })
 
-    @ set_switch
     def get_frequency(self):
         """
         Get frequency of single peak in THz.
 
         :Returns: float, frequency in THz
         """
-        return self.__client.call_method('get_frequency')
+        return self.__client.call_method({
+            'method_name': 'get_frequency',
+            'set_switch': True,
+            'sw_channel': self.__osw_ch
+        })
 
-    @ set_switch
     def get_wavelength(self):
         """
         Get wavelength of single peak in nm
 
         :Returns: float, wavelength in nm
         """
-        return self.__client.call_method('get_wavelength')
+        return self.__client.call_method({
+            'method_name': 'get_wavelength',
+            'set_switch': True,
+            'sw_channel': self.__osw_ch
+        })
 
-    @ set_switch
     def get_power_value(self):
         """
         Get wavelength of single peak in selected unit
         :return: (float) optical power in selected unit.
         """
-        return self.__client.call_method('get_power_value')
+        return self.__client.call_method({
+            'method_name': 'get_power_value',
+            'set_switch': True,
+            'sw_channel': self.__osw_ch
+        })
