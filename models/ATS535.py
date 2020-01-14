@@ -12,7 +12,7 @@ class ModelATS535(VisaInstrument, TypeTS):
 
     def __init__(self, resource_name, read_termination='\r\n', **kwargs):
         super(ModelATS535, self).__init__(resource_name, read_termination=read_termination, **kwargs)
-        self.__ts_type = 'ThermoStream'
+        self._ts_type = 'ThermoStream'
     
     def head_up(self):
         return self.command('HEAD 0')

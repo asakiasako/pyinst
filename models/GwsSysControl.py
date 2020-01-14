@@ -87,7 +87,7 @@ class ModelGwsSysControl(BaseInstrument, TypeTS):
     def __init__(self, resource_name, **kwargs):
         # load dlls to class attributes if none.
         self.__load_dlls()
-        self.__ts_type = 'Chamber'
+        self._ts_type = 'Chamber'
         super(ModelGwsSysControl, self).__init__(resource_name, **kwargs)
         select_id = 0
         if not resource_name.upper().startswith('COM'):
