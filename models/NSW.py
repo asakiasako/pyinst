@@ -12,9 +12,9 @@ class ModelNSW(BaseInstrument, TypeSW):
     brand = "NeoPhotonics"
     params = [
         {
-            "name": "slot",
-            "type": "int",
-            "options": [1, 2, 3, 4, 5]
+            "name": "slot_or_type",
+            "type": "str",
+            "options": ['1', '2', '3', '1*8', '1*16']
         }
     ]
     details = {
@@ -26,10 +26,26 @@ class ModelNSW(BaseInstrument, TypeSW):
     except Exception:
         _ops = None
 
-    def __init__(self, resource_name, slot):
+    def __init__(self, resource_name, slot_or_type):
+        """
+        slot_or_type: 1, 2, 3, '1*8', '1*16'
+        """
         super(ModelNSW, self).__init__()
         self._resource_name = resource_name
-        self.__index = slot - 1
+        if isinstance(slot_or_type, int):
+            self.__index = slot_or_type - 1
+        else:
+            index_map = {
+                '1': 0,
+                '2': 1,
+                '3': 2,
+                '1*8': 3,
+                '1*16': 4,
+            }
+            try:
+                self.__index = index_map[slot_or_type]
+            except KeyError:
+                raise KeyError('Invalid value for slot_or_type: %r' % slot_or_type)
         if not self._ops:
             raise ModuleNotFoundError('Neo_SmartOpticalSwitch.SmartOpticalSwitch')
 
