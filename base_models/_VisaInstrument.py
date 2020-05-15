@@ -7,7 +7,7 @@ import os.path
 
 # define const
 OPEN_TIMEOUT = 0  # default open timeout for all instruments if not specified during init.
-TIMEOUT = 8000  # default timeout of operation in ms for all instruments if not specified during init.
+TIMEOUT = 2000  # default timeout of operation in ms for all instruments if not specified during init.
 QUERY_DELAY = 0.001  # the default time in seconds to wait after each write operation for all if not specified.
 READ_TERMINATION = '\n'  # default read termination for all instruments if not specified during init.
 WRITE_TERMINATION = '\n'  # default write termination for all instruments if not specified during init.
