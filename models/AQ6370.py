@@ -49,7 +49,8 @@ class ModelAQ6370(VisaInstrument, TypeOSA):
         raise PermissionError("Uncorrect LAN username or password for %s" % self.model)
 
     def close(self):
-        self.command('CLOSE')
+        if self.resource_name.upper().startswith('TCPIP'):
+            self.command('CLOSE')
         VisaInstrument.close(self)
 
     def sweep(self, mode="REPEAT"):
