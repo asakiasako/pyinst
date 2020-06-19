@@ -14,6 +14,8 @@ from .M81571A import Model81571A
 from .M8163A import Model81635A
 from .M8292A import ModelM8292A
 from .MPC202 import ModelMPC202
+from .MSO5000 import ModelMSO5000
+from .MSOX6000 import ModelMSOX6000
 from .N4392A import ModelN4392A
 from .N7744A import ModelN7744A
 from .N7752A import ModelN7752A

@@ -24,6 +24,8 @@ class InstrumentType(Enum):
     PDLE = 10   # PDL Emulator/Source
     POLC = 11   # Polarization Controller/Synthesizer
     PMDE = 12   # PMD Emulator/Source
+    WGEN = 13   # Waveform Generator
+    OSC = 14    # Oscilloscopes
 
 
 @unique

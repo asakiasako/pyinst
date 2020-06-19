@@ -10,3 +10,5 @@ from .PS import TypePS
 from .PDLE import TypePDLE
 from .POLC import TypePOLC
 from .PMDE import TypePMDE
+from .WGEN import TypeWGEN
+from .OSC import TypeOSC
