@@ -99,7 +99,7 @@ class VisaInstrument(BaseInstrument):
         Since it's always used after a 'command' method, it's better to use 'query' method instead.
         :return: (str) message sent from instrument
         """
-        return self.__inst.read_binary_values(cmd, 'B') if bin else self.__inst.read()
+        return self.__inst.read_binary_values('B') if bin else self.__inst.read()
 
     def query(self, cmd, bin=False):
         """
