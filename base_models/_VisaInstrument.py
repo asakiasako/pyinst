@@ -93,21 +93,22 @@ class VisaInstrument(BaseInstrument):
         self.__inst.write(cmd)
         return self  # reserved for chained calling
 
-    def read(self):
+    def read(self, bin=False):
         """
         Read VISA message from instrument.
         Since it's always used after a 'command' method, it's better to use 'query' method instead.
         :return: (str) message sent from instrument
         """
-        return self.__inst.read()
+        return self.__inst.read_binary_values(cmd, 'B') if bin else self.__inst.read()
 
-    def query(self, cmd):
+    def query(self, cmd, bin=False):
         """
         Send a command to instrument and read back immediately.
         :param cmd: (str) VISA command
+        :param bin: (bool) if true, get data in binary.
         :return: (str) message sent from instrument
         """
-        return self.__inst.query(cmd)
+        return self.__inst.query_binary_values(cmd, 'B') if bin else self.__inst.query(cmd)
 
     def close(self):
         """
