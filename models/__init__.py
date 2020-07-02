@@ -9,13 +9,14 @@ from .ATS535 import ModelATS535
 from .BTF10011 import ModelBTF10011
 from .E3631A import ModelE3631A
 from .E3633A import ModelE3633A
-from .GwsSysControl import ModelGwsSysControl
+# from .GwsSysControl import ModelGwsSysControl
 from .M81571A import Model81571A
 from .M8163A import Model81635A
 from .M8292A import ModelM8292A
 from .MPC202 import ModelMPC202
 from .MSO5000 import ModelMSO5000
 from .MSOX6000 import ModelMSOX6000
+from .MT3065 import ModelMT3065
 from .N4392A import ModelN4392A
 from .N7744A import ModelN7744A
 from .N7752A import ModelN7752A
