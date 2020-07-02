@@ -52,7 +52,7 @@ class ModelMT3065(BaseInstrument, TypeTS):
         value = round(value*10)
         cmd = 'FFWW0D119705{temp:04X}0000000000000000'.format(temp=value).encode()
         self.write_cmd(cmd)
-        time.sleep(7)
+        time.sleep(0.5)
         r = self.read_reply()
         if not r.startswith(b'\x06'):
             raise ValueError('Unexpected reply: %r' % r)
