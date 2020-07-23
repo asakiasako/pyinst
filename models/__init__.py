@@ -9,7 +9,6 @@ from .ATS535 import ModelATS535
 from .BTF10011 import ModelBTF10011
 from .E3631A import ModelE3631A
 from .E3633A import ModelE3633A
-# from .GwsSysControl import ModelGwsSysControl
 from .M81571A import Model81571A
 from .M8163A import Model81635A
 from .M8292A import ModelM8292A
@@ -29,3 +28,4 @@ from .PSY201 import ModelPSY201
 from .RemoteAQ6150 import ModelRemoteAQ6150
 from .TC3625 import ModelTC3625
 from .WaveAnalyzer1500S import ModelWaveAnalyzer1500S
+from .WaveShaper4000A import ModelWaveShaper4000A

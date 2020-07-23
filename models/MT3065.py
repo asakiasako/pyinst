@@ -50,6 +50,8 @@ class ModelMT3065(BaseInstrument, TypeTS):
         :param value: <float|int> target temperature value
         """
         value = round(value*10)
+        if value < 0:
+            value = 65536 + value
         cmd = 'FFWW0D119705{temp:04X}0000000000000000'.format(temp=value).encode()
         self.write_cmd(cmd)
         time.sleep(0.5)
@@ -68,7 +70,9 @@ class ModelMT3065(BaseInstrument, TypeTS):
         r = self.read_reply()
         if not r.startswith(b'\x02'):
             raise ValueError('Unexpected reply: %r' % r)
-        return int(r[5:9].decode(), 16)/10
+        raw_val = int(r[5:9].decode(), 16)
+        signed_val = (raw_val - 65536) if raw_val >= 65536/2 else raw_val
+        return signed_val/10
 
     def get_current_temp(self):
         """
@@ -81,7 +85,9 @@ class ModelMT3065(BaseInstrument, TypeTS):
         r = self.read_reply()
         if not r.startswith(b'\x02'):
             raise ValueError('Unexpected reply: %r' % r)
-        return int(r[5:9].decode(), 16)/10
+        raw_val = int(r[5:9].decode(), 16)
+        signed_val = (raw_val - 65536) if raw_val >= 65536/2 else raw_val
+        return signed_val/10
 
     def set_unit(self, unit):
         """
