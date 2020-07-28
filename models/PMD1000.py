@@ -1,6 +1,5 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypePMDE
-from ..utils import check_range, check_type
 from ..constants import LIGHT_SPEED
 import math
 
@@ -57,8 +56,10 @@ class ModelPMD1000(VisaInstrument, TypePMDE):
         :param pmd: (float, int) DGD value in ps
         :param sopmd: (float, int) 2nd order pmd in ps**2
         """
-        check_type(pmd, (int, float), 'pmd')
-        check_type(sopmd, (int, float), 'sopmd')
-        check_range(pmd, 0.36, 182.4)
-        check_range(sopmd, 0, 8319.9)
+        if not (isinstance(pmd, (float, int)) and isinstance(sopmd, (float, int))):
+            raise TypeError('Param pmd and sopmd should be number')
+        if not 0.36 <= pmd <= 182.4:
+            raise ValueError('Param pmd out of range')
+        if not 0 <= sopmd <= 8319.9:
+            raise ValueError('Param sopmd out of range')
         return self.command('*PMD:CON %.2f,%.2f#' % (pmd, sopmd))

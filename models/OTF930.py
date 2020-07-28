@@ -1,12 +1,9 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypeOTF
-from ..utils import check_type, check_range
 from ..constants import OpticalUnit, LIGHT_SPEED
 from time import sleep
 import math
 
-
-# TODO: Not verified yet
 class ModelOTF930(VisaInstrument, TypeOTF):
     model = "OTF-930"
     brand = "Santec"
@@ -41,8 +38,10 @@ class ModelOTF930(VisaInstrument, TypeOTF):
         Sets the filter center wavelength.
         :param value: (float|int) wavelength in nm
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_wl, self._max_wl)
+        if not isinstance(value, (int, float)):
+            raise TypeError('Wavelength value should be number')
+        if not self.min_wavelength <= value <= self.max_wavelength:
+            raise ValueError('Wavelength value out of range')
         return self.command('WA '+str(value))
 
     def get_frequency(self):
@@ -74,7 +73,8 @@ class ModelOTF930(VisaInstrument, TypeOTF):
         Sets the offset to the filter center wavelength.
         :param value: (float|int) wavelength
         """
-        check_type(value, (int, float), 'value')
+        if not isinstance(value, (float, int)):
+            raise TypeError('Wavelength offset value should be number')
         return self.command('CW %s' % str(round(value, 3)))
 
     def get_bandwidth_offset(self):
@@ -91,7 +91,8 @@ class ModelOTF930(VisaInstrument, TypeOTF):
         Sets the offset to the filter bandwidth.
         :param value: (float|int) bandwidth offset in nm
         """
-        check_type(value, (int, float), 'value')
+        if not isinstance(value, (float, int)):
+            raise TypeError('Bandwidth offset value should be number')
         return self.command(':OFFS:Band '+str(value)+'nm')
 
     def get_power_unit(self):

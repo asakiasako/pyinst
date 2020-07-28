@@ -1,7 +1,6 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypeVOA
 from ..constants import LIGHT_SPEED
-from ..utils import check_range, check_type
 import math
 
 class Model81571A(VisaInstrument, TypeVOA):
@@ -21,7 +20,6 @@ class Model81571A(VisaInstrument, TypeVOA):
     ]
 
     def __init__(self, resource_name, slot, **kwargs):
-        check_type(slot, int, 'slot')
         self.__slot = slot
         super(Model81571A, self).__init__(resource_name, **kwargs)
         self._max_att = 60.0
@@ -48,7 +46,8 @@ class Model81571A(VisaInstrument, TypeVOA):
         Set VOA output enabled/disabled.
         :param status: (bool=True)
         """
-        check_type(status, bool, 'status')
+        if not isinstance(status, bool):
+            raise TypeError('Enable status should be bool')
         status_str = str(int(status))
         return self.command(":OUTP" + str(self.slot) + " " + status_str)
 
@@ -104,9 +103,10 @@ class Model81571A(VisaInstrument, TypeVOA):
         Set att value in dB.
         :param value: (float|int) att value in dB
         """
-        print('ATT: %.2f' % value)
-        check_type(value, (int, float), 'value')
-        check_range(value, 0, self._max_att)
+        if not isinstance(value, (float, int)):
+            raise TypeError('Att value should be number')
+        if not 0 <= value <= self.max_att:
+            raise ValueError('Att value out of range')
         return self.command("INP" + str(self.slot) + ":ATT " + str(value) + "dB")
 
     def set_offset(self, value):
@@ -121,8 +121,10 @@ class Model81571A(VisaInstrument, TypeVOA):
         Set wavelength value in nm.
         :param value: (float|int) wavelength value in nm
         """
-        check_type(value, (float, int), 'value')
-        check_range(value, self._min_wl, self._max_wl)
+        if not isinstance(value, (int, float)):
+            raise TypeError('Offset should be number.')
+        if not self.min_wavelength <= value <= self.max_wavelength:
+            raise ValueError('Wavelength value out of range')
         return self.command(":INP"+str(self.slot)+":WAV " + str(value) + "NM")
 
     def set_frequency(self, value):

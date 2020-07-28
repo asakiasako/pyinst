@@ -1,10 +1,12 @@
-class BaseInstrument(object):
+from abc import ABC, abstractmethod
+
+class BaseInstrument(ABC):
     """
     Base class of instruments.
     """
     # instrument information
-    brand = ""
-    model = ""
+    brand = "No Brand"
+    model = "No Model"
     details = {}
     params = []
 
@@ -25,13 +27,21 @@ class BaseInstrument(object):
         raise NotImplementedError('This instrument model lacks "close" method.')
 
     @property
-    def resource_name(self):
-        return self._resource_name
+    @abstractmethod
+    def ins_type(self):
+        """
+        A list of instrument types
+        """
 
-    @resource_name.setter
-    def resource_name(self, value):
-        raise AttributeError('attr "resource_name" is read-only.')
+    @property
+    @abstractmethod
+    def resource_name(self):
+        """
+        Visa Resource Name or other address.
+        """
     
+    @abstractmethod
     def check_connection(self):
-        raise NotImplementedError('This instrument model lacks "check_connection" method.')
-        
+        """
+        Check connection
+        """

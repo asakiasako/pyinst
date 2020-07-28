@@ -1,4 +1,4 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypeOSC
 
 

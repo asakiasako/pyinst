@@ -1,7 +1,6 @@
 from .OTF970 import ModelOTF970
 
 
-# TODO: Not verified yet
 class ModelOTF980(ModelOTF970):
     model = "OTF-980"
     brand = "Santec"

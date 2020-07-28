@@ -1,4 +1,4 @@
-from ..base_models.E36xx import ModelE36xx
+from ._E36xx import ModelE36xx
 
 
 class ModelE3633A(ModelE36xx):

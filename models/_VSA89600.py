@@ -1,8 +1,10 @@
-from ..base_models._VisaInstrument import VisaInstrument
-from ..utils import check_range, check_type
+from ._VisaInstrument import VisaInstrument
 
 
 class ModelVSA89600(VisaInstrument):
+    """
+    This is the base model of Keysight VSA89600 software
+    """
 
     def __init__(self, resource_name, **kwargs):
         super(ModelVSA89600, self).__init__(resource_name, **kwargs)
@@ -31,8 +33,10 @@ class ModelVSA89600(VisaInstrument):
         :param trace: (int) index of trace, 1 based from A. For example: A->1, E->5
         :return: (list of str) trace item names.
         """
-        check_type(trace, int, 'trace')
-        check_range(trace, 1, float('inf'))
+        if not isinstance(trace, int):
+            raise TypeError('trace should be int')
+        if not trace >= 1:
+            raise ValueError('trace starts from 1')
         item_str = self.query(':TRACe%d:DATA:TABLe:NAME?' % trace)
         item_list = item_str.split(',')
         item_list = list(map(lambda x: x.strip('"'), item_list))
@@ -44,8 +48,10 @@ class ModelVSA89600(VisaInstrument):
         :param trace: (int) index of trace, 1 based from A. For example: A->1, E->5
         :return: (list of float) trace item values.
         """
-        check_type(trace, int, 'trace')
-        check_range(trace, 1, float('inf'))
+        if not isinstance(trace, int):
+            raise TypeError('trace should be int')
+        if not trace >= 1:
+            raise ValueError('trace starts from 1')
         value_str = self.query(':TRACe%d:DATA:TABLe?' % trace)
         value_list = value_str.split(',')
         value_list = list(map(lambda x: float(x), value_list))
@@ -57,8 +63,10 @@ class ModelVSA89600(VisaInstrument):
         :param trace: (int) index of trace, 1 based from A. For example: A->1, E->5
         :return: (list of str) units of item values.
         """
-        check_type(trace, int, 'trace')
-        check_range(trace, 1, float('inf'))
+        if not isinstance(trace, int):
+            raise TypeError('trace should be int')
+        if not trace >= 1:
+            raise ValueError('trace starts from 1')
         unit_str = self.query(':TRACe%d:DATA:TABLe:UNIT?' % trace)
         unit_list = unit_str.split(',')        
         unit_list = list(map(lambda x: x.strip('"'), unit_list))
@@ -69,8 +77,10 @@ class ModelVSA89600(VisaInstrument):
         Set current trace
         :param trace: (int) index of trace, 1 based from A. For example: A->1, E->5
         """
-        check_type(trace, int, 'trace')
-        check_range(trace, 1, float('inf'))
+        if not isinstance(trace, int):
+            raise TypeError('trace should be int')
+        if not trace >= 1:
+            raise ValueError('trace starts from 1')
         self._trace = trace
         self._item_names = self.get_trace_item_names(trace)
         self._units = self.get_trace_units(trace)

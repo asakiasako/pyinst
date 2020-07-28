@@ -1,4 +1,4 @@
-from ..base_models.VsaOSA import ModelVsaOSA
+from ._VsaOSA import ModelVsaOSA
 from ..instrument_types import TypeOMA
 
 class ModelN4392A(ModelVsaOSA):

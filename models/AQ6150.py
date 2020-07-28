@@ -1,7 +1,6 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypeWM
 from ..constants import OpticalUnit
-from ..utils import check_type
 
 
 class ModelAQ6150(VisaInstrument, TypeWM):

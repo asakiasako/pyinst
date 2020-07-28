@@ -1,6 +1,5 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypeOTF
-from ..utils import check_type, check_range
 from ..constants import OpticalUnit
 from time import sleep
 
@@ -49,8 +48,10 @@ class ModelOTF970(VisaInstrument, TypeOTF):
         Sets the filter center wavelength.
         :param value: (float|int) wavelength in nm
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_wl, self._max_wl)
+        if not isinstance(value, (float, int)):
+            raise TypeError('Wavelength value should be number.')
+        if not self.min_wavelength <= value <= self.max_wavelength:
+            raise ValueError('Wavelength value out of range')
         return self.command(':WAV '+str(value)+'nm')
 
     def get_wavelength_setting_state(self):
@@ -76,8 +77,10 @@ class ModelOTF970(VisaInstrument, TypeOTF):
         Sets the filter center wavelength in frequency(THz).
         :param value: (float|int) optical frequency in THz
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_freq, self._max_freq)
+        if not isinstance(value, (float, int)):
+            raise TypeError('Frequency value should be number.')
+        if not self.min_frequency <= value <= self.max_frequency:
+            raise ValueError('Frequency value out of range')
         return self.command(':FREQ '+str(value)+'THz')
 
     def get_wavelength_offset(self):
@@ -94,8 +97,10 @@ class ModelOTF970(VisaInstrument, TypeOTF):
         Sets the offset to the filter center wavelength.
         :param value: (float|int) wavelength
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_wl_offs, self._max_wl_offs)
+        if not isinstance(value, (float, int)):
+            raise TypeError('Wavelength offset value should be number.')
+        if not self._min_wl_offs <= value <= self._max_wl_offs:
+            raise ValueError('Wavelength offset value out of range')
         return self.command(':OFFS '+str(value)+'nm')
 
     def get_bandwidth(self):
@@ -112,8 +117,10 @@ class ModelOTF970(VisaInstrument, TypeOTF):
         Sets the filter bandwidth.
         :param value: (float|int) bandwidth setting value in nm
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_bw, self._max_bw)
+        if not isinstance(value, (int, float)):
+            raise TypeError('Bandwidth should be number')
+        if not self.min_bandwidth <= value <= self.max_bandwidth:
+            raise ValueError('Bandwidth value out of range')
         return self.command(':BAND '+str(value)+'nm')
 
     def get_bandwidth_setting_state(self):
@@ -139,8 +146,10 @@ class ModelOTF970(VisaInstrument, TypeOTF):
         Sets the offset to the filter bandwidth.
         :param value: (float|int) bandwidth offset in nm
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_bw_offs, self._max_bw_offs)
+        if not isinstance(value, (int, float)):
+            raise TypeError('Bandwith offset value should be number')
+        if not self._min_bw_offs <= value <= self._max_bw_offs:
+            raise ValueError('Bandwidth offset value out of range')
         return self.command(':OFFS:Band '+str(value)+'nm')
 
     def get_power_unit(self):
@@ -174,8 +183,10 @@ class ModelOTF970(VisaInstrument, TypeOTF):
         Set peak search center in nm.
         :param center: (float|int) peak search center in nm
         """
-        check_type(center, (int, float), 'center')
-        check_range(center, self._min_wl, self._max_wl)
+        if not isinstance(center, (int, float)):
+            raise TypeError('Parameter center should be number')
+        if not self.min_wavelength <= center <= self.max_wavelength:
+            raise ValueError('Parameter center out of range')
         return self.command(':CENT '+str(center)+'nm')
 
     def _set_peak_search_span(self, span):
@@ -183,8 +194,10 @@ class ModelOTF970(VisaInstrument, TypeOTF):
         Set peak search span in nm.
         :param span: (float|int) peak search span in nm
         """
-        check_type(span, (float, int), 'span')
-        check_range(span, 0, 2*(self._max_wl-self._min_wl))
+        if not isinstance(span, (int, float)):
+            raise TypeError('Parameter span should be number')
+        if not 0 <= span <= 2*(self._max_wl-self._min_wl):
+            raise ValueError('Param span out of range')
         return self.command(':SPAN '+str(span)+'nm')
 
     def _run_peak_search(self, if_run):
@@ -192,7 +205,8 @@ class ModelOTF970(VisaInstrument, TypeOTF):
         Run or cancel peak search.
         :param if_run: (bool) if run or cancel
         """
-        check_type(if_run, bool, 'if_run')
+        if not isinstance(if_run, bool):
+            raise TypeError('Param if_run should be bool')
         return self.command(':PS '+str(int(if_run)))
 
     def _is_peak_search_complete(self):

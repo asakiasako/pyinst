@@ -1,6 +1,6 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypeTS
-from ..utils import check_range, check_type, int_to_complement, complement_to_int, calc_check_sum
+from ..utils import int_to_complement, complement_to_int, calc_check_sum
 from ..constants import TemperatureUnit
 import serial
 import time
@@ -63,7 +63,8 @@ class ModelATS535(VisaInstrument, TypeTS):
         Set the target Temperature.
         :param value: <float|int> target temperature value
         """
-        check_type(value, (float, int), 'value')
+        if not isinstance(value, (int, float)):
+            raise TypeError('Target temperature should be number')
         if value < 20:
             n = 2
         elif 20<= value <= 30:

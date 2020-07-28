@@ -62,28 +62,6 @@ def format_unit(value, precision):
         return value, ''
 
 
-def check_range(value, r_min, r_max):
-    if not (r_min <= value <= r_max):
-        raise ValueError('Out of range')
-
-
-def check_type(value, v_type, name):
-    if not isinstance(value, v_type):
-        if not isinstance(v_type, (tuple, list)):
-            type_str = v_type.__name__
-        else:
-            type_str_list = [i.__name__ for i in v_type]
-            type_str = "(%s)" % "|".join(type_str_list)
-        raise TypeError('Param %s should be %s' % (name, type_str))
-
-
-def check_selection(value, seq):
-    if not isinstance(seq, (list, tuple)):
-        raise TypeError('seq must be list|tuple')
-    if value not in seq:
-        raise ValueError('Out of selection.')
-
-
 def complement_to_int(comp, bytes_num):
     range_str = '0x%s' % ('FF'*bytes_num)
     range_val = int(range_str, 16)
@@ -97,10 +75,12 @@ def int_to_complement(value, bytes_num):
     """
     :return: (str) a str of Hex caractors with fixed length such as: '0048', 'FF3A'
     """
-    check_type(value, int, 'value')
+    if not isinstance(value, int):
+        raise TypeError('value to convert should be int')
     range_str = '0x%s' % ('FF' * bytes_num)
     range_val = int(range_str, 16)
-    check_range(value, -(range_val+1)/2, (range_val+1)/2 - 1)
+    if not -(range_val+1)/2 <= value <= (range_val+1)/2 - 1:
+        raise ValueError('value to convert is out of valid range')
     if value >= 0:
         return '%0*X' % (bytes_num*2, value)
     else:

@@ -1,4 +1,4 @@
-from ..base_models._BaseInstrument import BaseInstrument
+from ._BaseInstrument import BaseInstrument
 from ..instrument_types import TypeSW
 import subprocess
 import os

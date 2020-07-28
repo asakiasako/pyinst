@@ -1,4 +1,4 @@
-from .VSA89600 import ModelVSA89600
+from ._VSA89600 import ModelVSA89600
 from ..instrument_types import TypeOMA
 
 
