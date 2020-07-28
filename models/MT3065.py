@@ -7,6 +7,14 @@ import time
 class ModelMT3065(BaseInstrument, TypeTS):
     model = "MT3065"
     brand = "Espec"
+    params = [
+        {
+            "name": "dev_id",
+            "type": "int",
+            "min": 0,
+            "max": 15
+        }
+    ]
 
     def __init__(self, resource_name, dev_id=0, baud_rate=19200, **kwargs):
         super(ModelMT3065, self).__init__()
