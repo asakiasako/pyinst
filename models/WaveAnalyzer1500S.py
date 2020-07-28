@@ -91,7 +91,7 @@ class ModelWaveAnalyzer1500S(TypeOSA):
         msg = self.__get('wanl/scan/%d/%d/%s' % (center*10**6, span*10**3, tag))
         rc = msg['rc']
         if rc == 0:
-            return self
+            return
         else:
             raise ValueError('Responsed Error Code: Rc = %d' % rc)
 

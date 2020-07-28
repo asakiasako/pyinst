@@ -225,4 +225,4 @@ class ModelOTF970(VisaInstrument, TypeOTF):
         while True:
             sleep(0.5)
             if self._is_peak_search_complete():
-                return self
+                return
