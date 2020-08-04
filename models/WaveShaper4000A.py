@@ -1,5 +1,5 @@
 from ..instrument_types import TypeOTF
-from ..base_models._BaseInstrument import BaseInstrument
+from ._BaseInstrument import BaseInstrument
 import requests
 import json
 from ..constants import LIGHT_SPEED

@@ -1,4 +1,4 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypeWGEN
 from string import ascii_lowercase
 
@@ -8,7 +8,6 @@ class ModelMSOX6000(VisaInstrument, TypeWGEN):
     brand = "Keysight"
 
     def __init__(self, resource_name, wg_channel, **kwargs):
-        # TODO: termination
         super(ModelMSOX6000, self).__init__(resource_name, **kwargs)
         self.wg_channel = wg_channel
 

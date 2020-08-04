@@ -1,6 +1,5 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypeOPM
-from ..utils import check_range, check_type
 from ..constants import OpticalUnit, LIGHT_SPEED
 import math
 
@@ -22,7 +21,8 @@ class ModelN7744A(VisaInstrument, TypeOPM):
     ]
 
     def __init__(self, resource_name, slot, max_slot=4, **kwargs):
-        check_type(slot, int, 'slot')
+        if not isinstance(slot, int):
+            raise TypeError('Parameter slot should be int')
         if not 1 <= slot <= max_slot:
             raise ValueError('slot out of range.')
         super(ModelN7744A, self).__init__(resource_name, **kwargs)
@@ -110,15 +110,18 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         """
         Set calibration offset in dB
         """
-        check_type(value, (int, float), 'value')
+        if not isinstance(value, (float, int)):
+            raise TypeError('Calibration value should be numbwer')
         return self.command(':sens' + str(self.slot) + ':corr ' + str(value) + 'DB')
 
     def set_wavelength(self, value):
         """
         Set optical wavelength in nm
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_wl, self._max_wl)
+        if not isinstance(value, (int, float)):
+            raise TypeError('Wavelength value should be number')
+        if not self.min_wavelength <= value <= self.max_wavelength:
+            raise ValueError('Wavelength value out of range')
         return self.command(":sens" + str(self.slot) + ":pow:wav " + str(value) + "NM")
 
     def set_frequency(self, value):
@@ -135,6 +138,8 @@ class ModelN7744A(VisaInstrument, TypeOPM):
         """
         set avg time in ms
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_avg_time, self._max_avg_time)
+        if not isinstance(value, (float, int)):
+            raise TypeError('Averaging time should be number')
+        if not self.min_avg_time <= value <= self.max_avg_time:
+            raise ValueError('Averaging time out of range')
         return self.command(":sens" + str(self.slot) + ":pow:atim " + str(value) + "MS")

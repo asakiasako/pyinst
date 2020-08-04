@@ -1,4 +1,4 @@
-from ..base_models.AQ2200 import ModelAQ2200, ApplicationType
+from ._AQ2200 import ModelAQ2200, ApplicationType
 from ..instrument_types import TypeVOA
 from ..constants import LIGHT_SPEED
 import math

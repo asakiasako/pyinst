@@ -1,6 +1,6 @@
-from ..base_models._BaseInstrument import BaseInstrument
+from ._BaseInstrument import BaseInstrument
 from ..instrument_types import TypeTS
-from ..utils import check_range, check_type, int_to_complement, complement_to_int, calc_check_sum
+from ..utils import int_to_complement, complement_to_int, calc_check_sum
 from ..constants import TemperatureUnit
 import serial
 
@@ -48,8 +48,6 @@ class ModelTC3625(BaseInstrument, TypeTS):
         :param cmd: (str) VISA command
         :return: (str) message sent from instrument
         """
-        check_type(cmd, str, 'cmd')
-        check_type(value, int, 'value')
         val_str = int_to_complement(value, 4)
         cmd_content = ('00%s%s' % (cmd, val_str)).lower()
         check_sum = calc_check_sum(cmd_content)
@@ -79,7 +77,8 @@ class ModelTC3625(BaseInstrument, TypeTS):
         Set the target Temperature.
         :param value: <float|int> target temperature value
         """
-        check_type(value, (float, int), 'value')
+        if not isinstance(value, (float, int)):
+            raise TypeError('Temperature value should be number')
         value = int(round(value*100))
         rtn_value = self.formed_query('1c', value)
         if value == rtn_value:

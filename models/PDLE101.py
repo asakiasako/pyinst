@@ -1,6 +1,5 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypePDLE
-from ..utils import check_range, check_type
 from ..constants import LIGHT_SPEED
 import pyvisa
 import math
@@ -52,8 +51,10 @@ class ModelPDLE101(VisaInstrument, TypePDLE):
         Set wavelength setting (nm)
         :param wavelength: (int) wavelength in nm
         """
-        check_type(wavelength, (int, float), 'wavelength')
-        check_range(wavelength, self._min_wl, self._max_wl)
+        if not isinstance(wavelength, (int, float)):
+            raise TypeError('Param wavelength should be number')
+        if not self.min_wavelength <= wavelength <= self.max_wavelength:
+            raise ValueError('Param wavelength out of range')
         wavelength = round(wavelength)
         backcode = self._formatted_query('*WAV %d#' % wavelength)
         if backcode != 'E00':
@@ -74,8 +75,10 @@ class ModelPDLE101(VisaInstrument, TypePDLE):
         Set pdl value
         :param value: (float, int) pdl value in dB
         """
-        check_type(value, (float, int), 'value')
-        check_range(value, 0.1, 20)
+        if not isinstance(value, (float, int)):
+            raise TypeError('PDL value should be number')
+        if not 0.1 <= value <= 20:
+            raise ValueError('PDL value out of range')
         cmd_str = '*PDL %.1f#' % value
         backcode = self._formatted_query(cmd_str)
         if backcode != 'E00':

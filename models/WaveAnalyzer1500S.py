@@ -1,5 +1,4 @@
 from ..instrument_types import TypeOSA
-from ..utils import check_range, check_type, check_selection
 import requests
 import subprocess
 import threading
@@ -83,13 +82,16 @@ class ModelWaveAnalyzer1500S(TypeOSA):
         span: GHz,
         tag: Normal, Normal20MHz, HighSens, HighSens20MHz
         """
-        check_type(center, (int, float), 'center')
-        check_type(span, (int,float), 'span')
-        check_selection(tag, ['Normal', 'Normal20MHz', 'HighSens', 'HighSens20MHz'])
+        if not isinstance(center, (int, float)):
+            raise TypeError('Parameter center should be number')
+        if not isinstance(span, (int, float)):
+            raise TypeError('Parameter span should be number')
+        if tag not in ['Normal', 'Normal20MHz', 'HighSens', 'HighSens20MHz']:
+            raise ValueError('Invalid tag: %r' % tag)
         msg = self.__get('wanl/scan/%d/%d/%s' % (center*10**6, span*10**3, tag))
         rc = msg['rc']
         if rc == 0:
-            return self
+            return
         else:
             raise ValueError('Responsed Error Code: Rc = %d' % rc)
 
@@ -115,9 +117,12 @@ class ModelWaveAnalyzer1500S(TypeOSA):
         """
         rbw: MHz
         """
-        check_type(rbw, (int, float), 'rbw')
-        check_type(averages, int, rbw)
-        check_selection(shape, ['flattop', 'gaussian'])
+        if not isinstance(rbw, (int, float)):
+            raise TypeError('Parameter rbw should be number')
+        if not isinstance(averages, int):
+            raise TypeError('Parameter avarages should be int')
+        if shape not in ['flattop', 'gaussian']:
+            raise ValueError('Invalid shape: %r' % shape)
         msg = self.__analysis('data?ip=%s&averages=%d&scantype=%s&rbw=%d&shape=%s' % (self.resource_name, averages, scantype, rbw, shape), False)
         return msg
 

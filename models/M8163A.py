@@ -1,6 +1,5 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypeOPM
-from ..utils import check_range, check_type
 from ..constants import OpticalUnit, LIGHT_SPEED
 import math
 
@@ -26,8 +25,6 @@ class Model81635A(VisaInstrument, TypeOPM):
     ]
 
     def __init__(self, resource_name, slot, channel, **kwargs):
-        check_type(channel, int, 'channel')
-        check_type(slot, int, 'slot')
         super(Model81635A, self).__init__(resource_name, **kwargs)
         self._is_pos_cal = False
         self.__slot = slot
@@ -122,15 +119,18 @@ class Model81635A(VisaInstrument, TypeOPM):
         """
         Set calibration offset in dB
         """
-        check_type(value, (int, float), 'value')
+        if not isinstance(value, (int, float)):
+            raise TypeError('Calibration value should be number')
         return self.command(':sens%d:chan%d:corr %sDB' % (self.slot, self.channel, value))
 
     def set_wavelength(self, value):
         """
         Set optical wavelength in nm
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_wl, self._max_wl)
+        if not isinstance(value, (int, float)):
+            raise TypeError('Wavelength value should be number')
+        if not self.min_wavelength <= value <= self.max_wavelength:
+            raise ValueError('Wavelength value out of range')
         return self.command(":sens%d:chan%d:pow:wav %sNM" % (self.slot, self.channel, value))
 
     def set_frequency(self, value):
@@ -147,6 +147,8 @@ class Model81635A(VisaInstrument, TypeOPM):
         """
         set avg time in ms
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_avg_time, self._max_avg_time)
+        if not isinstance(value, (int, float)):
+            raise TypeError('Averaging time should be number')
+        if not self.min_avg_time <= value <= self.max_avg_time:
+            raise ValueError('Averaging time out of range')
         return self.command(":sens%d:chan%d:pow:atim %sMS" % (self.slot, self.channel, value))

@@ -1,5 +1,4 @@
 from ._VisaInstrument import VisaInstrument
-from ..utils import check_type, check_range
 from ..constants import OpticalUnit, LIGHT_SPEED
 from enum import unique, Enum
 
@@ -22,10 +21,6 @@ def checkAppType(*app_types):
 
 class ModelAQ2200(VisaInstrument):
     def __init__(self, resource_name, app_type, slot, channel=1, *args, **kwargs):
-        # check param types
-        check_type(app_type, ApplicationType, 'app_type')
-        check_type(slot, int, 'slot')
-        check_type(channel, int, 'channel')
         # super
         super(ModelAQ2200, self).__init__(resource_name, read_termination='', *args, **kwargs)
         # attributes
@@ -198,14 +193,16 @@ class ModelAQ2200(VisaInstrument):
         """
         Set calibration offset in dB
         """
-        check_type(value, (int, float), 'value')
+        if not isinstance(value, (int, float)):
+            raise TypeError('Calibration value should be float or int.')
         return self.command(':outp%d:chan%d:pow:offs ' % (self._slot, self._channel) + str(value) + 'DB')
 
     def _set_sens_cal(self, value):
         """
         Set calibration offset in dB
         """
-        check_type(value, (int, float), 'value')
+        if not isinstance(value, (int, float)):
+            raise TypeError('Calibration value should be float or int.')
         return self.command(':sens%d:chan%d:corr ' % (self._slot, self._channel) + str(value) + 'DB')
     
     @ checkAppType(ApplicationType.Sensor, ApplicationType.ATTN)
@@ -223,8 +220,10 @@ class ModelAQ2200(VisaInstrument):
         """
         Set optical wavelength in nm
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_wl, self._max_wl)
+        if not isinstance(value, (int, float)):
+            raise TypeError('Wavelength value should be float or int.')
+        if not self._min_wl <= value <= self._max_wl:
+            raise ValueError('Wavelength value out of range')
         return self.command(":sens%d:chan%d:pow:wav " % (self._slot, self._channel) + str(value) + "NM")
 
     def _set_inp_wavelength(self, value):
@@ -232,8 +231,10 @@ class ModelAQ2200(VisaInstrument):
         Set wavelength value in nm.
         :param value: (float|int) wavelength value in nm
         """
-        check_type(value, (float, int), 'value')
-        check_range(value, self._min_wl, self._max_wl)
+        if not isinstance(value, (int, float)):
+            raise TypeError('Wavelength value should be float or int.')
+        if not self._min_wl <= value <= self._max_wl:
+            raise ValueError('Wavelength value out of range')
         return self.command(":INP%d:CHAN%d:WAV " % (self._slot, self._channel) + str(value) + "NM")
 
     @ checkAppType(ApplicationType.Sensor, ApplicationType.ATTN)
@@ -247,16 +248,20 @@ class ModelAQ2200(VisaInstrument):
         """
         set avg time in ms
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_avg_time, self._max_avg_time)
+        if not isinstance(value, (int, float)):
+            raise TypeError('Averaging time value should be float or int.')
+        if not self._min_avg_time <= value <= self._max_avg_time:
+            raise ValueError('Averaging time value out of range.')
         return self.command(":OUTP%d:CHAN%d:atim " % (self._slot, self._channel) + str(value) + "MS")
 
     def _set_sens_avg_time(self, value):
         """
         set avg time in ms
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_avg_time, self._max_avg_time)
+        if not isinstance(value, (int, float)):
+            raise TypeError('Averaging time value should be float or int.')
+        if not self._min_avg_time <= value <= self._max_avg_time:
+            raise ValueError('Averaging time value out of range.')
         return self.command(":sens%d:CHAN%d:pow:atim " % (self._slot, self._channel) + str(value) + "MS")
 
     @ checkAppType(ApplicationType.ATTN)
@@ -265,7 +270,8 @@ class ModelAQ2200(VisaInstrument):
         Set VOA output enabled/disabled.
         :param status: (bool=True)
         """
-        check_type(status, bool, 'status')
+        if not isinstance(status, bool):
+            raise TypeError('Enable status should be bool')
         status_str = str(int(status))
         return self.command(":OUTP%d:CHAN%d " % (self._slot, self._channel) + status_str)
 
@@ -315,8 +321,10 @@ class ModelAQ2200(VisaInstrument):
         """
         value = round(value, 3)
         print('ATT: %.f' % value)
-        check_type(value, (int, float), 'value')
-        check_range(value, 0, self._max_att)
+        if not isinstance(value, (int, float)):
+            raise TypeError('Att value should be float or int.')
+        if not 0 <= value <= self._max_att:
+            raise ValueError('Averaging time value out of range.')
         return self.command(":INP%d:CHAN%d:ATT " % (self._slot, self._channel) + str(value) + "dB")
 
     @ checkAppType(ApplicationType.ATTN)

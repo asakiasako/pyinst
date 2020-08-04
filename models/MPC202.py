@@ -1,5 +1,4 @@
-from ..base_models._VisaInstrument import VisaInstrument
-from ..utils import check_range, check_type
+from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypePOLC
 from ..constants import LIGHT_SPEED
 import math
@@ -42,8 +41,10 @@ class ModelMPC202(VisaInstrument, TypePOLC):
         Set wavelength setting (nm)
         :param wavelength: (float, int) wavelength in nm
         """
-        check_type(wavelength, (int, float), wavelength)
-        check_range(wavelength, self._min_wl, self._max_wl)
+        if not isinstance(wavelength, (float, int)):
+            raise TypeError('Wavelength value should be number')
+        if not self.min_wavelength <= wavelength <= self.max_wavelength:
+            raise ValueError('Wavelength value out of range')
         return self.command(':CONF:WLEN %.1f' % wavelength)
 
     def set_frequency(self, freq):
@@ -63,13 +64,17 @@ class ModelMPC202(VisaInstrument, TypePOLC):
         rate = params[0]
         if len(mode) >= 4:
             if mode[0:4].upper() == 'TORN':
-                check_range(rate, 0, 60000)
+                if not 0 <= rate <= 60000:
+                    raise ValueError('Parameter rate is out of range')
             elif mode[0:4].upper() == 'DISC':
-                check_range(rate, 0, 20000)
+                if not 0 <= rate <= 20000:
+                    raise ValueError('Parameter rate is out of range')
             else:
-                check_range(rate, 0, 2000)
+                if not 0 <= rate <= 2000:
+                    raise ValueError('Parameter rate is out of range')
         else:
-            check_range(rate, 0, 2000)
+            if not 0 <= rate <= 2000:
+                raise ValueError('Parameter rate is out of range')
         self.command(':%s:RATE %.1f' % (mode, rate))
         if mode[0:4].upper() == 'TORN':
             type = params[1]

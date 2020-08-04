@@ -1,6 +1,5 @@
-from ..base_models._BaseInstrument import BaseInstrument
+from ._BaseInstrument import BaseInstrument
 from ..instrument_types import TypeOTF
-from ..utils import check_range, check_type
 from ..constants import LIGHT_SPEED
 import serial
 import re
@@ -82,8 +81,10 @@ class ModelBTF10011(BaseInstrument, TypeOTF):
         Sets the filter center wavelength.
         :param value: (float|int) wavelength in nm
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_wl, self._max_wl)
+        if not isinstance(value, (int, float)):
+            raise TypeError('wavelength value should be number')
+        if not self._min_wl <= value <= self._max_wl:
+            raise ValueError('Wavelength value out of range: %r' % value)
         self.__write('w%.2f' % value)
         line_count = 0
         while True:
@@ -110,8 +111,10 @@ class ModelBTF10011(BaseInstrument, TypeOTF):
         Sets the filter center wavelength in frequency(THz).
         :param value: (float|int) optical frequency in THz
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_freq, self._max_freq)
+        if not isinstance(value, (int, float)):
+            raise TypeError('Frequency value should be number')
+        if not self.min_frequency <= value <= self.max_frequency:
+            raise ValueError('Frequency value out of range')
         wl = round(LIGHT_SPEED/value, 3)
         return self.set_wavelength(wl)
 
@@ -142,8 +145,10 @@ class ModelBTF10011(BaseInstrument, TypeOTF):
         Sets the filter bandwidth.
         :param value: (float|int) bandwidth setting value in nm
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, self._min_bw, self._max_bw)
+        if not isinstance(value, (float, int)):
+            raise TypeError('Bandwidth value should be number')
+        if not self.min_bandwidth <= value <= self.max_bandwidth:
+            raise ValueError('Bandwidth value out of range')
         wl = self.get_wavelength()
         self.__write('w%.2f,%.2f' % (wl, value))
         line_count = 0

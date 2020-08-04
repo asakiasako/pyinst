@@ -1,6 +1,5 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypePOLC
-from ..utils import check_range, check_type
 from ..constants import LIGHT_SPEED
 import math
 
@@ -38,8 +37,10 @@ class ModelPSY201(VisaInstrument, TypePOLC):
         Set wavelength setting (nm)
         :param wavelength: (float, int) wavelength in nm
         """
-        check_type(wavelength, (int, float), 'wavelength')
-        check_range(wavelength, self._min_wl, self._max_wl)
+        if not isinstance(wavelength, (float, int)):
+            raise TypeError('wavelength should be number')
+        if not self.min_wavelength <= wavelength <= self.max_wavelength:
+            raise ValueError('wavelength out of range')
         wavelength = int(wavelength)
         return self.command(':CONF:WLEN %d' % wavelength)
 
@@ -55,11 +56,14 @@ class ModelPSY201(VisaInstrument, TypePOLC):
         rate = params[0]
         if len(mode) >= 4:
             if mode[0:4].upper() == 'DISC':
-                check_range(rate, 0.01, 20000)
+                if not 0.01 <= rate <= 20000:
+                    raise ValueError('Param rate out of range')
             else:
-                check_range(rate, 0.01, 2000)
+                if not 0.01 <= rate <= 2000:
+                    raise ValueError('Param rate out of range')
         else:
-            check_range(rate, 0.01, 2000)
+            if not 0.01 <= rate <= 2000:
+                raise ValueError('Param rate out of range')
         self.command(':CONT:SCR:%s:RATE %.2f' % (mode, rate))
         if mode[0:4].upper() == 'TORN':
             type = params[1]
@@ -90,7 +94,8 @@ class ModelPSY201(VisaInstrument, TypePOLC):
 
     def set_sop(self, s1, s2, s3):
         for i in (s1, s2, s3):
-            check_type(i, (int, float), 's1, s2, s3')
+            if not isinstance(i, (int, float)):
+                raise TypeError('Parameters s1, s2, s3 should be number')
         return self.command(':CONT:SOP %.2f,%.2f,%.2f' % (s1, s2, s3))
 
     def set_sop_in_degree(self, theta, phi):
@@ -99,7 +104,10 @@ class ModelPSY201(VisaInstrument, TypePOLC):
         :param phi: (float) 0 to 180
         """
         for i in (theta, phi):
-            check_type(i, (int, float), 'theta, phi')
-        check_range(theta, 0, 360)
-        check_range(phi, 0, 180)
+            if not isinstance(i, (int, float)):
+                raise TypeError('Parameters theta, phi should be number')
+        if not 0 <= theta <= 360:
+            raise ValueError('Parameter theta out of range')
+        if not 0 <= phi <= 180:
+            raise ValueError('Parameter phi out of range')
         return self.command(':CONT:ANGL %.2f,%.2f' % (theta, phi))

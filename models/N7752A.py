@@ -1,8 +1,7 @@
-from ..base_models._VisaInstrument import VisaInstrument
+from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypeVOA
 from .N7744A import ModelN7744A
 from ..constants import LIGHT_SPEED
-from ..utils import check_range, check_type
 
 class ModelN7752A(ModelN7744A, TypeVOA):
     model = "N7752A"
@@ -48,7 +47,8 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         :param status: (bool=True)
         """
         self.__check_is_att()
-        check_type(status, bool, 'status')
+        if not isinstance(status, bool):
+            raise TypeError('Enable status should be bool')
         status_str = str(int(status))
         return self.command(":OUTP" + str(self.slot) + " " + status_str)
 
@@ -112,9 +112,10 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         :param value: (float|int) att value in dB
         """
         self.__check_is_att()
-        print('ATT: %.2f' % value)
-        check_type(value, (int, float), 'value')
-        check_range(value, 0, self._max_att)
+        if not isinstance(value, (float, int)):
+            raise TypeError('Att value should be number')
+        if not 0 <= value <= self.max_att:
+            raise ValueError('Att value out of range')
         return self.command("INP" + str(self.slot) + ":ATT " + str(value) + "dB")
 
     def set_offset(self, value):
@@ -132,8 +133,10 @@ class ModelN7752A(ModelN7744A, TypeVOA):
         """
         if self.slot >= 5:
             return ModelN7744A.set_wavelength(self, value)
-        check_type(value, (float, int), 'value')
-        check_range(value, self._min_wl, self._max_wl)
+        if not isinstance(value, (float, int)):
+            raise TypeError('Wavelength value should be number')
+        if not self.min_wavelength <= value <= self.max_wavelength:
+            raise ValueError('Wavelength value out of range')
         return self.command(":INP"+str(self.slot)+":WAV " + str(value) + "NM")
 
     def set_frequency(self, value):

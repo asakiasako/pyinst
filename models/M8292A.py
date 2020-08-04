@@ -1,4 +1,4 @@
-from ..base_models.VsaOSA import ModelVsaOSA
+from ._VsaOSA import ModelVsaOSA
 
 class ModelM8292A(ModelVsaOSA):
     model = "M8292A"

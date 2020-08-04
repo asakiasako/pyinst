@@ -1,18 +1,19 @@
 from ._VisaInstrument import VisaInstrument
 from ..instrument_types import TypePS
-from ..utils import check_type, check_range
 
 
 class ModelE36xx(VisaInstrument, TypePS):
     def __init__(self, resource_name, **kwargs):
         super(ModelE36xx, self).__init__(resource_name, **kwargs)
+        self._range = None
         
     def enable(self, status=True):
         """
         Enable power supply output or not.
         :param status: (bool) enable status of power supply output
         """
-        check_type(status, bool, 'status')
+        if not isinstance(status, bool):
+            raise TypeError('Enable status should be bool')
         status_list = ['OFF', 'ON']
         status_str = status_list[int(status)]
         return self.command(":OUTP "+status_str)
@@ -31,8 +32,10 @@ class ModelE36xx(VisaInstrument, TypePS):
         Set voltage (limit).
         :param value: (float|int) voltage value in V
         """
-        check_type(value, (float, int), 'value')
-        check_range(value, 0, self._range["max_volt"])
+        if not isinstance(value, (float, int)):
+            raise TypeError('Voltage value should be number')
+        if not 0 <= value <= self._range['max_volt']:
+            raise ValueError('Exceed max voltage limit')
         return self.command(":VOLT "+str(value))
 
     def get_voltage(self):
@@ -58,8 +61,10 @@ class ModelE36xx(VisaInstrument, TypePS):
         Set current (limit).
         :param value: (float|int) current value in A
         """
-        check_type(value, (int, float), 'value')
-        check_range(value, 0, self._range["max_current"])
+        if not isinstance(value, (int, float)):
+            raise TypeError('Current value should be number')
+        if not 0 <= value <= self._range["max_current"]:
+            raise ValueError('Current value out of range')
         return self.command(":CURR "+str(value))
 
     def get_current(self):
@@ -84,8 +89,10 @@ class ModelE36xx(VisaInstrument, TypePS):
         """
         :param value: (float|int) ocp value in A
         """
-        check_type(value, (float, int), 'value')
-        check_range(value, 0, 22)
+        if not isinstance(value, (float, int)):
+            raise TypeError('OCP value should be number')
+        if not 0 <= value <= 22:
+            raise ValueError('OCP value out of range')
         return self.command(":CURR:PROT "+str(value))
 
     def get_ocp(self):
@@ -100,7 +107,8 @@ class ModelE36xx(VisaInstrument, TypePS):
         """
         :param status: (bool) if ocp is enabled
         """
-        check_type(status, bool, 'status')
+        if not isinstance(status, bool):
+            raise TypeError('OCP status should be bool')
         return self.command(":CURR:PROT:STAT "+str(int(status)))
 
     def get_ocp_status(self):
@@ -130,8 +138,10 @@ class ModelE36xx(VisaInstrument, TypePS):
         """
         :param value: (float|int) ovp value in V
         """
-        check_type(value, (float, int), 'value')
-        check_range(value, 0, 22)
+        if not isinstance(value, (float, int)):
+            raise TypeError('OVP value should be number')
+        if not 0 <= value <= 22:
+            raise ValueError('OVP value out of range')
         return self.command(":VOLT:PROT "+str(value))
 
     def get_ovp(self):
@@ -146,7 +156,8 @@ class ModelE36xx(VisaInstrument, TypePS):
         """
         :param status: (bool) if ovp is enabled
         """
-        check_type(status, bool, 'status')
+        if not isinstance(status, bool):
+            raise TypeError('OVP status should be bool')
         return self.command(":VOLT:PROT:STAT "+str(int(status)))
 
     def get_ovp_status(self):
