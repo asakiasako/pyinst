@@ -95,10 +95,6 @@ class TypeVOA(BaseInstrumentType):
         else:
             return self._max_att
 
-    @ max_att.setter
-    def max_att(self, value):
-        raise AttributeError('Attribute "max_att" is read-only.')
-
     # -- methods --
     def enable(self, status=True):
         """

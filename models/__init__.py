@@ -12,6 +12,7 @@ from .E3633A import ModelE3633A
 from .M81571A import Model81571A
 from .M8163A import Model81635A
 from .M8292A import ModelM8292A
+from .MAP200_mVoaC1 import ModelMAP200_mVoaC1
 from .MPC202 import ModelMPC202
 from .MSO5000 import ModelMSO5000
 from .MSOX6000 import ModelMSOX6000

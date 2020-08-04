@@ -14,6 +14,13 @@ class ModelOTF970(VisaInstrument, TypeOTF):
         "Bandwidth @-3dB": "0.08 ~ 4.0 nm",
         "Max Input Power": "+27 dBm"
     }
+    params = [
+        {
+            "name": "read_termination",
+            "type": "str",
+            "options": ['\r', '\n', '\r\n']
+        }
+    ]
 
     def __init__(self, resource_name, read_termination='\r\n', write_termination='\r\n', **kwargs):
         super(ModelOTF970, self).__init__(resource_name, read_termination=read_termination,
