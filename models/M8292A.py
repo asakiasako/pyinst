@@ -11,3 +11,4 @@ class ModelM8292A(ModelVsaOMA):
     def __init__(self, resource_name, **kwargs):
         super(ModelM8292A, self).__init__(resource_name, **kwargs)
         
+    
