@@ -1,7 +1,7 @@
-from ._VsaOSA import ModelVsaOSA
+from ._VsaOMA import ModelVsaOMA
 from ..instrument_types import TypeOMA
 
-class ModelN4392A(ModelVsaOSA):
+class ModelN4392A(ModelVsaOMA):
     model = "N4392A"
     brand = "Keysight"
     details = {

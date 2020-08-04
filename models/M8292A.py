@@ -1,6 +1,6 @@
-from ._VsaOSA import ModelVsaOSA
+from ._VsaOMA import ModelVsaOMA
 
-class ModelM8292A(ModelVsaOSA):
+class ModelM8292A(ModelVsaOMA):
     model = "M8292A"
     brand = "Keysight"
     details = {

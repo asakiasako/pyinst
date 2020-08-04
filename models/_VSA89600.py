@@ -6,11 +6,8 @@ class ModelVSA89600(VisaInstrument):
     This is the base model of Keysight VSA89600 software
     """
 
-    def __init__(self, resource_name, **kwargs):
-        super(ModelVSA89600, self).__init__(resource_name, **kwargs)
-        self._trace = None
-        self._item_names = []
-        self._units = []
+    def __init__(self, resource_name, encoding='latin1', **kwargs):
+        super(ModelVSA89600, self).__init__(resource_name, encoding=encoding, **kwargs)
 
     # param encapsulation
 
@@ -72,34 +69,17 @@ class ModelVSA89600(VisaInstrument):
         unit_list = list(map(lambda x: x.strip('"'), unit_list))
         return unit_list
 
-    def set_active_trace(self, trace):
-        """
-        Set current trace
-        :param trace: (int) index of trace, 1 based from A. For example: A->1, E->5
-        """
-        if not isinstance(trace, int):
-            raise TypeError('trace should be int')
-        if not trace >= 1:
-            raise ValueError('trace starts from 1')
-        self._trace = trace
-        self._item_names = self.get_trace_item_names(trace)
-        self._units = self.get_trace_units(trace)
-
-    def get_formatted_trace_data(self, trace):
+    def get_trace_data(self, trace):
         """
         Get a formatted data include test item_names, values, and units.
         :param trace: (int) index of trace, 1 based from A. For example: A->1, E->5
         :return: (dict) { str:item1: (float:value, str:unit), ...}
         """
-        if trace != self._trace:
-            self.set_active_trace(trace)
-
+        names = self.get_trace_item_names(trace)
         values = self.get_trace_values(trace)
-        trac_data = {}
-        for i in range(len(self._item_names)):
-            trac_data[self._item_names[i]] = (values[i], self._units[i])
-        return trac_data
-
-    def get_trace_params(self, trace, param_names):
-        trac_data = self.get_formatted_trace_data(trace)
-        return [trac_data[i] for i in param_names]
+        units = self.get_trace_units(trace)
+        ilen = len(names)
+        res = {}
+        for i in range(ilen):
+            res[names[i]] = (values[i], units[i])
+        return res

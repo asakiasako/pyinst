@@ -2,10 +2,10 @@ from ._VSA89600 import ModelVSA89600
 from ..instrument_types import TypeOMA
 
 
-class ModelVsaOSA(ModelVSA89600, TypeOMA):
+class ModelVsaOMA(ModelVSA89600, TypeOMA):
 
     def __init__(self, resource_name, **kwargs):
-        super(ModelVsaOSA, self).__init__(resource_name, **kwargs)
+        super(ModelVsaOMA, self).__init__(resource_name, **kwargs)
 
     def smart_setup(self, execute=True, freq=None, symbol_rate=None, fine_tune_symbol_rate=None, demodulation_format=None, polarization=None, pre_set_layout=None):
         """
