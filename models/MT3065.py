@@ -26,6 +26,11 @@ class ModelMT3065(BaseInstrument, TypeTS):
         self.__serial.setRTS()
         self.__serial.setDTR()
         self.__serial.reset_input_buffer()
+        self.__resource_name = resource_name
+
+    @property
+    def resource_name(self):
+        return self.__resource_name
 
     def write_cmd(self, cmd):
         pre = b'\x05'

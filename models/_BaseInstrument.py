@@ -26,14 +26,6 @@ class BaseInstrument(ABC):
     def close(self):
         raise NotImplementedError('This instrument model lacks "close" method.')
 
-    @property
-    @abstractmethod
-    def ins_type(self):
-        """
-        A list of instrument types
-        """
-
-    @property
     @abstractmethod
     def resource_name(self):
         """

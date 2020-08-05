@@ -1,5 +1,5 @@
 import pyvisa
-from .base_models._VisaInstrument import rm
+from .models._VisaInstrument import rm
 from .constants import InstrumentType
 from . import models
 

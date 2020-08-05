@@ -29,3 +29,4 @@ from .PSY201 import ModelPSY201
 from .TC3625 import ModelTC3625
 from .WaveAnalyzer1500S import ModelWaveAnalyzer1500S
 from .WaveShaper4000A import ModelWaveShaper4000A
+from .XTA50 import ModelXTA50

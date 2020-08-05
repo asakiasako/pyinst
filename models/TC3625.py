@@ -15,6 +15,11 @@ class ModelTC3625(BaseInstrument, TypeTS):
         self.__serial = serial.Serial(port=resource_name, baudrate=baud_rate, timeout=3)
         self.__write_termination = write_termination
         self.__read_termination = read_termination
+        self.__resource_name = resource_name
+
+    @property
+    def resource_name(self):
+        return self.__resource_name
 
     def command(self, cmd):
         cmd_str = '{cmd}{write_termination}'.format(cmd=cmd, write_termination = self.__write_termination)

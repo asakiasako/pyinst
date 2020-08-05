@@ -31,7 +31,7 @@ class ModelNSW(BaseInstrument, TypeSW):
         slot_or_type: 1, 2, 3, '1*8', '1*16'
         """
         super(ModelNSW, self).__init__()
-        self._resource_name = resource_name
+        self.__resource_name = resource_name
         if isinstance(slot_or_type, int):
             self.__index = slot_or_type - 1
         else:
@@ -48,6 +48,10 @@ class ModelNSW(BaseInstrument, TypeSW):
                 raise KeyError('Invalid value for slot_or_type: %r' % slot_or_type)
         if not self._ops:
             raise ModuleNotFoundError('Neo_SmartOpticalSwitch.SmartOpticalSwitch')
+
+    @property
+    def resource_name(self):
+        return self.__resource_name
 
     @classmethod
     def get_usb_devices(cls, num=9):

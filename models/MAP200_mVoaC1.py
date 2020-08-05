@@ -1,5 +1,5 @@
 from ..instrument_types import TypeVOA, TypeOPM
-from ..base_models._VisaInstrument import VisaInstrument
+from ._VisaInstrument import VisaInstrument
 from ..constants import LIGHT_SPEED, OpticalUnit
 from ..utils import dbm_to_w
 import math

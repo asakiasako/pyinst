@@ -8,8 +8,12 @@ class ModelVSA89600(VisaInstrument):
 
     def __init__(self, resource_name, encoding='latin1', **kwargs):
         super(ModelVSA89600, self).__init__(resource_name, encoding=encoding, **kwargs)
+        self.__resource_name = resource_name
 
     # param encapsulation
+    @property
+    def resource_name(self):
+        return self.__resource_name
 
     # Methods
     def run(self):

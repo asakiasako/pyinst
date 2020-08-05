@@ -30,7 +30,7 @@ class ModelWaveShaper4000A(BaseInstrument, TypeOTF):
 
     def __init__(self, resource_name, port, profile, timeout=5, **kwargs):
         super(ModelWaveShaper4000A, self).__init__()
-        self._resource_name = resource_name
+        self.__resource_name = resource_name
         self.__timeout = timeout
         self.__port = port
         self.__profile = profile
@@ -43,6 +43,10 @@ class ModelWaveShaper4000A(BaseInstrument, TypeOTF):
         self.__curr_freq = 193.1
         self.__curr_bw = 1
         self.__upload_profile(self.__curr_freq, self.__curr_bw)
+
+    @property
+    def resource_name(self):
+        return self.__resource_name
 
     def close(self):
         pass

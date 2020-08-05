@@ -1,4 +1,3 @@
-from ..utils import check_type
 from ..constants import InstrumentType
 
 
@@ -22,7 +21,8 @@ class BaseInstrumentType(object):
         Append new instrument type into ins_type attr.
         :param i_type: (InstrumentType) instrument type
         """
-        check_type(i_type, InstrumentType, "i_type")
+        if not isinstance(i_type, InstrumentType):
+            raise TypeError('Param i_type should be an instance of InstrumentType')
         if i_type not in self._ins_type:
             self._ins_type.append(i_type)
 

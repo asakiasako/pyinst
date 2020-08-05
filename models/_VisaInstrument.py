@@ -24,8 +24,12 @@ class VisaInstrument(BaseInstrument):
         self.__inst = rm.open_resource(resource_name, read_termination=read_termination,
                                        write_termination=write_termination, open_timeout=open_timeout,
                                        timeout=timeout, query_delay=query_delay, **kwargs)
-        self.resource_name = resource_name
+        self.__resource_name = resource_name
         super(VisaInstrument, self).__init__()
+
+    @property
+    def resource_name(self):
+        return self.__resource_name
 
     @property
     def resource_info(self):
