@@ -14,15 +14,25 @@ class ModelMAP200_mVoaC1(VisaInstrument, TypeVOA, TypeOPM):
     }
     params = [
         {
+            "name": "chassis",
+            "type": "int",
+            "min": 0
+        },
+        {
+            "name": "slot",
+            "type": "int",
+            "min": 1
+        },
+        {
             "name": "channel",
             "type": "int",
             "options": [1, 2, 3, 4]
         }
     ]
 
-    def __init__(self, resource_name, channel, **kwargs):
+    def __init__(self, resource_name, chassis, slot, channel, **kwargs):
         super(ModelMAP200_mVoaC1, self).__init__(resource_name, **kwargs)
-        self.__channel = channel
+        self.__device = '{chassis:d},{slot:d},{channel:d}'.format(chassis=chassis, slot=slot, channel=channel)
         # thresholds
         self._min_wl = 1260
         self._max_wl = 1650
@@ -44,7 +54,7 @@ class ModelMAP200_mVoaC1(VisaInstrument, TypeVOA, TypeOPM):
         :Parameters: **status** - bool, True(default) -> enable, False -> disable
         """
         beam_block = not status
-        cmd = ':OUTPut:BBLock {ch:d},{state:d}'.format(ch=self.__channel, state=beam_block)
+        cmd = ':OUTPut:BBLock {device},{state:d}'.format(device=self.__device, state=beam_block)
         self.command(cmd)
 
     def is_enabled(self):
@@ -53,7 +63,7 @@ class ModelMAP200_mVoaC1(VisaInstrument, TypeVOA, TypeOPM):
 
         :Returns: bool, if VOA output is enabled.
         """
-        cmd = ':OUTPut:BBLock? {ch:d}'.format(ch=self.__channel)
+        cmd = ':OUTPut:BBLock? {device}'.format(device=self.__device)
         beam_block = bool(int(self.query(cmd)))
         enabled = not beam_block
         return enabled
@@ -64,7 +74,7 @@ class ModelMAP200_mVoaC1(VisaInstrument, TypeVOA, TypeOPM):
 
         :Returns: float, att value in dB.
         """
-        cmd = ':OUTPut:ATTenuation? {ch:d}'.format(ch=self.__channel)
+        cmd = ':OUTPut:ATTenuation? {device}'.format(device=self.__device)
         att = float(self.query(cmd))
         return att
 
@@ -74,7 +84,7 @@ class ModelMAP200_mVoaC1(VisaInstrument, TypeVOA, TypeOPM):
 
         :Returns: float, offset value in dB.
         """
-        cmd = ':OUTPut:POWer:OFFSet? {ch:d}'.format(ch=self.__channel)
+        cmd = ':OUTPut:POWer:OFFSet? {device}'.format(device=self.__device)
         offset = float(self.query(cmd))
         return offset
 
@@ -82,7 +92,7 @@ class ModelMAP200_mVoaC1(VisaInstrument, TypeVOA, TypeOPM):
         """
         :Returns: float, optical wavelength in nm
         """
-        cmd = ':OUTPut:WAVelength? {ch:d}'.format(ch=self.__channel)
+        cmd = ':OUTPut:WAVelength? {device}'.format(device=self.__device)
         wl = float(self.query(cmd))
         return wl
     
@@ -97,7 +107,7 @@ class ModelMAP200_mVoaC1(VisaInstrument, TypeVOA, TypeOPM):
         """
         if not 0 <= value <= self.max_att:
             raise ValueError('ATT value out of range.')
-        cmd = ':OUTPut:ATTenuation {ch:d},{att:.4f}'.format(ch=self.__channel, att=value)
+        cmd = ':OUTPut:ATTenuation {device},{att:.4f}'.format(device=self.__device, att=value)
         self.command(cmd)
 
     def set_offset(self, value):
@@ -108,7 +118,7 @@ class ModelMAP200_mVoaC1(VisaInstrument, TypeVOA, TypeOPM):
         """
         if not self.min_offset <= value <= self.max_offset:
             raise ValueError('Att offset out of range.')
-        cmd = ':OUTPut:POWer:OFFSet {ch:d},{offset:.4f}'.format(ch=self.__channel, offset=value)
+        cmd = ':OUTPut:POWer:OFFSet {device},{offset:.4f}'.format(device=self.__device, offset=value)
         self.command(cmd)
 
     def set_wavelength(self, value):
@@ -119,7 +129,7 @@ class ModelMAP200_mVoaC1(VisaInstrument, TypeVOA, TypeOPM):
         """
         if not self.min_wavelength <= value <= self.max_wavelength:
             raise ValueError('Wavelength out of range.')
-        cmd = ':OUTPut:WAVelength {ch:d},{wl:.4f}'.format(ch=self.__channel, wl=value)
+        cmd = ':OUTPut:WAVelength {device},{wl:.4f}'.format(device=self.__device, wl=value)
         self.command(cmd)
 
     def set_frequency(self, value):
@@ -132,7 +142,7 @@ class ModelMAP200_mVoaC1(VisaInstrument, TypeVOA, TypeOPM):
 
         :Returns: float, value of optical power
         """
-        cmd = ':FETch:POWer:OUTPut? {ch:d}'.format(ch=self.__channel)
+        cmd = ':FETch:POWer:OUTPut? {device}'.format(device=self.__device)
         raw = self.query(cmd)
         if raw.startswith('-') and raw.endswith('-'):
             dbm_value = -100
@@ -154,7 +164,7 @@ class ModelMAP200_mVoaC1(VisaInstrument, TypeVOA, TypeOPM):
         """
         :Returns: float, calibration offset in dB
         """
-        cmd = ':SENSe:POWer:OFFSet? {ch:d}'.format(ch=self.__channel)
+        cmd = ':SENSe:POWer:OFFSet? {device}'.format(device=self.__device)
         cal = float(self.query(cmd))
         return cal
 
@@ -162,7 +172,7 @@ class ModelMAP200_mVoaC1(VisaInstrument, TypeVOA, TypeOPM):
         """
         Get averaging time in ms.
         """
-        cmd = ':SENSe:POWer:ATIMe? {ch:d}'.format(ch=self.__channel)
+        cmd = ':SENSe:POWer:ATIMe? {device}'.format(device=self.__device)
         atime = float(self.query(cmd))
         return atime
 
@@ -185,7 +195,7 @@ class ModelMAP200_mVoaC1(VisaInstrument, TypeVOA, TypeOPM):
         """
         if not self.min_cal <= value <= self.max_cal:
             raise ValueError('OPM Calibration out of range')
-        cmd = ':SENSe:POWer:OFFSet {ch:d},{offset:.4f}'.format(ch=self.__channel, offset=value)
+        cmd = ':SENSe:POWer:OFFSet {device},{offset:.4f}'.format(device=self.__device, offset=value)
         self.command(cmd)
 
     def set_avg_time(self, value):
@@ -196,5 +206,5 @@ class ModelMAP200_mVoaC1(VisaInstrument, TypeVOA, TypeOPM):
         """
         if not self.min_avg_time <= value <= self.max_avg_time:
             raise ValueError('Averaging time out of range')
-        cmd = ':SENSe:POWer:ATIMe {ch:d},{atime:.4f}'.format(ch=self.__channel, atime=value)
+        cmd = ':SENSe:POWer:ATIMe {device},{atime:.4f}'.format(device=self.__device, atime=value)
         self.command(cmd)
