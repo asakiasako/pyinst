@@ -45,6 +45,10 @@ class VisaInstrument(BaseInstrument):
         """
         return self.query('*IDN?')
 
+    @property
+    def opc(self):
+        return self.query('*OPC?')
+
     # methods
     def check_connection(self):
         """
