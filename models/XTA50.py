@@ -15,7 +15,6 @@ class ModelXTA50(VisaInstrument, TypeOTF):
             'parity': Parity.none,
             'stop_bits': StopBits.one
         }
-        kwargs = RS232_CONFIG.update(kwargs)
         super(ModelXTA50, self).__init__(resource_name, read_termination=read_termination,
                                           write_termination=write_termination, **kwargs)
         self._set_ranges()
@@ -26,8 +25,8 @@ class ModelXTA50(VisaInstrument, TypeOTF):
         self._max_wl = 1620
         self._min_freq = round(LIGHT_SPEED/self._max_wl, 3)
         self._max_freq = round(LIGHT_SPEED/self._min_wl, 3)
-        self._min_bw = float(self.query('FWHM_MIN?'))
-        self._max_bw = float(self.query('FWHM_MAX?'))
+        self._min_bw = float(self.query('FWHM_MIN?').split('=')[1])
+        self._max_bw = float(self.query('FWHM_MAX?').split('=')[1])
 
     def get_wavelength(self):
         """
@@ -49,7 +48,7 @@ class ModelXTA50(VisaInstrument, TypeOTF):
         Reads out the filter center wavelength in optical frequency.
         :return: (float) optical frequency in THz
         """
-        freq = float(self.query('FREQ?'))
+        freq = float(self.query('FREQ?').split('=')[1])
         return freq
 
     def set_frequency(self, value):
@@ -61,14 +60,14 @@ class ModelXTA50(VisaInstrument, TypeOTF):
             raise TypeError('Frequency value should be number.')
         if not self.min_frequency <= value <= self.max_frequency:
             raise ValueError('Frequency value out of range')
-        self.command('FREQ={freq}'.format(freq=round(value, 5)))
+        self.query('FREQ={freq}'.format(freq=round(value, 5)))
 
     def get_bandwidth(self):
         """
         Reads out the filter bandwidth.
         :return: (float) bandwidth setting value in nm
         """
-        bw = float(self.query('FWHM?'))
+        bw = float(self.query('FWHM?').split('=')[1])
         return bw
 
     def set_bandwidth(self, value):
@@ -80,4 +79,4 @@ class ModelXTA50(VisaInstrument, TypeOTF):
             raise TypeError('Bandwidth should be number')
         if not self.min_bandwidth <= value <= self.max_bandwidth:
             raise ValueError('Bandwidth value out of range')
-        self.command('FWHM={bw}'.format(bw=round(value, 4)))
+        self.query('FWHM={bw}'.format(bw=round(value, 4)))

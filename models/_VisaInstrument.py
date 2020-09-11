@@ -49,6 +49,12 @@ class VisaInstrument(BaseInstrument):
     def opc(self):
         return self.query('*OPC?')
 
+    def set_visa_attribute(self, *args, **kwargs):
+        return self.__inst.set_visa_attribute(*args, **kwargs)
+
+    def get_visa_attribute(self, *args, **kwargs):
+        return self.__inst.get_visa_attribute(*args, **kwargs)
+
     # methods
     def check_connection(self):
         """
